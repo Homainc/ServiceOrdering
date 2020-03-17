@@ -21,9 +21,9 @@ namespace OrderingService.Data.Repositories
         public IRepository<ServiceType> ServiceTypes => _serviceTypeRepository ??= new ServiceTypeRepository(_db);
         public IRepository<UserProfile> UserProfiles => _userProfileRepository ??= new UserProfileRepository(_db);
         public UserManager<User> UserManager { get; }
-        public RoleManager<User> RoleManager { get; }
+        public RoleManager<IdentityRole> RoleManager { get; }
 
-        public ApplicationUnitOfWork(ApplicationContext db, UserManager<User> userManager, RoleManager<User> roleManager)
+        public ApplicationUnitOfWork(ApplicationContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _db = db;
             UserManager = userManager;

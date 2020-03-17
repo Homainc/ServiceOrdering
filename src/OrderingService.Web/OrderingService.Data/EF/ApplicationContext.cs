@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.Models;
 
@@ -15,6 +17,18 @@ namespace OrderingService.Data.EF
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             Database.EnsureCreated();
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new UserConfiguration());
+            var roles = new IdentityRole[]
+            {
+                new IdentityRole { Name = "USER" , NormalizedName = "USER" },
+                new IdentityRole { Name = "ADMIN", NormalizedName = "ADMIN" },
+            };
+            builder.Entity<IdentityRole>().HasData(roles);
         }
     }
 }

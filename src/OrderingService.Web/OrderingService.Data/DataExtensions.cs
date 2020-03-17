@@ -15,7 +15,6 @@ namespace OrderingService.Data
             //configure your Data Layer services here
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=OrderingServiceDB;Trusted_Connection=True;MultipleActiveResultSets=true"));
-            
             services.AddIdentityCore<User>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>();
             services.AddTransient<IUnitOfWork, ApplicationUnitOfWork>();

@@ -8,10 +8,10 @@ namespace OrderingService.Data.Models
     {
         [Key]
         public int Id { get; set; }
-        public int ClientId { get; set; }
+        public string ClientId { get; set; }
         [ForeignKey("ClientId")]
         public User Client { get; set; }
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         public User Employee { get; set; }
         [Required]
