@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OrderingService.Data.EF;
+using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
+using OrderingService.Data.Repositories;
 
 namespace OrderingService.Data
 {
@@ -16,6 +18,7 @@ namespace OrderingService.Data
             
             services.AddIdentityCore<User>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>();
+            services.AddTransient<IUnitOfWork, ApplicationUnitOfWork>();
             return services;
         }
     }
