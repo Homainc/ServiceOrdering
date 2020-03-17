@@ -1,14 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace OrderingService.Data.Models
 {
     public class User : IdentityUser
     {
-        [Required]
-        public string FirstName { get; set; }
-        [Required]
-        public string SecondName { get; set; }
-        public EmployeeProfile EmployeeProfile { get; set; }
+        public UserProfile UserProfile { get; set; }
     }
 }
