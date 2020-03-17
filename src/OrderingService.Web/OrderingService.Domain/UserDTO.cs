@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-
-namespace OrderingService.Domain
+﻿namespace OrderingService.Domain
 {
     public class UserDTO
     {
