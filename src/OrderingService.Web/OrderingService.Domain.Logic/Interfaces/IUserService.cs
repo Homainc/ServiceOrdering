@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Interfaces
 {
     public interface IUserService : IDisposable
     {
-        IOperationResult Create(UserDTO userDto);
-        ClaimsIdentity Authenticate(UserDTO userDto);
+        Task<IOperationResult> CreateAsync(UserDTO userDto);
+        Task<ClaimsIdentity> Authenticate(UserDTO userDto);
     }
 }
