@@ -10,6 +10,7 @@ namespace OrderingService.Data.EF
         public DbSet<ServiceOrder> ServiceOrders { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<EmployeeProfile> EmployeeProfiles { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {

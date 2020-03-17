@@ -5,11 +5,11 @@ using System.Text;
 
 namespace OrderingService.Data.Interfaces
 {
-    public interface IRepository<T>
+    public interface IRepository<T> where T : class
     {
         IQueryable<T> GetAll();
-        T Create(T entity);
-        bool Delete(T entity);
-        T Update(T entity);
+        void Create(T entity);
+        void Delete(int id);
+        void Update(T entity);
     }
 }

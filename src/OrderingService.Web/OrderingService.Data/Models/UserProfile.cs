@@ -12,5 +12,6 @@ namespace OrderingService.Data.Models
         [Required]
         public string SecondName { get; set; }
         public EmployeeProfile EmployeeProfile { get; set; }
+        public User User { get; set; }
     }
 }
