@@ -23,7 +23,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public void Dispose() => Database.Dispose();
 
-        public IEnumerable<EmployeeProfileDTO> FilterEmployeeProfiles(string serviceName, decimal? maxServiceCost)
+        public IResponse<IEnumerable<EmployeeProfileDTO>> FilterEmployeeProfiles(string serviceName, decimal? maxServiceCost)
         {
             var employee = Database.EmployeeProfiles.GetAll();
             if (serviceName != null)
@@ -31,16 +31,16 @@ namespace OrderingService.Domain.Logic.Services
             if (maxServiceCost.HasValue)
                 employee = employee.Where(e => e.ServiceCost <= maxServiceCost.Value);
 
-            return employee.ProjectTo<EmployeeProfileDTO>(Mapper.ConfigurationProvider);
+            return Response<IEnumerable<EmployeeProfileDTO>>.Success(employee.ProjectTo<EmployeeProfileDTO>(Mapper.ConfigurationProvider));
         }
 
-        public IOperationResult CreateEmployeeProfile(EmployeeProfileDTO employeeProfileDto)
+        public IResponse<EmployeeProfileDTO> CreateEmployeeProfile(EmployeeProfileDTO employeeProfileDto)
         {
             var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == employeeProfileDto.Id);
 
             if (employeeProfile != null)
             {
-                var result = OperationResult.Error("Employee profile already exist");
+                var result = Response<EmployeeProfileDTO>.ValidationError("Employee profile already exist");
                 Logger.LogError(result.ErrorMessage);
                 return result;
             }
@@ -63,16 +63,16 @@ namespace OrderingService.Domain.Logic.Services
             Database.Save();
 
             Logger.LogInformation($"Employee Profile(cost: {employeeProfile.ServiceCost}, service name: {employeeProfile.ServiceType.Name}) was added");
-            return OperationResult.Success();
+            return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
 
-        public IOperationResult UpdateEmployeeService(EmployeeProfileDTO employeeProfileDto)
+        public IResponse<EmployeeProfileDTO> UpdateEmployeeService(EmployeeProfileDTO employeeProfileDto)
         {
             var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == employeeProfileDto.Id);
 
             if (employeeProfile == null)
             {
-                var result = OperationResult.Error($"Employee profile with id {employeeProfileDto.Id} not found");
+                var result = Response<EmployeeProfileDTO>.NotFound($"Employee profile with id {employeeProfileDto.Id} not found");
                 Logger.LogError(result.ErrorMessage);
                 return result;
             }
@@ -92,16 +92,16 @@ namespace OrderingService.Domain.Logic.Services
             Database.Save();
 
             Logger.LogInformation($"Employee Profile(cost: {employeeProfile.ServiceCost}, service name: {employeeProfile.ServiceType.Name}) was updated");
-            return OperationResult.Success();
+            return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
 
-        public IOperationResult DeleteEmployeeProfile(string employeeId)
+        public IResponse<EmployeeProfileDTO> DeleteEmployeeProfile(string employeeId)
         {
             var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(e => e.Id == employeeId);
 
             if (employeeProfile == null)
             {
-                var result = OperationResult.Error("Employee profile not found");
+                var result = Response<EmployeeProfileDTO>.NotFound("Employee profile not found");
                 Logger.LogError(result.ErrorMessage);
             }
 
@@ -109,7 +109,7 @@ namespace OrderingService.Domain.Logic.Services
             Database.Save();
 
             Logger.LogInformation($"Employee profile from user id {employeeId} was deleted");
-            return OperationResult.Success();
+            return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
     }
 }

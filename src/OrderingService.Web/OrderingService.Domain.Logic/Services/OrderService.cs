@@ -24,12 +24,12 @@ namespace OrderingService.Domain.Logic.Services
 
         public void Dispose() => Database.Dispose();
 
-        public IOperationResult Create(OrderDTO orderDto)
+        public IResponse<OrderDTO> Create(OrderDTO orderDto)
         {
             var orderEmployee = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == orderDto.EmployeeId);
             if (orderEmployee == null)
             {
-                var result = OperationResult.Error($"Employee with id {orderDto.EmployeeId} not found");
+                var result = Response<OrderDTO>.ValidationError($"Employee with id {orderDto.EmployeeId} not found");
                 Logger.LogInformation(result.ErrorMessage);
                 return result;
             }
@@ -37,7 +37,7 @@ namespace OrderingService.Domain.Logic.Services
             var orderClient = Database.UserProfiles.GetAll().SingleOrDefault(x => x.Id == orderDto.ClientId);
             if (orderClient == null)
             {
-                var result = OperationResult.Error($"Client with id {orderDto.ClientId} not found");
+                var result = Response<OrderDTO>.ValidationError($"Client with id {orderDto.ClientId} not found");
                 Logger.LogInformation(result.ErrorMessage);
                 return result;
             }
@@ -48,15 +48,15 @@ namespace OrderingService.Domain.Logic.Services
             Database.Save();
 
             Logger.LogInformation($"Order (Price: {order.Price}, Description: {order.Description}) was created");
-            return OperationResult.Success();
+            return Response<OrderDTO>.Success(Mapper.Map<OrderDTO>(order));
         }
 
-        public IOperationResult Close(int id)
+        public IResponse<OrderDTO> Close(int id)
         {
             var order = Database.ServiceOrders.GetAll().SingleOrDefault(x => x.Id == id);
             if (order == null)
             {
-                var result = OperationResult.Error($"Order with id {id} not found");
+                var result = Response<OrderDTO>.NotFound($"Order with id {id} not found");
                 Logger.LogInformation(result.ErrorMessage);
                 return result;
             }
@@ -66,15 +66,15 @@ namespace OrderingService.Domain.Logic.Services
             Database.Save();
 
             Logger.LogInformation($"Order with id {id} was closed");
-            return OperationResult.Success();
+            return Response<OrderDTO>.Success(Mapper.Map<OrderDTO>(order));
         }
 
-        public IOperationResult Delete(int id)
+        public IResponse<OrderDTO> Delete(int id)
         {
             var order = Database.ServiceOrders.GetAll().SingleOrDefault(x => x.Id == id);
             if (order == null)
             {
-                var result = OperationResult.Error($"Order with id {id} not found");
+                var result = Response<OrderDTO>.NotFound($"Order with id {id} not found");
                 Logger.LogInformation(result.ErrorMessage);
                 return result;
             }
@@ -83,10 +83,13 @@ namespace OrderingService.Domain.Logic.Services
             Database.Save();
 
             Logger.LogInformation($"Order with id {id} was deleted");
-            return OperationResult.Success();
+            return Response<OrderDTO>.Success(Mapper.Map<OrderDTO>(order));
         }
 
-        public IEnumerable<OrderDTO> GetEmployeeOrders(string employeeId) => Database.ServiceOrders.GetAll()
-            .Where(x => x.EmployeeId == employeeId && !x.IsClosed).ProjectTo<OrderDTO>(Mapper.ConfigurationProvider);
+        public IResponse<IEnumerable<OrderDTO>> GetEmployeeOrders(string employeeId) =>
+            Response<IEnumerable<OrderDTO>>.Success(
+                Database.ServiceOrders.GetAll()
+                    .Where(x => x.EmployeeId == employeeId && !x.IsClosed)
+                    .ProjectTo<OrderDTO>(Mapper.ConfigurationProvider));
     }
 }

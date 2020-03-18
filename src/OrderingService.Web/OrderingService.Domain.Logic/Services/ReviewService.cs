@@ -22,12 +22,12 @@ namespace OrderingService.Domain.Logic.Services
             Logger = logger;
             Mapper = mapper;
         }
-        public IOperationResult Create(ReviewDTO reviewDto)
+        public IResponse<ReviewDTO> Create(ReviewDTO reviewDto)
         {
             var reviewEmployee = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == reviewDto.EmployeeId);
             if (reviewEmployee == null)
             {
-                var result = OperationResult.Error($"Employee with id {reviewDto.EmployeeId} not found!");
+                var result = Response<ReviewDTO>.ValidationError($"Employee with id {reviewDto.EmployeeId} not found!");
                 Logger.LogInformation(result.ErrorMessage);
                 return result;
             }
@@ -35,7 +35,7 @@ namespace OrderingService.Domain.Logic.Services
             var reviewClient = Database.UserProfiles.GetAll().SingleOrDefault(x => x.Id == reviewDto.ClientId);
             if (reviewClient == null)
             {
-                var result = OperationResult.Error($"Client with id {reviewDto.ClientId} not found!");
+                var result = Response<ReviewDTO>.ValidationError($"Client with id {reviewDto.ClientId} not found!");
                 Logger.LogInformation(result.ErrorMessage);
                 return result;
             }
@@ -46,16 +46,16 @@ namespace OrderingService.Domain.Logic.Services
             Database.Save();
 
             Logger.LogInformation($"Review to user with id {reviewDto.EmployeeId} was added");
-            return OperationResult.Success();
+            return Response<ReviewDTO>.Success(Mapper.Map<ReviewDTO>(review));
 
         }
 
-        public IOperationResult Delete(int id)
+        public IResponse<ReviewDTO> Delete(int id)
         {
             var review = Database.Reviews.GetAll().SingleOrDefault(x => x.Id == id);
             if (review == null)
             {
-                var result = OperationResult.Error($"Review with id {id} not found");
+                var result = Response<ReviewDTO>.NotFound($"Review with id {id} not found");
                 Logger.LogInformation(result.ErrorMessage);
                 return result;
             }
@@ -64,12 +64,13 @@ namespace OrderingService.Domain.Logic.Services
             Database.Save();
 
             Logger.LogInformation($"Review with id {id} was deleted");
-            return OperationResult.Success();
+            return Response<ReviewDTO>.Success(Mapper.Map<ReviewDTO>(review));
         }
 
-        public IEnumerable<ReviewDTO> GetUserReviews(string userId) =>
-            Database.Reviews.GetAll().Where(x => x.EmployeeId == userId)
-                .ProjectTo<ReviewDTO>(Mapper.ConfigurationProvider);
+        public IResponse<IEnumerable<ReviewDTO>> GetUserReviews(string userId) =>
+            Response<IEnumerable<ReviewDTO>>.Success(
+                Database.Reviews.GetAll().Where(x => x.EmployeeId == userId)
+                    .ProjectTo<ReviewDTO>(Mapper.ConfigurationProvider));
 
         public void Dispose() => Database.Dispose();
     }

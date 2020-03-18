@@ -6,10 +6,10 @@ namespace OrderingService.Domain.Logic.Interfaces
 {
     public interface IOrderService : IDisposable
     {
-        IOperationResult Create(OrderDTO orderDto);
-        IOperationResult Close(int orderDto);
-        IOperationResult Delete(int orderDto);
+        IResponse<OrderDTO> Create(OrderDTO orderDto);
+        IResponse<OrderDTO> Close(int orderDto);
+        IResponse<OrderDTO> Delete(int orderDto);
 
-        IEnumerable<OrderDTO> GetEmployeeOrders(string employeeId);
+        IResponse<IEnumerable<OrderDTO>> GetEmployeeOrders(string employeeId);
     }
 }

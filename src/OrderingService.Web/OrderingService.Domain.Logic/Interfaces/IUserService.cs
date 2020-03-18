@@ -6,7 +6,7 @@ namespace OrderingService.Domain.Logic.Interfaces
 {
     public interface IUserService : IDisposable
     {
-        Task<IOperationResult> CreateAsync(UserDTO userDto);
-        Task<string> AuthenticateAsync(UserDTO userDto);
+        Task<IResponse<UserDTO>> CreateAsync(UserDTO userDto);
+        Task<IResponse<string>> AuthenticateAsync(UserDTO userDto);
     }
 }

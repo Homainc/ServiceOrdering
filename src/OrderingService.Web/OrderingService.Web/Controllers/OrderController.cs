@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
 
@@ -16,19 +15,19 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpGet("employee/{id}")]
-        public IEnumerable<OrderDTO> GetEmployeeOrders(string id) =>
-            OrderService.GetEmployeeOrders(id);
+        public IActionResult GetEmployeeOrders(string id) =>
+            OrderService.GetEmployeeOrders(id).ToHttpResponse();
 
         [HttpPost]
-        public IOperationResult Create(OrderDTO orderDto) =>
-            OrderService.Create(orderDto);
+        public IActionResult Create(OrderDTO orderDto) =>
+            OrderService.Create(orderDto).ToHttpResponse();
 
         [HttpPut("{id}")]
-        public IOperationResult Close(int id) =>
-            OrderService.Close(id);
+        public IActionResult Close(int id) =>
+            OrderService.Close(id).ToHttpResponse();
 
         [HttpDelete("{id}")]
-        public IOperationResult Delete(int id) =>
-            OrderService.Delete(id);
+        public IActionResult Delete(int id) =>
+            OrderService.Delete(id).ToHttpResponse();
     }
 }

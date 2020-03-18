@@ -16,7 +16,11 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IOperationResult> Create(UserDTO userDto) => 
-            await UserService.CreateAsync(userDto);
+        public async Task<IActionResult> Create(UserDTO userDto) => 
+            (await UserService.CreateAsync(userDto)).ToHttpResponse();
+
+        [HttpPost("auth")]
+        public async Task<IActionResult> Auth(UserDTO userDto) =>
+            (await UserService.AuthenticateAsync(userDto)).ToHttpResponse();
     }
 }

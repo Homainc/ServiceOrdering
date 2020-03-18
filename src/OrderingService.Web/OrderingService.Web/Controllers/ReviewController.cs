@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
 
@@ -16,15 +15,15 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<ReviewDTO> GetUserReviews(string id) => 
-            ReviewService.GetUserReviews(id);
+        public IActionResult GetUserReviews(string id) => 
+            ReviewService.GetUserReviews(id).ToHttpResponse();
 
         [HttpPost]
-        public IOperationResult Create(ReviewDTO reviewDto) =>
-            ReviewService.Create(reviewDto);
+        public IActionResult Create(ReviewDTO reviewDto) =>
+            ReviewService.Create(reviewDto).ToHttpResponse();
 
         [HttpDelete("{id:int}")]
-        public IOperationResult Delete(int id) =>
-            ReviewService.Delete(id);
+        public IActionResult Delete(int id) =>
+            ReviewService.Delete(id).ToHttpResponse();
     }
 }

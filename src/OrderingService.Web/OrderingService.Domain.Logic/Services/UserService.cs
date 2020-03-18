@@ -21,45 +21,48 @@ namespace OrderingService.Domain.Logic.Services
         private IUnitOfWork Database { get; }
         private ILogger<UserService> Logger { get; }
         private IMapper Mapper { get; }
-        private SignInManager<User> SignInManager { get; }
+        private IPasswordHasher<User> PasswordHasher { get; }
         private UserManager<User> UserManager { get; }
         private AppSettings AppSettings { get; }
 
         public UserService(IUnitOfWork db, ILogger<UserService> logger, IMapper mapper, UserManager<User> userManager,
-            SignInManager<User> signInManager, IOptions<AppSettings> appSettings)
+            IPasswordHasher<User> passwordHasher, IOptions<AppSettings> appSettings)
         {
             Database = db;
             Logger = logger;
             Mapper = mapper;
-            SignInManager = signInManager;
+            PasswordHasher = passwordHasher;
             UserManager = userManager;
             AppSettings = appSettings.Value;
         }
 
-        public async Task<IOperationResult> CreateAsync(UserDTO userDto)
+        public async Task<IResponse<UserDTO>> CreateAsync(UserDTO userDto)
         {
             var user = await UserManager.FindByEmailAsync(userDto.Email);
 
             if (user != null)
-                return OperationResult.Error("User with this email already exists");
+                return Response<UserDTO>.ValidationError("User with this email already exists");
 
             user = Mapper.Map<User>(userDto);
             var result = await UserManager.CreateAsync(user, userDto.Password);
             if (!result.Succeeded)
-                return OperationResult.Error(result.Errors.First().Description);
+                return Response<UserDTO>.ValidationError(result.Errors.First().Description);
 
             await UserManager.AddToRoleAsync(user, userDto.Role);
 
             Database.Save();
-            return OperationResult.Success();
+            return Response<UserDTO>.Success(Mapper.Map<UserDTO>(user));
         }
 
-        public async Task<string> AuthenticateAsync(UserDTO userDto)
+        public async Task<IResponse<string>> AuthenticateAsync(UserDTO userDto)
         {
-            var user = Mapper.Map<User>(userDto);
-            var result = await SignInManager.CheckPasswordSignInAsync(user, userDto.Password, false);
-            if (!result.Succeeded)
-                return null;
+            var user = await UserManager.FindByEmailAsync(userDto.Email);
+            if(user == null)
+                return Response<string>.ValidationError("Email or password is wrong");
+
+            var result = PasswordHasher.VerifyHashedPassword(user, user.PasswordHash,userDto.Password);
+            if (result == PasswordVerificationResult.Failed)
+                return Response<string>.ValidationError("Email or password is wrong");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
@@ -73,7 +76,7 @@ namespace OrderingService.Domain.Logic.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return Response<string>.Success(tokenHandler.WriteToken(token));
         }
 
         public void Dispose()
