@@ -6,7 +6,7 @@ using OrderingService.Domain.Logic.Interfaces;
 namespace OrderingService.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
         private IUserService UserService { get; }
@@ -16,7 +16,7 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserDTO userDto) => 
-            new JsonResult(await UserService.CreateAsync(userDto));
+        public async Task<IOperationResult> Create(UserDTO userDto) => 
+            await UserService.CreateAsync(userDto);
     }
 }

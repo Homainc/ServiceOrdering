@@ -7,7 +7,7 @@ using OrderingService.Domain.Logic.Interfaces;
 namespace OrderingService.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class EmployeeProfileController : ControllerBase
     {
         private IEmployeeService EmployeeService { get; }
