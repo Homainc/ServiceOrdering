@@ -20,9 +20,9 @@ namespace OrderingService.Data.Repositories
 
         public void Update(UserProfile entity) => _db.Entry(entity).State = EntityState.Modified;
 
-        public void Delete(int id)
+        public void Delete(UserProfile entity)
         {
-            var userProfile = _db.UserProfiles.Find(id);
+            var userProfile = _db.UserProfiles.Find(entity.Id);
             if (userProfile != null)
                 _db.UserProfiles.Remove(userProfile);
         }

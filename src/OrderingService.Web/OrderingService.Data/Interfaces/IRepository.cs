@@ -9,7 +9,7 @@ namespace OrderingService.Data.Interfaces
     {
         IQueryable<T> GetAll();
         void Create(T entity);
-        void Delete(int id);
+        void Delete(T id);
         void Update(T entity);
     }
 }

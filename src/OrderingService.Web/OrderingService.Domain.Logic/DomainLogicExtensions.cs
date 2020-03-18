@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using OrderingService.Data;
 using OrderingService.Domain.Logic.Interfaces;
+using OrderingService.Domain.Logic.MapperProfiles;
 using OrderingService.Domain.Logic.Services;
 
 namespace OrderingService.Domain.Logic
@@ -15,6 +14,7 @@ namespace OrderingService.Domain.Logic
             services.AddDataServices();
 
             //configure your Domain Logic Layer services here
+            services.AddAutoMapper(typeof(UserMapperProfile));
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
             return services;

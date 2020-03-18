@@ -1,17 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OrderingService.Data.Models
 {
     public class UserProfile
     {
         [Key]
-        public int Id { get; set; }
+        [ForeignKey("User")]
+        public string Id { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
 
-        public string UserId { get; set; }
         public User User { get; set; }
     }
 }

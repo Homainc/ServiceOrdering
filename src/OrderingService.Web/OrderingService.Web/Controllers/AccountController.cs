@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
 
 namespace OrderingService.Web.Controllers
@@ -12,5 +14,9 @@ namespace OrderingService.Web.Controllers
         {
             UserService = userService;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(UserDTO userDto) => 
+            new JsonResult(await UserService.CreateAsync(userDto));
     }
 }

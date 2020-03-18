@@ -20,9 +20,9 @@ namespace OrderingService.Data.Repositories
 
         public void Update(Review entity) => _db.Entry(entity).State = EntityState.Modified;
 
-        public void Delete(int id)
+        public void Delete(Review entity)
         {
-            var review = _db.Reviews.Find(id);
+            var review = _db.Reviews.Find(entity.Id);
             if (review != null)
                 _db.Reviews.Remove(review);
         }

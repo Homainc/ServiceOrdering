@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using OrderingService.Data.Interfaces;
@@ -44,7 +42,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public IOperationResult CreateEmployeeProfile(string userId, EmployeeProfileDTO employeeProfileDto)
         {
-            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.UserId == userId);
+            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == userId);
 
             if (employeeProfile != null)
             {
@@ -60,7 +58,7 @@ namespace OrderingService.Domain.Logic.Services
 
             employeeProfile = new EmployeeProfile
             {
-                UserId = userId,
+                Id = userId,
                 ServiceCost = employeeProfileDto.ServiceCost,
                 ServiceType = serviceType,
             };
@@ -73,7 +71,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public IOperationResult DeleteEmployeeProfile(string userId)
         {
-            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(e => e.UserId == userId);
+            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(e => e.Id == userId);
 
             if (employeeProfile == null)
             {
@@ -81,7 +79,7 @@ namespace OrderingService.Domain.Logic.Services
                 Logger.LogError(result.ErrorMessage);
             }
 
-            Database.EmployeeProfiles.Delete(employeeProfile.Id);
+            Database.EmployeeProfiles.Delete(employeeProfile);
             Database.Save();
 
             Logger.LogInformation($"Employee profile from user id {userId} was deleted");

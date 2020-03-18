@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,21 +14,29 @@ namespace OrderingService.Domain.Logic.Services
     {
         private IUnitOfWork Database { get; }
         private ILogger<UserService> Logger { get; }
+        private IMapper Mapper { get; }
 
-        public UserService(IUnitOfWork db, ILogger<UserService> logger)
+        public UserService(IUnitOfWork db, ILogger<UserService> logger, IMapper mapper)
         {
             Database = db;
             Logger = logger;
+            Mapper = mapper;
         }
 
         public async Task<IOperationResult> CreateAsync(UserDTO userDto)
         {
             var user = await Database.UserManager.FindByEmailAsync(userDto.Email);
-            if (user == null)
+
+            if (user != null)
                 return OperationResult.Error("User with this email already exists");
-            user = UserMapper.Map<User>(userDto);
-            await Database.UserManager.CreateAsync(user, userDto.Password);
+
+            user = Mapper.Map<User>(userDto);
+            var result = await Database.UserManager.CreateAsync(user, userDto.Password);
+            if (result.Errors.Any())
+                return OperationResult.Error(result.Errors.First().Description);
+
             await Database.UserManager.AddToRoleAsync(user, userDto.Role);
+
             Database.Save();
             return OperationResult.Success();
         }
@@ -39,19 +48,5 @@ namespace OrderingService.Domain.Logic.Services
         }
 
         public void Dispose() => Database.Dispose();
-
-        private Mapper UserMapper
-        {
-            get
-            {
-                var config = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<UserDTO, User>();
-                    cfg.CreateMap<UserDTO, UserProfile>();
-
-                });
-                return new Mapper(config);
-            }
-        }
     }
 }

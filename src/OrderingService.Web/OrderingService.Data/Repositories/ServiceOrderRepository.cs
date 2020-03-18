@@ -20,9 +20,9 @@ namespace OrderingService.Data.Repositories
 
         public void Update(ServiceOrder entity) => _db.Entry(entity).State = EntityState.Modified;
 
-        public void Delete(int id)
+        public void Delete(ServiceOrder entity)
         {
-            var serviceOrder = _db.ServiceOrders.Find(id);
+            var serviceOrder = _db.ServiceOrders.Find(entity.Id);
             if (serviceOrder != null)
                 _db.ServiceOrders.Remove(serviceOrder);
         }

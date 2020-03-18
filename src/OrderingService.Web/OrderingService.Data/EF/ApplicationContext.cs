@@ -22,7 +22,6 @@ namespace OrderingService.Data.EF
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfiguration(new UserConfiguration());
             var roles = new IdentityRole[]
             {
                 new IdentityRole { Name = "USER" , NormalizedName = "USER" },

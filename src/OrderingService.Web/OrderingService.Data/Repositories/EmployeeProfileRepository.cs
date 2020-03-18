@@ -23,9 +23,9 @@ namespace OrderingService.Data.Repositories
 
         public void Update(EmployeeProfile entity) => _db.Entry(entity).State = EntityState.Modified;
 
-        public void Delete(int id)
+        public void Delete(EmployeeProfile entity)
         {
-            var employeeProfile = _db.EmployeeProfiles.Find(id);
+            var employeeProfile = _db.EmployeeProfiles.Find(entity.Id);
             if (employeeProfile != null)
                 _db.EmployeeProfiles.Remove(employeeProfile);
         }
