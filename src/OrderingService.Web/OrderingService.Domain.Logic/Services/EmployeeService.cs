@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Logging;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
@@ -12,10 +13,12 @@ namespace OrderingService.Domain.Logic.Services
     {
         private IUnitOfWork Database { get; }
         private ILogger<EmployeeService> Logger { get; }
-        public EmployeeService(IUnitOfWork db, ILogger<EmployeeService> logger)
+        private IMapper Mapper { get; }
+        public EmployeeService(IUnitOfWork db, ILogger<EmployeeService> logger, IMapper mapper)
         {
             Database = db;
             Logger = logger;
+            Mapper = mapper;
         }
 
         public void Dispose() => Database.Dispose();
@@ -28,21 +31,12 @@ namespace OrderingService.Domain.Logic.Services
             if (maxServiceCost.HasValue)
                 employee = employee.Where(e => e.ServiceCost <= maxServiceCost.Value);
 
-            var config = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<EmployeeProfile, EmployeeProfileDTO>()
-                        .IncludeMembers(e => e.User, e => e.ServiceType);
-                    cfg.CreateMap<ServiceType, EmployeeProfileDTO>();
-                    cfg.CreateMap<User, UserDTO>();
-                    cfg.CreateMap<User, EmployeeProfileDTO>();
-                });
-            var mapper = new Mapper(config);
-            return mapper.Map<IEnumerable<EmployeeProfile>, IEnumerable<EmployeeProfileDTO>>(employee.AsEnumerable());
+            return employee.ProjectTo<EmployeeProfileDTO>(Mapper.ConfigurationProvider);
         }
 
-        public IOperationResult CreateEmployeeProfile(string userId, EmployeeProfileDTO employeeProfileDto)
+        public IOperationResult CreateEmployeeProfile(EmployeeProfileDTO employeeProfileDto)
         {
-            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == userId);
+            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == employeeProfileDto.Id);
 
             if (employeeProfile != null)
             {
@@ -53,14 +47,17 @@ namespace OrderingService.Domain.Logic.Services
 
             var serviceType = Database.ServiceTypes.GetAll()
                 .SingleOrDefault(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()));
-            serviceType ??= new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
-            Database.ServiceTypes.Create(serviceType);
+            if (serviceType == null)
+            {
+                serviceType = new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
+                Database.ServiceTypes.Create(serviceType);
+            }
 
             employeeProfile = new EmployeeProfile
             {
-                Id = userId,
+                Id = employeeProfileDto.Id,
                 ServiceCost = employeeProfileDto.ServiceCost,
-                ServiceType = serviceType,
+                ServiceType = serviceType
             };
             Database.EmployeeProfiles.Create(employeeProfile);
             Database.Save();
@@ -69,9 +66,38 @@ namespace OrderingService.Domain.Logic.Services
             return OperationResult.Success();
         }
 
-        public IOperationResult DeleteEmployeeProfile(string userId)
+        public IOperationResult UpdateEmployeeService(EmployeeProfileDTO employeeProfileDto)
         {
-            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(e => e.Id == userId);
+            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == employeeProfileDto.Id);
+
+            if (employeeProfile == null)
+            {
+                var result = OperationResult.Error($"Employee profile with id {employeeProfileDto.Id} not found");
+                Logger.LogError(result.ErrorMessage);
+                return result;
+            }
+
+            var serviceType = Database.ServiceTypes.GetAll()
+                .SingleOrDefault(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()));
+            if (serviceType == null)
+            {
+                serviceType = new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
+                Database.ServiceTypes.Create(serviceType);
+            }
+
+            employeeProfile.ServiceCost = employeeProfileDto.ServiceCost;
+            employeeProfile.ServiceType = serviceType;
+
+            Database.EmployeeProfiles.Update(employeeProfile);
+            Database.Save();
+
+            Logger.LogInformation($"Employee Profile(cost: {employeeProfile.ServiceCost}, service name: {employeeProfile.ServiceType.Name}) was updated");
+            return OperationResult.Success();
+        }
+
+        public IOperationResult DeleteEmployeeProfile(string employeeId)
+        {
+            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(e => e.Id == employeeId);
 
             if (employeeProfile == null)
             {
@@ -82,7 +108,7 @@ namespace OrderingService.Domain.Logic.Services
             Database.EmployeeProfiles.Delete(employeeProfile);
             Database.Save();
 
-            Logger.LogInformation($"Employee profile from user id {userId} was deleted");
+            Logger.LogInformation($"Employee profile from user id {employeeId} was deleted");
             return OperationResult.Success();
         }
     }

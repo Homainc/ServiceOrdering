@@ -7,7 +7,8 @@ namespace OrderingService.Domain.Logic.Interfaces
     public interface IEmployeeService : IDisposable
     {
         IEnumerable<EmployeeProfileDTO> FilterEmployeeProfiles(string serviceName, decimal? maxServiceCost);
-        IOperationResult CreateEmployeeProfile(string userId, EmployeeProfileDTO employeeProfileDto);
-        IOperationResult DeleteEmployeeProfile(string userId);
+        IOperationResult CreateEmployeeProfile(EmployeeProfileDTO employeeProfileDto);
+        IOperationResult UpdateEmployeeService(EmployeeProfileDTO employeeProfileDto);
+        IOperationResult DeleteEmployeeProfile(string employeeId);
     }
 }

@@ -14,7 +14,7 @@ namespace OrderingService.Domain.Logic
             services.AddDataServices();
 
             //configure your Domain Logic Layer services here
-            services.AddAutoMapper(typeof(UserMapperProfile));
+            services.AddAutoMapper(typeof(UserMapperProfile), typeof(EmployeeMapperProfile));
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
             return services;
