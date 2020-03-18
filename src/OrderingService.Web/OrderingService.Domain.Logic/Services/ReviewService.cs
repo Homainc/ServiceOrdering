@@ -40,6 +40,7 @@ namespace OrderingService.Domain.Logic.Services
                 return result;
             }
 
+            reviewDto.Date = DateTime.Now;
             var review = Mapper.Map<Review>(reviewDto);
             Database.Reviews.Create(review);
             Database.Save();

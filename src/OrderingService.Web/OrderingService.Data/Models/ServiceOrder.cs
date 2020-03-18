@@ -17,7 +17,7 @@ namespace OrderingService.Data.Models
         [Required]
         public string Description { get; set; }
         public decimal Price { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Date { get; set; }
+        public bool IsClosed { get; set; }
     }
 }
