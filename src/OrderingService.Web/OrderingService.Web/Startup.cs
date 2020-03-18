@@ -21,7 +21,7 @@ namespace OrderingService.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDomainServices();
+            services.AddDomainServices(Configuration);
             services.AddOpenApiDocument();
 
 
@@ -53,6 +53,7 @@ namespace OrderingService.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

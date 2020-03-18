@@ -20,14 +20,10 @@ namespace OrderingService.Data.Repositories
         public IRepository<ServiceOrder> ServiceOrders => _serviceOrderRepository ??= new ServiceOrderRepository(_db);
         public IRepository<ServiceType> ServiceTypes => _serviceTypeRepository ??= new ServiceTypeRepository(_db);
         public IRepository<UserProfile> UserProfiles => _userProfileRepository ??= new UserProfileRepository(_db);
-        public UserManager<User> UserManager { get; }
-        public RoleManager<IdentityRole> RoleManager { get; }
 
-        public ApplicationUnitOfWork(ApplicationContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public ApplicationUnitOfWork(ApplicationContext db)
         {
             _db = db;
-            UserManager = userManager;
-            RoleManager = roleManager;
         }
 
         public void Save() => _db.SaveChanges();

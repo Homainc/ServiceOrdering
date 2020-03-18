@@ -13,8 +13,6 @@ namespace OrderingService.Data.Interfaces
         IRepository<ServiceOrder> ServiceOrders { get; }
         IRepository<ServiceType> ServiceTypes { get; }
         IRepository<UserProfile> UserProfiles { get; }
-        UserManager<User> UserManager { get; }
-        RoleManager<IdentityRole> RoleManager { get; }
         void Save();
 
     }
