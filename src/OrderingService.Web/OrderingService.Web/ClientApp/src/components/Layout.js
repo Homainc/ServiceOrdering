@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
+import { BrowserRouter } from 'react-router-dom';
 
 export class Layout extends Component {
   static displayName = Layout.name;
@@ -8,10 +9,15 @@ export class Layout extends Component {
   render () {
     return (
       <div>
-        <NavMenu />
-        <Container>
-          {this.props.children}
-        </Container>
+        <BrowserRouter basename={this.props.basename} history={this.props.history}>
+          <Fragment>
+            <NavMenu />
+            
+            <Container>
+              {this.props.children}
+            </Container>
+          </Fragment>
+        </BrowserRouter>
       </div>
     );
   }
