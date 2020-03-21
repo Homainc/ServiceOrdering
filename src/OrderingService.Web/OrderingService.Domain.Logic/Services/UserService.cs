@@ -54,15 +54,15 @@ namespace OrderingService.Domain.Logic.Services
             return Response<UserDTO>.Success(Mapper.Map<UserDTO>(user));
         }
 
-        public async Task<IResponse<string>> AuthenticateAsync(UserDTO userDto)
+        public async Task<IResponse<UserDTO>> AuthenticateAsync(UserDTO userDto)
         {
             var user = await UserManager.FindByEmailAsync(userDto.Email);
             if(user == null)
-                return Response<string>.ValidationError("Email or password is wrong");
+                return Response<UserDTO>.ValidationError("Email or password is wrong");
 
             var result = PasswordHasher.VerifyHashedPassword(user, user.PasswordHash,userDto.Password);
             if (result == PasswordVerificationResult.Failed)
-                return Response<string>.ValidationError("Email or password is wrong");
+                return Response<UserDTO>.ValidationError("Email or password is wrong");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
@@ -76,7 +76,10 @@ namespace OrderingService.Domain.Logic.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return Response<string>.Success(tokenHandler.WriteToken(token));
+
+            userDto = Mapper.Map<UserDTO>(user);
+            userDto.Token = tokenHandler.WriteToken(token);
+            return Response<UserDTO>.Success(userDto);
         }
 
         public void Dispose()

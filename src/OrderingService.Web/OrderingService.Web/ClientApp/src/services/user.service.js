@@ -1,16 +1,16 @@
 import config from '../config';
-import { authHeader } from '../helpers';
+//import { authHeader } from '../helpers';
 
 export const userService = {
     login,
     logout
 };
 
-function login(username, password) {
+function login(email, password) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password} )
+        body: JSON.stringify({ email, password })
     };
 
     return fetch(`${config.apiUrl}/account/auth`, requestOptions)
@@ -26,16 +26,16 @@ function logout(){
 }
 
 function handleResponse(response){
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
+    return response.json().then(data => {
         if (!response.ok) {
-            if (response.status == 401) {
+            if (response.status === 401) {
                 logout();
                 window.location.reload(true);
             }
 
-            const error = (data && data.message) || response.statusText;
+            const error = (data && data.errorMessage) || response.statusText;
             return Promise.reject(error);
         }
+        return data.model;
     });
 }
