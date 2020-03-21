@@ -39,7 +39,11 @@ class NavMenu extends Component {
                   <NavItem>
                     <NavLink tag={Link} className="text-dark" to="/">{user.email}</NavLink>
                   </NavItem>
-                ): null } 
+                ):(
+                  <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/signup">Sign Up</NavLink>
+                  </NavItem>
+                ) } 
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/login">{loggedIn? 'Logout' : 'Login'}</NavLink>
                 </NavItem>

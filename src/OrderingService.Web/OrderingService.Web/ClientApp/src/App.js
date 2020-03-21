@@ -9,10 +9,12 @@ import { LoginPage } from './LoginPage';
 import { HomePage } from './HomePage';
 
 import './custom.css'
+import { SignUpPage } from './SignUpPage';
+import { connect } from 'react-redux';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 
-export class App extends React.Component {
+class App extends React.Component {
   static displayName = App.name;
 
   constructor(props) {
@@ -27,9 +29,20 @@ export class App extends React.Component {
   render () {
     return (
       <Layout basename={baseUrl} history={history}>
+        <Route path='/signup' component={SignUpPage} />
         <Route path='/login' component={LoginPage}/>
         <Route exact path='/' component={HomePage} />
       </Layout>
     );
   }
 }
+
+function mapStateToProps(state){
+  const { alert } = state;
+  return {
+    alert
+  };
+}
+
+const connectedApp = connect(mapStateToProps)(App);
+export { connectedApp as App };
