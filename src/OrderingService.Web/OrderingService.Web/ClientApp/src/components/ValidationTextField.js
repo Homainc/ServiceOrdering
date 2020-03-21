@@ -11,7 +11,7 @@ export const ValidationTextField = ({ label, ...props}) => {
                 valid={meta.touched && !meta.error} 
                 invalid={meta.touched && !!meta.error}/>
             {meta.touched && meta.error ? (
-                <FormFeedback invalid>{meta.error}</FormFeedback>
+                <FormFeedback invalid="true">{meta.error}</FormFeedback>
             ): null}
         </FormGroup>
     );
