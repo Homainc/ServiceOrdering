@@ -82,6 +82,15 @@ namespace OrderingService.Domain.Logic.Services
             return Response<UserDTO>.Success(userDto);
         }
 
+        public async Task<IResponse<UserDTO>> SignUpAsync(UserDTO userDto)
+        {
+            userDto.Role = "user";
+            var result = await CreateAsync(userDto);
+            if (result.DidError)
+                return result;
+            return await AuthenticateAsync(userDto);
+        }
+
         public void Dispose()
         {
             UserManager.Dispose();

@@ -3,6 +3,7 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import { connect } from 'react-redux';
+import { UserWithAvatar } from './index';
 
 class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -37,7 +38,7 @@ class NavMenu extends Component {
                 </NavItem>
                 { loggedIn? (
                   <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/">{user.email}</NavLink>
+                    <NavLink tag={Link} className="text-dark" to="/"><UserWithAvatar user={user}/></NavLink>
                   </NavItem>
                 ):(
                   <NavItem>

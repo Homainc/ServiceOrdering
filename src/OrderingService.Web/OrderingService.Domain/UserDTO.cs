@@ -11,6 +11,7 @@
         public string LastName { get; set; }
         public string UserName { get; set; }
         public string Token { get; set; }
+        public  string ImageUrl { get; set; }
         public EmployeeProfileDTO EmployeeProfile { get; set; }
     }
 }

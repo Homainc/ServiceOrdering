@@ -11,11 +11,13 @@ namespace OrderingService.Domain.Logic.MapperProfiles
                 .ForMember(u => u.Id, opt => opt.Condition(u => u.Id != null))
                 .ForPath(dest => dest.UserProfile.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForPath(dest => dest.UserProfile.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForPath(dest => dest.UserProfile.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl))
                 .ForPath(dest => dest.UserProfile.Id, opt => opt.Ignore())
                 .ReverseMap()
                 .IncludeMembers(src => src.UserProfile)
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.UserProfile.FirstName))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.UserProfile.LastName));
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.UserProfile.LastName))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.UserProfile.ImageUrl));
             CreateMap<UserProfile, UserDTO>();
         }
     }

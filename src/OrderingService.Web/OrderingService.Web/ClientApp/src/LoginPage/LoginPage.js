@@ -1,12 +1,13 @@
-import * as Yup from 'yup';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { ValidationTextField, LoadingButton } from '../components';
 import { Col, Card, Row, CardTitle, Alert } from 'reactstrap';
 import { userActions } from '../actions';
 
 class LoginPage extends Component {
+
     constructor(props){
         super(props);
 
@@ -61,7 +62,7 @@ class LoginPage extends Component {
     }
 }
 
-function mapStateToProps(state){
+const mapStateToProps = state => {
     const { loggingIn } = state.authentication;
     const { alert } = state;
     return {

@@ -34,7 +34,7 @@ export const ImageUpload = ({label, imageUploaded, ...props}) => {
             <Label htmlFor={props.id && props.name}>{label}</Label><br/>
             <Row>
                 <Col md="2">
-                    <img src={meta.value || 'images/default-user.jpg'} height="100" width="100"/>
+                    <img src={meta.value || 'images/default-user.jpg'} height="100" width="100" alt="Profile"/>
                 </Col>
                 <Col className="d-flex align-items-center">
                     <input type="file" {...props} 

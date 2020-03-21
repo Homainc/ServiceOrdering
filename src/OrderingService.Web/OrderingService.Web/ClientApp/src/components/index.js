@@ -4,3 +4,4 @@ export * from './PrivateRoute.js';
 export * from './ValidationTextField';
 export * from './LoadingButton';
 export * from './ImageUpload';
+export * from './UserWithAvatar';
