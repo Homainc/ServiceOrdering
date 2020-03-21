@@ -6,7 +6,7 @@ export const LoadingButton = ({ isLoading, ...props}) => {
         <Button {...props} disabled={isLoading}>
             {isLoading ? (
                 <Fragment>
-                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                     Loading...
                 </Fragment>
             ): props.children }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -6,17 +6,18 @@ import { ValidationTextField, LoadingButton } from '../components';
 import { Col, Card, Row, CardTitle, Alert } from 'reactstrap';
 import { userActions } from '../actions';
 
-class LoginPage extends Component {
+class LoginPage extends React.Component {
 
     constructor(props){
         super(props);
 
         //reset login status
-        this.props.dispatch(userActions.logout());
+        if(props.loggedIn)
+            props.logOut();
     }
 
     render() {
-        const { alert, loggingIn } = this.props; 
+        const { alert, loggingIn, logIn } = this.props; 
         return (
             <Row className="d-flex justify-content-center mt-5">
                 <Col lg={5} md={6} sm={8}>
@@ -36,7 +37,7 @@ class LoginPage extends Component {
                                     .required('Required')
                             })}
                             onSubmit={(values, { setSubmitting }) => {
-                                this.props.dispatch(userActions.login(values.email, values.password));
+                                logIn(values.email, values.password);
                                 setSubmitting(true);
                             }}>
                             <Form>
@@ -63,13 +64,19 @@ class LoginPage extends Component {
 }
 
 const mapStateToProps = state => {
-    const { loggingIn } = state.authentication;
+    const { loggingIn, loggedIn } = state.authentication;
     const { alert } = state;
     return {
         loggingIn,
+        loggedIn,
         alert
     };
-}
+};
 
-const connectedLoginPage = connect(mapStateToProps)(LoginPage);
+const mapDispatchToProps = dispatch => ({
+    logOut: () => dispatch(userActions.logout()),
+    logIn: (username, password) => dispatch(userActions.login(username, password))
+});
+
+const connectedLoginPage = connect(mapStateToProps, mapDispatchToProps)(LoginPage);
 export { connectedLoginPage as LoginPage };

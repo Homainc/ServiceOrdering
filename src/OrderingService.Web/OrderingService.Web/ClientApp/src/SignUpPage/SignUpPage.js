@@ -6,7 +6,7 @@ import { ValidationTextField, LoadingButton, ImageUpload } from '../components';
 import { userActions } from '../actions';
 import { connect } from 'react-redux';
 
-class SignUpPage extends Component{
+class SignUpPage extends Component {
     render(){
         const { signUp, signingUp, alert } = this.props;
         return(

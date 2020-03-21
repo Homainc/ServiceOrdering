@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -77,6 +79,7 @@ namespace OrderingService.Domain.Logic.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            user.UserProfile = Database.UserProfiles.GetAll().SingleOrDefault(x => x.Id == user.Id);
             userDto = Mapper.Map<UserDTO>(user);
             userDto.Token = tokenHandler.WriteToken(token);
             return Response<UserDTO>.Success(userDto);
@@ -89,6 +92,14 @@ namespace OrderingService.Domain.Logic.Services
             if (result.DidError)
                 return result;
             return await AuthenticateAsync(userDto);
+        }
+
+        public IResponse<UserDTO> GetUserById(string id)
+        {
+            var userProfile = Database.UserProfiles.GetAll()
+                .Where(x => x.Id == id)
+                .ProjectTo<UserDTO>(Mapper.ConfigurationProvider).FirstOrDefault();
+            return Response<UserDTO>.Success(Mapper.Map<UserDTO>(userProfile));
         }
 
         public void Dispose()
