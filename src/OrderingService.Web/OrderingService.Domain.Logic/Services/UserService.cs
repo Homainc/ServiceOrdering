@@ -96,10 +96,24 @@ namespace OrderingService.Domain.Logic.Services
 
         public IResponse<UserDTO> GetUserById(string id)
         {
-            var userProfile = Database.UserProfiles.GetAll()
-                .Where(x => x.Id == id)
-                .ProjectTo<UserDTO>(Mapper.ConfigurationProvider).FirstOrDefault();
+            var userProfile = Database.UserProfiles.GetAll().SingleOrDefault(x => x.Id == id);
             return Response<UserDTO>.Success(Mapper.Map<UserDTO>(userProfile));
+        }
+
+        public async Task<IResponse<UserDTO>> UpdateProfileAsync(UserDTO userDto)
+        {
+            var user = await UserManager.FindByIdAsync(userDto.Id);
+            if (user == null)
+                Response<UserDTO>.NotFound($"User with id {userDto.Id} not found");
+
+            user.PhoneNumber = userDto.PhoneNumber;
+            await UserManager.UpdateAsync(user);
+
+            var userProfile = Mapper.Map<UserProfile>(userDto);
+            Database.UserProfiles.Update(userProfile);
+
+            Database.Save();
+            return Response<UserDTO>.Success(userDto);
         }
 
         public void Dispose()

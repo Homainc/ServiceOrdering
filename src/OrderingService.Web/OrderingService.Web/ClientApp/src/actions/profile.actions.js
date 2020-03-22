@@ -26,6 +26,20 @@ function loadProfile(){
     function failure() { return { type: profileConstants.PROFILE_FAILURE } } 
 }
 
-function updateProfile(){
+function updateProfile(profile){
+    return dispatch => {
+        dispatch(request(profile));
 
+        return profileService.updateProfile(profile)
+            .then(profile => {
+                dispatch(success(profile));
+            },
+            error => {
+                dispatch(failure(error));
+            });
+    };
+
+    function request() { return { type: profileConstants.PROFILE_UPDATE_REQUEST, profile }; }
+    function success(profile) { return { type: profileConstants.PROFILE_UPDATE_SUCCESS, profile }; }
+    function failure(error) { return { type: profileConstants.PROFILE_UPDATE_FAILURE, error } } 
 }

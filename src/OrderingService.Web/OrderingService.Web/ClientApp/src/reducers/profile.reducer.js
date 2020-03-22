@@ -5,7 +5,7 @@ const initialState = user ? { profile: user } : {};
 
 export function profile(state = initialState, action) {
     switch(action.type){
-        // PROFILE
+        // GET PROFILE
         case profileConstants.PROFILE_REQUEST:
             return {
                 profileLoading: true
@@ -15,6 +15,20 @@ export function profile(state = initialState, action) {
                 profile: action.profile
             };
         case profileConstants.PROFILE_FAILURE:
+            return {};
+
+
+        // UPDATE PROFILE
+        case profileConstants.PROFILE_UPDATE_REQUEST:
+            return {
+                profileUpdating: true,
+                profile: action.profile
+            };
+        case profileConstants.PROFILE_UPDATE_SUCCESS:
+            return {
+                profile: action.profile
+            };
+        case profileConstants.PROFILE_UPDATE_FAILURE:
             return {};
 
         default:

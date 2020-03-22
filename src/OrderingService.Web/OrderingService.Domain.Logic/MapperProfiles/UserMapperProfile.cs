@@ -18,7 +18,11 @@ namespace OrderingService.Domain.Logic.MapperProfiles
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.UserProfile.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.UserProfile.LastName))
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.UserProfile.ImageUrl));
-            CreateMap<UserProfile, UserDTO>();
+            CreateMap<UserProfile, UserDTO>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
+                .ForMember(dest => dest.EmployeeProfile, opt=>opt.MapFrom(src => src.User.EmployeeProfile))
+                .ReverseMap();
         }
     }
 }

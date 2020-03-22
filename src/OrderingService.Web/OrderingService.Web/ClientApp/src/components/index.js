@@ -6,4 +6,4 @@ export * from './LoadingButton';
 export * from './ImageUpload';
 export * from './UserWithAvatar';
 export * from './LoadingContainer';
-export * from './UserProfileBlock';
+export * from './UserPersonalBlock';

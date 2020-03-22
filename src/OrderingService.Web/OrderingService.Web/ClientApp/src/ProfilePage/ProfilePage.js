@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Col, Row, Card, CardTitle, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { profileActions } from '../actions/profile.actions';
-import { LoadingContainer, UserProfileBlock } from '../components';
+import { LoadingContainer, UserPersonalBlock } from '../components';
 
 class ProfilePage extends Component {
 
@@ -19,7 +19,7 @@ class ProfilePage extends Component {
                         <LoadingContainer isLoading={!!profileLoading}>
                             <CardTitle>Profile</CardTitle>
                             <ListGroup>
-                                <UserProfileBlock profile={profile}/>
+                                <UserPersonalBlock profile={profile}/>
                                 <ListGroupItem>
                                     <ListGroupItemHeading>Email</ListGroupItemHeading>
                                     <ListGroupItemText>{profile && profile.email}</ListGroupItemText>

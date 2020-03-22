@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Interfaces
@@ -10,5 +9,6 @@ namespace OrderingService.Domain.Logic.Interfaces
         Task<IResponse<UserDTO>> CreateAsync(UserDTO userDto);
         Task<IResponse<UserDTO>> AuthenticateAsync(UserDTO userDto);
         IResponse<UserDTO> GetUserById(string email);
+        Task<IResponse<UserDTO>> UpdateProfileAsync(UserDTO userDto);
     }
 }

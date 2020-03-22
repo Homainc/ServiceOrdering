@@ -30,5 +30,13 @@ namespace OrderingService.Web.Controllers
         [HttpGet("profile")]
         public IActionResult GetProfile() =>
             UserService.GetUserById(User.Identity.Name).ToHttpResponse();
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateProfileAsync(UserDTO userDto)
+        {
+            userDto.Id = User.Identity.Name;
+            return (await UserService.UpdateProfileAsync(userDto)).ToHttpResponse();
+        }
     }
 }

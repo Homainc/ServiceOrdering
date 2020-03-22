@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import config from '../config';
 import { useField } from 'formik';
-import { FormGroup, Label, Row, Col } from 'reactstrap';
+import { FormGroup, Label } from 'reactstrap';
 import './ImageUpload.css';
 
-export const ImageUpload = ({label, imageUploaded, ...props}) => {
-    const [state, setState] = useState({ isUploading: false});
-    const [field, meta, helpers] = useField(props);
+export const ImageUpload = ({label, ...props}) => {
+    const [, setState] = useState({ isUploading: false});
+    const [, meta, helpers] = useField(props);
     const { setValue } = helpers;
 
     const handleFileChange = ({ target }) => {
@@ -31,17 +31,14 @@ export const ImageUpload = ({label, imageUploaded, ...props}) => {
 
     return (
         <FormGroup>
-            <Label htmlFor={props.id && props.name}>{label}</Label><br/>
-            <Row>
-                <Col md="3">
-                    <img src={meta.value || 'images/default-user.jpg'} height="100" width="100" alt="Profile"/>
-                </Col>
-                <Col className="d-flex align-items-center">
-                    <input type="file" {...props} 
-                        onChange={handleFileChange}
-                        disabled={state.isUploading}/>
-                </Col>
-            </Row>
+            <Label htmlFor={props.id && props.name}>
+                <img src={meta.value || 'images/default-user.jpg'} 
+                    height="150" width="150"
+                    className={'rounded '+ (props.disabled? '': 'img-upload')} 
+                    alt="Profile"/>
+            </Label>
+            <input className="collapse" type="file" {...props}
+                onChange={handleFileChange}/>
         </FormGroup>
     );
 };

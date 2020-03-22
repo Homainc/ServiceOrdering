@@ -15,6 +15,15 @@ function loadProfile(){
         .then(handleResponse);
 }
 
-function updateProfile(){
-
+function updateProfile(profile){
+    const requestOptions = {
+        method: 'PUT',
+        headers: {
+            ...authHeader(),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(profile)
+    };
+    return fetch(`${config.apiUrl}/account`, requestOptions)
+        .then(handleResponse)
 }

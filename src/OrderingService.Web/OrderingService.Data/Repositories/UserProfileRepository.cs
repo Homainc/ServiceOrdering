@@ -14,7 +14,10 @@ namespace OrderingService.Data.Repositories
             _db = appContext;
         }
 
-        public IQueryable<UserProfile> GetAll() => _db.UserProfiles.AsQueryable();
+        public IQueryable<UserProfile> GetAll() => _db.UserProfiles
+            .Include(x => x.User)
+            .ThenInclude(x => x.EmployeeProfile)
+            .ThenInclude(x => x.ServiceType).AsQueryable();
 
         public void Create(UserProfile entity) => _db.Add(entity);
 

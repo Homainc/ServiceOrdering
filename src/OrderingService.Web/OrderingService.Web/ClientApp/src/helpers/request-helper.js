@@ -2,6 +2,7 @@ import { userService } from '../services';
 
 export function handleResponse(response){
     return response.json().then(data => {
+        console.log(data);
         if (!response.ok) {
             if (response.status === 401) {
                 userService.logout();
