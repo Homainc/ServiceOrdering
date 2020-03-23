@@ -5,6 +5,7 @@
         public string Id { get; set; }
         public string ServiceType { get; set; }
         public decimal ServiceCost { get; set; }
+        public string Description { get; set; }
         public UserDTO User { get; set; }
     }
 }

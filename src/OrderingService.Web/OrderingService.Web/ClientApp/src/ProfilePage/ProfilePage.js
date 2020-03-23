@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Col, Row, Card, CardTitle, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { profileActions } from '../actions/profile.actions';
-import { LoadingContainer, UserPersonalBlock } from '../components';
+import { LoadingContainer, UserPersonalBlock, UserEmployeeBlock } from '../components';
 
 class ProfilePage extends Component {
 
@@ -26,10 +26,7 @@ class ProfilePage extends Component {
                                     <ListGroupItemHeading>Password</ListGroupItemHeading>
                                     <ListGroupItemText>*************</ListGroupItemText>
                                 </ListGroupItem>
-                                <ListGroupItem>
-                                    <ListGroupItemHeading>Employee profile</ListGroupItemHeading>
-                                    <ListGroupItemText>real email</ListGroupItemText>
-                                </ListGroupItem>
+                                <UserEmployeeBlock profile={profile}/>
                             </ListGroup>
                         </LoadingContainer>
                     </Card>

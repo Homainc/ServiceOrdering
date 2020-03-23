@@ -19,11 +19,11 @@ const UserPersonalBlock = props => {
     return(
         <ListGroupItem>
             <Row>
-                <Col><ListGroupItemHeading>Personal data</ListGroupItemHeading></Col>
-                <Col sm="5" md="4" lg="3" className="d-flex align-items-end align-self-end">
+                <Col><ListGroupItemHeading className="p-1 pb-1">Personal data</ListGroupItemHeading></Col>
+                <Col sm="5" md="4" lg="3" className="d-flex">
                 <Button 
                     color="link" 
-                    className={state.editMode ? 'd-none': '' } 
+                    className={state.editMode ? 'collapse': '' } 
                     onClick={()=> setState({ editMode: true })}>
                         Edit personal data
                 </Button>

@@ -10,7 +10,7 @@ namespace OrderingService.Data.Models
         public string Id { get; set; }
         public ServiceType ServiceType { get; set; }
         public decimal ServiceCost { get; set; }
-
+        public string Description { get; set; }
         public User User { get; set; }
     }
 }

@@ -7,3 +7,4 @@ export * from './ImageUpload';
 export * from './UserWithAvatar';
 export * from './LoadingContainer';
 export * from './UserPersonalBlock';
+export * from './UserEmployeeBlock';
