@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
 
@@ -15,15 +17,15 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserReviews(string id) => 
-            ReviewService.GetUserReviews(new System.Guid(id)).ToHttpResponse();
+        public async Task<IActionResult> GetUserReviewsAsync(string id, CancellationToken token = default) => 
+            await ReviewService.GetUserReviewsAsync(new System.Guid(id), token).ToHttpResponseAsync();
 
         [HttpPost]
-        public IActionResult Create(ReviewDTO reviewDto) =>
-            ReviewService.Create(reviewDto).ToHttpResponse();
+        public async Task<IActionResult> CreateAsync(ReviewDTO reviewDto, CancellationToken token = default) =>
+            await ReviewService.CreateAsync(reviewDto, token).ToHttpResponseAsync();
 
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id) =>
-            ReviewService.Delete(id).ToHttpResponse();
+        public async Task<IActionResult> DeleteAsync(int id, CancellationToken token) =>
+            await ReviewService.DeleteAsync(id, token).ToHttpResponseAsync();
     }
 }

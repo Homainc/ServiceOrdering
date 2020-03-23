@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using OrderingService.Data.EF;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
@@ -27,7 +29,7 @@ namespace OrderingService.Data.Repositories
             _db = db;
         }
 
-        public void Save() => _db.SaveChanges();
+        public async Task SaveAsync(CancellationToken token) => await _db.SaveChangesAsync(token);
 
         private bool _disposed;
         protected virtual void Dispose(bool disposing)

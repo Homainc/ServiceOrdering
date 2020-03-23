@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Interfaces
@@ -11,7 +13,7 @@ namespace OrderingService.Data.Interfaces
         IRepository<ServiceType> ServiceTypes { get; }
         IRepository<User> Users { get; }
         IRepository<Role> Roles { get; }
-        void Save();
+        Task SaveAsync(CancellationToken token);
 
     }
 }

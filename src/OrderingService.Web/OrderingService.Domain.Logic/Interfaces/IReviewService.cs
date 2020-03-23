@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Interfaces
 {
     public interface IReviewService : IDisposable
     {
-        IResponse<IEnumerable<ReviewDTO>> GetUserReviews(Guid userId);
-        IResponse<ReviewDTO> Create(ReviewDTO reviewDto);
-        IResponse<ReviewDTO> Delete(int reviewDto);
+        Task<IResponse<IEnumerable<ReviewDTO>>> GetUserReviewsAsync(Guid userId, CancellationToken token);
+        Task<IResponse<ReviewDTO>> CreateAsync(ReviewDTO reviewDto, CancellationToken token);
+        Task<IResponse<ReviewDTO>> DeleteAsync(int reviewDto, CancellationToken token);
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
@@ -24,7 +27,8 @@ namespace OrderingService.Domain.Logic.Services
 
         public void Dispose() => Database.Dispose();
 
-        public IResponse<IEnumerable<EmployeeProfileDTO>> FilterEmployeeProfiles(string serviceName, decimal? maxServiceCost)
+        public async Task<IResponse<IEnumerable<EmployeeProfileDTO>>> FilterEmployeeProfilesAsync(string serviceName,
+            decimal? maxServiceCost, CancellationToken token)
         {
             var employee = Database.EmployeeProfiles.GetAll();
             if (serviceName != null)
@@ -32,12 +36,13 @@ namespace OrderingService.Domain.Logic.Services
             if (maxServiceCost.HasValue)
                 employee = employee.Where(e => e.ServiceCost <= maxServiceCost.Value);
 
-            return Response<IEnumerable<EmployeeProfileDTO>>.Success(employee.ProjectTo<EmployeeProfileDTO>(Mapper.ConfigurationProvider));
+            return Response<IEnumerable<EmployeeProfileDTO>>.Success(
+                await employee.ProjectTo<EmployeeProfileDTO>(Mapper.ConfigurationProvider).ToListAsync(token));
         }
 
-        public IResponse<EmployeeProfileDTO> CreateEmployeeProfile(EmployeeProfileDTO employeeProfileDto)
+        public async Task<IResponse<EmployeeProfileDTO>> CreateEmployeeProfileAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
         {
-            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == employeeProfileDto.Id);
+            var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == employeeProfileDto.Id, token);
 
             if (employeeProfile != null)
             {
@@ -46,12 +51,12 @@ namespace OrderingService.Domain.Logic.Services
                 return result;
             }
 
-            var serviceType = Database.ServiceTypes.GetAll()
-                .SingleOrDefault(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()));
+            var serviceType = await Database.ServiceTypes.GetAll()
+                .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()), token);
             if (serviceType == null)
             {
                 serviceType = new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
-                Database.ServiceTypes.Create(serviceType);
+                await Database.ServiceTypes.CreateAsync(serviceType, token);
             }
 
             employeeProfile = new EmployeeProfile
@@ -60,16 +65,16 @@ namespace OrderingService.Domain.Logic.Services
                 ServiceCost = employeeProfileDto.ServiceCost,
                 ServiceType = serviceType
             };
-            Database.EmployeeProfiles.Create(employeeProfile);
-            Database.Save();
+            await Database.EmployeeProfiles.CreateAsync(employeeProfile, token);
+            await Database.SaveAsync(token);
 
             Logger.LogInformation($"Employee Profile(cost: {employeeProfile.ServiceCost}, service name: {employeeProfile.ServiceType.Name}) was added");
             return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
 
-        public IResponse<EmployeeProfileDTO> UpdateEmployeeService(EmployeeProfileDTO employeeProfileDto)
+        public async Task<IResponse<EmployeeProfileDTO>> UpdateEmployeeServiceAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
         {
-            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == employeeProfileDto.Id);
+            var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == employeeProfileDto.Id, token);
 
             if (employeeProfile == null)
             {
@@ -78,27 +83,27 @@ namespace OrderingService.Domain.Logic.Services
                 return result;
             }
 
-            var serviceType = Database.ServiceTypes.GetAll()
-                .SingleOrDefault(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()));
+            var serviceType = await Database.ServiceTypes.GetAll()
+                .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()), token);
             if (serviceType == null)
             {
                 serviceType = new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
-                Database.ServiceTypes.Create(serviceType);
+                await Database.ServiceTypes.CreateAsync(serviceType, token);
             }
 
             employeeProfile.ServiceCost = employeeProfileDto.ServiceCost;
             employeeProfile.ServiceType = serviceType;
 
             Database.EmployeeProfiles.Update(employeeProfile);
-            Database.Save();
+            await Database.SaveAsync(token);
 
             Logger.LogInformation($"Employee Profile(cost: {employeeProfile.ServiceCost}, service name: {employeeProfile.ServiceType.Name}) was updated");
             return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
 
-        public IResponse<EmployeeProfileDTO> DeleteEmployeeProfile(Guid employeeId)
+        public async Task<IResponse<EmployeeProfileDTO>> DeleteEmployeeProfileAsync(Guid employeeId, CancellationToken token)
         {
-            var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(e => e.Id == employeeId);
+            var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(e => e.Id == employeeId, token);
 
             if (employeeProfile == null)
             {
@@ -107,7 +112,7 @@ namespace OrderingService.Domain.Logic.Services
             }
 
             Database.EmployeeProfiles.Delete(employeeProfile);
-            Database.Save();
+            await Database.SaveAsync(token);
 
             Logger.LogInformation($"Employee profile from user id {employeeId} was deleted");
             return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));

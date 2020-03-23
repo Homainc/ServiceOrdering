@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
@@ -24,9 +27,9 @@ namespace OrderingService.Domain.Logic.Services
 
         public void Dispose() => Database.Dispose();
 
-        public IResponse<OrderDTO> Create(OrderDTO orderDto)
+        public async Task<IResponse<OrderDTO>> CreateAsync(OrderDTO orderDto, CancellationToken token)
         {
-            var orderEmployee = Database.EmployeeProfiles.GetAll().SingleOrDefault(x => x.Id == orderDto.EmployeeId);
+            var orderEmployee = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.EmployeeId, token);
             if (orderEmployee == null)
             {
                 var result = Response<OrderDTO>.ValidationError($"Employee with id {orderDto.EmployeeId} not found");
@@ -34,7 +37,7 @@ namespace OrderingService.Domain.Logic.Services
                 return result;
             }
 
-            var orderClient = Database.Users.GetAll().SingleOrDefault(x => x.Id == orderDto.ClientId);
+            var orderClient = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.ClientId, token);
             if (orderClient == null)
             {
                 var result = Response<OrderDTO>.ValidationError($"Client with id {orderDto.ClientId} not found");
@@ -44,16 +47,16 @@ namespace OrderingService.Domain.Logic.Services
 
             orderDto.Date = DateTime.Now;
             var order = Mapper.Map<ServiceOrder>(orderDto);
-            Database.ServiceOrders.Create(order);
-            Database.Save();
+            await Database.ServiceOrders.CreateAsync(order, token);
+            await Database.SaveAsync(token);
 
             Logger.LogInformation($"Order (Price: {order.Price}, Description: {order.Description}) was created");
             return Response<OrderDTO>.Success(Mapper.Map<OrderDTO>(order));
         }
 
-        public IResponse<OrderDTO> Close(int id)
+        public async Task<IResponse<OrderDTO>> CloseAsync(int id, CancellationToken token)
         {
-            var order = Database.ServiceOrders.GetAll().SingleOrDefault(x => x.Id == id);
+            var order = await Database.ServiceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (order == null)
             {
                 var result = Response<OrderDTO>.NotFound($"Order with id {id} not found");
@@ -63,15 +66,15 @@ namespace OrderingService.Domain.Logic.Services
 
             order.IsClosed = true;
             Database.ServiceOrders.Update(order);
-            Database.Save();
+            await Database.SaveAsync(token);
 
             Logger.LogInformation($"Order with id {id} was closed");
             return Response<OrderDTO>.Success(Mapper.Map<OrderDTO>(order));
         }
 
-        public IResponse<OrderDTO> Delete(int id)
+        public async Task<IResponse<OrderDTO>> DeleteAsync(int id, CancellationToken token)
         {
-            var order = Database.ServiceOrders.GetAll().SingleOrDefault(x => x.Id == id);
+            var order = await Database.ServiceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (order == null)
             {
                 var result = Response<OrderDTO>.NotFound($"Order with id {id} not found");
@@ -80,16 +83,16 @@ namespace OrderingService.Domain.Logic.Services
             }
 
             Database.ServiceOrders.Delete(order);
-            Database.Save();
+            await Database.SaveAsync(token);
 
             Logger.LogInformation($"Order with id {id} was deleted");
             return Response<OrderDTO>.Success(Mapper.Map<OrderDTO>(order));
         }
 
-        public IResponse<IEnumerable<OrderDTO>> GetEmployeeOrders(Guid employeeId) =>
-            Response<IEnumerable<OrderDTO>>.Success(
-                Database.ServiceOrders.GetAll()
-                    .Where(x => x.EmployeeId == employeeId && !x.IsClosed)
-                    .ProjectTo<OrderDTO>(Mapper.ConfigurationProvider));
+        public async Task<IResponse<IEnumerable<OrderDTO>>>
+            GetEmployeeOrdersAsync(Guid employeeId, CancellationToken token) =>
+            Response<IEnumerable<OrderDTO>>.Success(await Database.ServiceOrders.GetAll()
+                .Where(x => x.EmployeeId == employeeId && !x.IsClosed)
+                .ProjectTo<OrderDTO>(Mapper.ConfigurationProvider).ToListAsync(token));
     }
 }

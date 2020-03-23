@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
@@ -19,25 +21,25 @@ namespace OrderingService.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult GetAll(string serviceName, decimal? serviceMaxCost) =>
-            EmployeeService.FilterEmployeeProfiles(serviceName, serviceMaxCost).ToHttpResponse();
+        public async Task<IActionResult> GetAllAsync(string serviceName, decimal? serviceMaxCost, CancellationToken token = default) =>
+            await EmployeeService.FilterEmployeeProfilesAsync(serviceName, serviceMaxCost, token).ToHttpResponseAsync();
 
         [HttpPost]
-        public IActionResult Create(EmployeeProfileDTO employeeProfileDto)
+        public async Task<IActionResult> CreateAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token = default)
         {
             employeeProfileDto.Id = new Guid(User.Identity.Name);
-            return EmployeeService.CreateEmployeeProfile(employeeProfileDto).ToHttpResponse();
+            return await EmployeeService.CreateEmployeeProfileAsync(employeeProfileDto, token).ToHttpResponseAsync();
         }
 
         [HttpPut]
-        public IActionResult Update(EmployeeProfileDTO employeeProfileDto)
+        public async Task<IActionResult> UpdateAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token = default)
         {
             employeeProfileDto.Id = new Guid(User.Identity.Name);
-            return EmployeeService.UpdateEmployeeService(employeeProfileDto).ToHttpResponse();
+            return await EmployeeService.UpdateEmployeeServiceAsync(employeeProfileDto, token).ToHttpResponseAsync();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id) => 
-            EmployeeService.DeleteEmployeeProfile(new Guid(id)).ToHttpResponse();
+        public async Task<IActionResult> DeleteAsync(string id, CancellationToken token = default) => 
+            await EmployeeService.DeleteEmployeeProfileAsync(new Guid(id), token).ToHttpResponseAsync();
     }
 }

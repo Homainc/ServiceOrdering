@@ -6,25 +6,10 @@ using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Repositories
 {
-    public class ServiceOrderRepository : IRepository<ServiceOrder>
+    public class ServiceOrderRepository : AbstractRepository<ServiceOrder>
     {
-        private readonly ApplicationContext _db;
-        public ServiceOrderRepository(ApplicationContext appContext)
-        {
-            _db = appContext;
-        }
+        public ServiceOrderRepository(ApplicationContext db) : base(db) { }
 
-        public IQueryable<ServiceOrder> GetAll() => _db.ServiceOrders.AsQueryable();
-
-        public void Create(ServiceOrder entity) => _db.Add(entity);
-
-        public void Update(ServiceOrder entity) => _db.Entry(entity).State = EntityState.Modified;
-
-        public void Delete(ServiceOrder entity)
-        {
-            var serviceOrder = _db.ServiceOrders.Find(entity.Id);
-            if (serviceOrder != null)
-                _db.ServiceOrders.Remove(serviceOrder);
-        }
+        public override IQueryable<ServiceOrder> GetAll() => _db.ServiceOrders.AsNoTracking().AsQueryable();
     }
 }
