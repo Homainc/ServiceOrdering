@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Identity;
 using OrderingService.Data.EF;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;

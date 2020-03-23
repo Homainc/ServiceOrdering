@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Interfaces

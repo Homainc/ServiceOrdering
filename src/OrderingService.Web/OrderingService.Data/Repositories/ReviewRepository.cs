@@ -14,7 +14,8 @@ namespace OrderingService.Data.Repositories
             _db = appContext;
         }
 
-        public IQueryable<Review> GetAll() => _db.Reviews.AsQueryable();
+        public IQueryable<Review> GetAll() => _db.Reviews
+            .AsNoTracking().AsQueryable();
 
         public void Create(Review entity) => _db.Add(entity);
 
