@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
@@ -24,19 +25,19 @@ namespace OrderingService.Web.Controllers
         [HttpPost]
         public IActionResult Create(EmployeeProfileDTO employeeProfileDto)
         {
-            employeeProfileDto.Id = User.Identity.Name;
+            employeeProfileDto.Id = new Guid(User.Identity.Name);
             return EmployeeService.CreateEmployeeProfile(employeeProfileDto).ToHttpResponse();
         }
 
         [HttpPut]
         public IActionResult Update(EmployeeProfileDTO employeeProfileDto)
         {
-            employeeProfileDto.Id = User.Identity.Name;
+            employeeProfileDto.Id = new Guid(User.Identity.Name);
             return EmployeeService.UpdateEmployeeService(employeeProfileDto).ToHttpResponse();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(string id) => 
-            EmployeeService.DeleteEmployeeProfile(id).ToHttpResponse();
+            EmployeeService.DeleteEmployeeProfile(new Guid(id)).ToHttpResponse();
     }
 }

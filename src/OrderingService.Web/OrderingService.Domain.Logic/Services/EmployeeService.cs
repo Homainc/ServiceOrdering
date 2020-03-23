@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -95,7 +96,7 @@ namespace OrderingService.Domain.Logic.Services
             return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
 
-        public IResponse<EmployeeProfileDTO> DeleteEmployeeProfile(string employeeId)
+        public IResponse<EmployeeProfileDTO> DeleteEmployeeProfile(Guid employeeId)
         {
             var employeeProfile = Database.EmployeeProfiles.GetAll().SingleOrDefault(e => e.Id == employeeId);
 

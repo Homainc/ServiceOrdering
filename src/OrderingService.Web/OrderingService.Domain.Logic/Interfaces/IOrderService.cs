@@ -10,6 +10,6 @@ namespace OrderingService.Domain.Logic.Interfaces
         IResponse<OrderDTO> Close(int orderDto);
         IResponse<OrderDTO> Delete(int orderDto);
 
-        IResponse<IEnumerable<OrderDTO>> GetEmployeeOrders(string employeeId);
+        IResponse<IEnumerable<OrderDTO>> GetEmployeeOrders(Guid employeeId);
     }
 }

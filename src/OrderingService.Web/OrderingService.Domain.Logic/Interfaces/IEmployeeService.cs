@@ -9,6 +9,6 @@ namespace OrderingService.Domain.Logic.Interfaces
         IResponse<IEnumerable<EmployeeProfileDTO>> FilterEmployeeProfiles(string serviceName, decimal? maxServiceCost);
         IResponse<EmployeeProfileDTO> CreateEmployeeProfile(EmployeeProfileDTO employeeProfileDto);
         IResponse<EmployeeProfileDTO> UpdateEmployeeService(EmployeeProfileDTO employeeProfileDto);
-        IResponse<EmployeeProfileDTO> DeleteEmployeeProfile(string employeeId);
+        IResponse<EmployeeProfileDTO> DeleteEmployeeProfile(Guid employeeId);
     }
 }

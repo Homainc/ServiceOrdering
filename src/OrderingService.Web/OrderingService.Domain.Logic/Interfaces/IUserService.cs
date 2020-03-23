@@ -8,7 +8,7 @@ namespace OrderingService.Domain.Logic.Interfaces
         Task<IResponse<UserDTO>> SignUpAsync(UserDTO userDto);
         Task<IResponse<UserDTO>> CreateAsync(UserDTO userDto);
         Task<IResponse<UserDTO>> AuthenticateAsync(UserDTO userDto);
-        IResponse<UserDTO> GetUserById(string email);
+        IResponse<UserDTO> GetUserById(Guid id);
         Task<IResponse<UserDTO>> UpdateProfileAsync(UserDTO userDto);
     }
 }

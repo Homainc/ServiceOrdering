@@ -34,7 +34,7 @@ namespace OrderingService.Domain.Logic.Services
                 return result;
             }
 
-            var orderClient = Database.UserProfiles.GetAll().SingleOrDefault(x => x.Id == orderDto.ClientId);
+            var orderClient = Database.Users.GetAll().SingleOrDefault(x => x.Id == orderDto.ClientId);
             if (orderClient == null)
             {
                 var result = Response<OrderDTO>.ValidationError($"Client with id {orderDto.ClientId} not found");
@@ -86,7 +86,7 @@ namespace OrderingService.Domain.Logic.Services
             return Response<OrderDTO>.Success(Mapper.Map<OrderDTO>(order));
         }
 
-        public IResponse<IEnumerable<OrderDTO>> GetEmployeeOrders(string employeeId) =>
+        public IResponse<IEnumerable<OrderDTO>> GetEmployeeOrders(Guid employeeId) =>
             Response<IEnumerable<OrderDTO>>.Success(
                 Database.ServiceOrders.GetAll()
                     .Where(x => x.EmployeeId == employeeId && !x.IsClosed)

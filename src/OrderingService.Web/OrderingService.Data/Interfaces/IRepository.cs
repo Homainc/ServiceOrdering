@@ -6,7 +6,7 @@ namespace OrderingService.Data.Interfaces
     {
         IQueryable<T> GetAll();
         void Create(T entity);
-        void Delete(T id);
+        void Delete(T entity);
         void Update(T entity);
     }
 }

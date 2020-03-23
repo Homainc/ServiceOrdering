@@ -12,13 +12,15 @@ namespace OrderingService.Data.Repositories
         private IRepository<Review> _reviewRepository;
         private IRepository<ServiceOrder> _serviceOrderRepository;
         private IRepository<ServiceType> _serviceTypeRepository;
-        private IRepository<UserProfile> _userProfileRepository;
+        private IRepository<User> _userRepository;
+        private IRepository<Role> _roleRepository;
 
         public IRepository<EmployeeProfile> EmployeeProfiles => _employeeProfileRepository ??= new EmployeeProfileRepository(_db);
         public IRepository<Review> Reviews => _reviewRepository ??= new ReviewRepository(_db);
         public IRepository<ServiceOrder> ServiceOrders => _serviceOrderRepository ??= new ServiceOrderRepository(_db);
         public IRepository<ServiceType> ServiceTypes => _serviceTypeRepository ??= new ServiceTypeRepository(_db);
-        public IRepository<UserProfile> UserProfiles => _userProfileRepository ??= new UserProfileRepository(_db);
+        public IRepository<User> Users => _userRepository ??= new UserRepository(_db);
+        public IRepository<Role> Roles => _roleRepository ??= new RoleRepository(_db);
 
         public ApplicationUnitOfWork(ApplicationContext db)
         {

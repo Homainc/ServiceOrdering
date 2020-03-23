@@ -22,33 +22,29 @@ namespace OrderingService.Domain.Logic.Services
         private ILogger<UserService> Logger { get; }
         private IMapper Mapper { get; }
         private IPasswordHasher<User> PasswordHasher { get; }
-        private UserManager<User> UserManager { get; }
         private AppSettings AppSettings { get; }
 
-        public UserService(IUnitOfWork db, ILogger<UserService> logger, IMapper mapper, UserManager<User> userManager,
+        public UserService(IUnitOfWork db, ILogger<UserService> logger, IMapper mapper, 
             IPasswordHasher<User> passwordHasher, IOptions<AppSettings> appSettings)
         {
             Database = db;
             Logger = logger;
             Mapper = mapper;
             PasswordHasher = passwordHasher;
-            UserManager = userManager;
             AppSettings = appSettings.Value;
         }
 
         public async Task<IResponse<UserDTO>> CreateAsync(UserDTO userDto)
         {
-            var user = await UserManager.FindByEmailAsync(userDto.Email);
+            var user = Database.Users.GetAll().SingleOrDefault(x => x.Email == userDto.Email);
 
             if (user != null)
                 return Response<UserDTO>.ValidationError("User with this email already exists");
 
             user = Mapper.Map<User>(userDto);
-            var result = await UserManager.CreateAsync(user, userDto.Password);
-            if (!result.Succeeded)
-                return Response<UserDTO>.ValidationError(result.Errors.First().Description);
-
-            await UserManager.AddToRoleAsync(user, userDto.Role);
+            user.HashedPassword = PasswordHasher.HashPassword(user, userDto.Password);
+            user.RoleId = Database.Roles.GetAll().SingleOrDefault(x => x.Name == userDto.Role).Id;
+            Database.Users.Create(user);
 
             Database.Save();
             return Response<UserDTO>.Success(Mapper.Map<UserDTO>(user));
@@ -56,11 +52,11 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<IResponse<UserDTO>> AuthenticateAsync(UserDTO userDto)
         {
-            var user = await UserManager.FindByEmailAsync(userDto.Email);
+            var user = Database.Users.GetAll().SingleOrDefault(x => x.Email == userDto.Email);
             if(user == null)
                 return Response<UserDTO>.ValidationError("Email or password is wrong");
 
-            var result = PasswordHasher.VerifyHashedPassword(user, user.PasswordHash,userDto.Password);
+            var result = PasswordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
             if (result == PasswordVerificationResult.Failed)
                 return Response<UserDTO>.ValidationError("Email or password is wrong");
 
@@ -70,14 +66,13 @@ namespace OrderingService.Domain.Logic.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id)
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            user.UserProfile = Database.UserProfiles.GetAll().SingleOrDefault(x => x.Id == user.Id);
             userDto = Mapper.Map<UserDTO>(user);
             userDto.Token = tokenHandler.WriteToken(token);
             return Response<UserDTO>.Success(userDto);
@@ -92,32 +87,28 @@ namespace OrderingService.Domain.Logic.Services
             return await AuthenticateAsync(userDto);
         }
 
-        public IResponse<UserDTO> GetUserById(string id)
+        public IResponse<UserDTO> GetUserById(Guid id)
         {
-            var userProfile = Database.UserProfiles.GetAll().SingleOrDefault(x => x.Id == id);
+            var userProfile = Database.Users.GetAll().SingleOrDefault(x => x.Id == id);
             return Response<UserDTO>.Success(Mapper.Map<UserDTO>(userProfile));
         }
 
         public async Task<IResponse<UserDTO>> UpdateProfileAsync(UserDTO userDto)
         {
-            var user = await UserManager.FindByIdAsync(userDto.Id);
+            var user = Database.Users.GetAll().SingleOrDefault(x => x.Id == userDto.Id);
             if (user == null)
                 Response<UserDTO>.NotFound($"User with id {userDto.Id} not found");
 
             user.PhoneNumber = userDto.PhoneNumber;
-            await UserManager.UpdateAsync(user);
+            Database.Users.Update(user);
 
-            var userProfile = Mapper.Map<UserProfile>(userDto);
-            Database.UserProfiles.Update(userProfile);
+            var userProfile = Mapper.Map<User>(userDto);
+            Database.Users.Update(userProfile);
 
             Database.Save();
             return Response<UserDTO>.Success(userDto);
         }
 
-        public void Dispose()
-        {
-            UserManager.Dispose();
-            Database.Dispose();
-        }
+        public void Dispose() => Database.Dispose();
     }
 }

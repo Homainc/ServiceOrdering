@@ -9,7 +9,8 @@ namespace OrderingService.Data.Interfaces
         IRepository<Review> Reviews { get; }
         IRepository<ServiceOrder> ServiceOrders { get; }
         IRepository<ServiceType> ServiceTypes { get; }
-        IRepository<UserProfile> UserProfiles { get; }
+        IRepository<User> Users { get; }
+        IRepository<Role> Roles { get; }
         void Save();
 
     }

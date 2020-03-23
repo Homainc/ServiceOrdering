@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
@@ -29,13 +30,13 @@ namespace OrderingService.Web.Controllers
         [Authorize]
         [HttpGet("profile")]
         public IActionResult GetProfile() =>
-            UserService.GetUserById(User.Identity.Name).ToHttpResponse();
+            UserService.GetUserById(new Guid(User.Identity.Name)).ToHttpResponse();
 
         [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateProfileAsync(UserDTO userDto)
         {
-            userDto.Id = User.Identity.Name;
+            userDto.Id = new Guid(User.Identity.Name);
             return (await UserService.UpdateProfileAsync(userDto)).ToHttpResponse();
         }
     }

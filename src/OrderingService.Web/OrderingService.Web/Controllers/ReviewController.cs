@@ -16,7 +16,7 @@ namespace OrderingService.Web.Controllers
 
         [HttpGet("{id}")]
         public IActionResult GetUserReviews(string id) => 
-            ReviewService.GetUserReviews(id).ToHttpResponse();
+            ReviewService.GetUserReviews(new System.Guid(id)).ToHttpResponse();
 
         [HttpPost]
         public IActionResult Create(ReviewDTO reviewDto) =>

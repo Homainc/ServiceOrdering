@@ -32,7 +32,7 @@ namespace OrderingService.Domain.Logic.Services
                 return result;
             }
 
-            var reviewClient = Database.UserProfiles.GetAll().SingleOrDefault(x => x.Id == reviewDto.ClientId);
+            var reviewClient = Database.Users.GetAll().SingleOrDefault(x => x.Id == reviewDto.ClientId);
             if (reviewClient == null)
             {
                 var result = Response<ReviewDTO>.ValidationError($"Client with id {reviewDto.ClientId} not found!");
@@ -67,7 +67,7 @@ namespace OrderingService.Domain.Logic.Services
             return Response<ReviewDTO>.Success(Mapper.Map<ReviewDTO>(review));
         }
 
-        public IResponse<IEnumerable<ReviewDTO>> GetUserReviews(string userId) =>
+        public IResponse<IEnumerable<ReviewDTO>> GetUserReviews(Guid userId) =>
             Response<IEnumerable<ReviewDTO>>.Success(
                 Database.Reviews.GetAll().Where(x => x.EmployeeId == userId)
                     .ProjectTo<ReviewDTO>(Mapper.ConfigurationProvider));

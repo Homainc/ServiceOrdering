@@ -16,7 +16,7 @@ namespace OrderingService.Web.Controllers
 
         [HttpGet("employee/{id}")]
         public IActionResult GetEmployeeOrders(string id) =>
-            OrderService.GetEmployeeOrders(id).ToHttpResponse();
+            OrderService.GetEmployeeOrders(new System.Guid(id)).ToHttpResponse();
 
         [HttpPost]
         public IActionResult Create(OrderDTO orderDto) =>
