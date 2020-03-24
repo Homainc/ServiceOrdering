@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OrderingService.Domain.Logic;
+using OrderingService.Web.Validators;
 
 namespace OrderingService.Web
 {
@@ -25,7 +27,14 @@ namespace OrderingService.Web
             services.AddOpenApiDocument();
 
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddFluentValidation(fv =>
+                {
+                    fv.RegisterValidatorsFromAssemblyContaining<UserDtoValidator>();
+                    fv.RegisterValidatorsFromAssemblyContaining<OrderDtoValidator>();
+                    fv.RegisterValidatorsFromAssemblyContaining<ReviewDtoValidator>();
+                    fv.RegisterValidatorsFromAssemblyContaining<EmployeeProfileDtoValidator>();
+                });
             services.AddAutoMapper(typeof(Startup).Assembly);
 
             // In production, the React files will be served from this directory

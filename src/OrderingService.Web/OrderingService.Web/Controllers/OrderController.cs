@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
@@ -20,7 +21,7 @@ namespace OrderingService.Web.Controllers
         [HttpGet("employee/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetEmployeeOrdersAsync(string id, CancellationToken token = default)
+        public async Task<IActionResult> GetEmployeeOrdersAsync([FromQuery] string id, CancellationToken token = default)
         {
             IPagedResponse<OrderDTO> response;
             var result = await OrderService.GetEmployeeOrdersAsync(new System.Guid(id), token);
@@ -37,7 +38,11 @@ namespace OrderingService.Web.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateAsync(OrderDTO orderDto, CancellationToken token = default)
+        public async Task<IActionResult> CreateAsync(
+            [FromBody]
+            [CustomizeValidator(RuleSet = "Create")]
+            OrderDTO orderDto,
+            CancellationToken token = default)
         {
             IResponse<OrderDTO> response;
             if (!ModelState.IsValid)
@@ -57,10 +62,10 @@ namespace OrderingService.Web.Controllers
             return Ok(response);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CloseAsync(int id, CancellationToken token = default)
+        public async Task<IActionResult> CloseAsync([FromQuery] int id, CancellationToken token = default)
         {
             IResponse<OrderDTO> response;
             if (!ModelState.IsValid)
@@ -80,10 +85,10 @@ namespace OrderingService.Web.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> DeleteAsync(int id, CancellationToken token = default)
+        public async Task<IActionResult> DeleteAsync([FromQuery] int id, CancellationToken token = default)
         {
             IResponse<OrderDTO> response;
             if (!ModelState.IsValid)

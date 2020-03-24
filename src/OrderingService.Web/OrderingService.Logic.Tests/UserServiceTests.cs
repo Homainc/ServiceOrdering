@@ -58,17 +58,17 @@ namespace OrderingService.Logic.Tests
         {
             // Assign
             var user = DefaultUser;
-            IResponse<UserDTO> result;
+            IResult<UserDTO> result;
 
             // Action
             using (var service = FakeService("Can_create_user"))
             {
-                result = service.CreateAsync(user).Result;
+                result = service.CreateAsync(user, default).Result;
             }
 
             // Assert
             Assert.False(result.DidError);
-            Assert.Equal(user.Email, result.Model.Email);
+            Assert.Equal(user.Email, result.Value.Email);
             Assert.Equal("user", user.Role);
         }
 
@@ -76,25 +76,26 @@ namespace OrderingService.Logic.Tests
         public void Can_auth_user()
         {
             // Assign
-            IResponse<UserDTO> result;
+            IResult<UserDTO> result;
             var user = DefaultUser;
 
             // Action
             using (var service = FakeService("Can_auth_user"))
             {
-                service.CreateAsync(user).Wait();
-                result = service.AuthenticateAsync(user).Result;
+                service.CreateAsync(user, default).Wait();
+                result = service.AuthenticateAsync(user, default).Result;
             }
 
             // Assert
             Assert.False(result.DidError);
-            Assert.NotNull(result.Model.Token);
+            Assert.NotNull(result.Value.Token);
         }
 
         [Fact]
         public void Can_not_create_user_with_same_email()
         {
-            IResponse<UserDTO> result;
+            // Assign
+            IResult<UserDTO> result;
             var user = DefaultUser;
             var sameEmailUser = new UserDTO
             {
@@ -109,10 +110,11 @@ namespace OrderingService.Logic.Tests
             // Action
             using(var service = FakeService("Can_not_create_user_with_same_email"))
             {
-                service.CreateAsync(user).Wait();
-                result = service.CreateAsync(sameEmailUser).Result;
+                service.CreateAsync(user, default).Wait();
+                result = service.CreateAsync(sameEmailUser, default).Result;
             }
 
+            // Assert
             Assert.True(result.DidError);
         } 
     }

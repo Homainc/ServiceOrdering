@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
@@ -20,7 +21,7 @@ namespace OrderingService.Web.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetUserReviewsAsync(string id, CancellationToken token = default)
+        public async Task<IActionResult> GetUserReviewsAsync([FromQuery] string id, CancellationToken token = default)
         {
             IPagedResponse<ReviewDTO> response;
             var result = await ReviewService.GetUserReviewsAsync(new System.Guid(id), token);
@@ -37,7 +38,11 @@ namespace OrderingService.Web.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateAsync(ReviewDTO reviewDto, CancellationToken token = default)
+        public async Task<IActionResult> CreateAsync(
+            [FromBody]
+            [CustomizeValidator(RuleSet = "Create")]
+            ReviewDTO reviewDto,
+            CancellationToken token = default)
         {
             IResponse<ReviewDTO> response;
             if (!ModelState.IsValid)
@@ -60,7 +65,7 @@ namespace OrderingService.Web.Controllers
         [HttpDelete("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> DeleteAsync(int id, CancellationToken token)
+        public async Task<IActionResult> DeleteAsync([FromQuery] int id, CancellationToken token)
         {
             IResponse<ReviewDTO> response;
             if (!ModelState.IsValid)

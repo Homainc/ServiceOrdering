@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
@@ -20,7 +21,11 @@ namespace OrderingService.Web.Controllers
         [HttpPost("auth")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Auth(UserDTO userDto, CancellationToken token = default)
+        public async Task<IActionResult> Auth(
+            [FromBody]
+            [CustomizeValidator(RuleSet = "LogIn")]
+            UserDTO userDto, 
+            CancellationToken token = default)
         {
             IResponse<UserDTO> response;
             if (!ModelState.IsValid)
@@ -43,7 +48,11 @@ namespace OrderingService.Web.Controllers
         [HttpPost("sign-up")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> SignUp(UserDTO userDto, CancellationToken token = default)
+        public async Task<IActionResult> SignUp(
+            [FromBody]
+            [CustomizeValidator(RuleSet = "Create")]
+            UserDTO userDto,
+            CancellationToken token = default)
         {
             IResponse<UserDTO> response;
             if (!ModelState.IsValid)
@@ -93,7 +102,11 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> UpdateProfileAsync(UserDTO userDto, CancellationToken token = default)
+        public async Task<IActionResult> UpdateProfileAsync(
+            [FromBody]
+            [CustomizeValidator(RuleSet = "Id,Create")]
+            UserDTO userDto,
+            CancellationToken token = default)
         {
             IResponse<UserDTO> response;
             if (!ModelState.IsValid)

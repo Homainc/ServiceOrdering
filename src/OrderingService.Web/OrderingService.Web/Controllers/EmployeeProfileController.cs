@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
@@ -25,7 +26,9 @@ namespace OrderingService.Web.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetAllAsync(string serviceName, decimal? serviceMaxCost,
+        public async Task<IActionResult> GetAllAsync(
+            [FromQuery] string serviceName,
+            [FromQuery] decimal? serviceMaxCost,
             CancellationToken token = default)
         {
             IPagedResult<EmployeeProfileDTO> response;
@@ -44,12 +47,16 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> CreateAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token = default)
+        public async Task<IActionResult> CreateAsync(
+            [FromBody]
+            [CustomizeValidator(RuleSet = "Create")]
+            EmployeeProfileDTO employeeProfileDto,
+            CancellationToken token = default)
         {
-            IResult<EmployeeProfileDTO> response;
+            IResponse<EmployeeProfileDTO> response;
             if (!ModelState.IsValid)
             {
-                response = new Result<EmployeeProfileDTO>(ModelState.GetErrorsString());
+                response = new Response<EmployeeProfileDTO>(ModelState.GetErrorsString());
                 return BadRequest(response);
             }
 
@@ -57,11 +64,11 @@ namespace OrderingService.Web.Controllers
             var result = await EmployeeService.CreateEmployeeProfileAsync(employeeProfileDto, token);
             if (result.DidError)
             {
-                response = new Result<EmployeeProfileDTO>(result.ErrorMessage);
+                response = new Response<EmployeeProfileDTO>(result.ErrorMessage);
                 return BadRequest(response);
             }
 
-            response = new Result<EmployeeProfileDTO>(result.Value);
+            response = new Response<EmployeeProfileDTO>(result.Value);
             return Ok(response);
         }
 
@@ -69,7 +76,11 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> UpdateAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token = default)
+        public async Task<IActionResult> UpdateAsync(
+            [FromBody]
+            [CustomizeValidator(RuleSet = "Id,Create")]
+            EmployeeProfileDTO employeeProfileDto,
+            CancellationToken token = default)
         {
             IResponse<EmployeeProfileDTO> response;
             if (!ModelState.IsValid)
@@ -94,15 +105,9 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> DeleteAsync(string id, CancellationToken token = default)
+        public async Task<IActionResult> DeleteAsync([FromQuery] string id, CancellationToken token = default)
         {
             IResponse<EmployeeProfileDTO> response;
-            if (!ModelState.IsValid)
-            {
-                response = new Response<EmployeeProfileDTO>(ModelState.GetErrorsString());
-                return BadRequest(response);
-            }
-
             var result = await EmployeeService.DeleteEmployeeProfileAsync(new Guid(id), token);
             if (result.DidError)
             {
