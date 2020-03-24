@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Domain.Logic.MapperProfiles

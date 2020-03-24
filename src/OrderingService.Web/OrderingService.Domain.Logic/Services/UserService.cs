@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OrderingService.Data.Interfaces;
@@ -20,16 +19,14 @@ namespace OrderingService.Domain.Logic.Services
     public class UserService : IUserService
     {
         private IUnitOfWork Database { get; }
-        private ILogger<UserService> Logger { get; }
         private IMapper Mapper { get; }
         private IPasswordHasher<User> PasswordHasher { get; }
         private AppSettings AppSettings { get; }
 
-        public UserService(IUnitOfWork db, ILogger<UserService> logger, IMapper mapper, 
+        public UserService(IUnitOfWork db, IMapper mapper, 
             IPasswordHasher<User> passwordHasher, IOptions<AppSettings> appSettings)
         {
             Database = db;
-            Logger = logger;
             Mapper = mapper;
             PasswordHasher = passwordHasher;
             AppSettings = appSettings.Value;

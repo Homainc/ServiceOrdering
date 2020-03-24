@@ -15,5 +15,8 @@ namespace OrderingService.Domain.Logic.Interfaces
     public interface IPagedResult<out T> : IResult
     {
         IEnumerable<T> Value { get; }
+        int PagesCount { get; }
+        int PageSize { get; }
+        int PageNumber { get; }
     }
 }

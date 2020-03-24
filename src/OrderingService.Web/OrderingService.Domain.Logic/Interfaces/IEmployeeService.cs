@@ -8,9 +8,15 @@ namespace OrderingService.Domain.Logic.Interfaces
 {
     public interface IEmployeeService : IDisposable
     {
-        Task<IPagedResult<EmployeeProfileDTO>> FilterEmployeeProfilesAsync(string serviceName, decimal? maxServiceCost, CancellationToken token);
-        Task<IResult<EmployeeProfileDTO>> CreateEmployeeProfileAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token);
-        Task<IResult<EmployeeProfileDTO>> UpdateEmployeeServiceAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token);
-        Task<IResult<EmployeeProfileDTO>> DeleteEmployeeProfileAsync(Guid employeeId, CancellationToken token);
+        Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(string serviceName, decimal? maxServiceCost,
+            int pageSize, int pageNumber, CancellationToken token);
+
+        Task<IResult<EmployeeProfileDTO>> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto,
+            CancellationToken token);
+
+        Task<IResult<EmployeeProfileDTO>> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto,
+            CancellationToken token);
+
+        Task<IResult<EmployeeProfileDTO>> DeleteEmployeeAsync(Guid employeeId, CancellationToken token);
     }
 }

@@ -20,8 +20,8 @@ namespace OrderingService.Data.Interfaces
         protected readonly ApplicationContext _db;
         protected AbstractRepository(ApplicationContext db) => _db = db;
         public abstract IQueryable<T> GetAll();
-        public async Task CreateAsync(T entity, CancellationToken token) => await _db.AddAsync(entity, token);
-        public void Update(T entity) => _db.Update(entity);
-        public void Delete(T entity) => _db.Remove(entity);
+        public async Task CreateAsync(T entity, CancellationToken token) => _db.Entry(entity).State = EntityState.Added;
+        public void Update(T entity) => _db.Entry(entity).State = EntityState.Modified;
+        public void Delete(T entity) => _db.Entry(entity).State = EntityState.Deleted;
     }
 }

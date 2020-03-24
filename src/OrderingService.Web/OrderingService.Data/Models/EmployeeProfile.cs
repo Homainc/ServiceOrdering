@@ -10,7 +10,10 @@ namespace OrderingService.Data.Models
         public ServiceType ServiceType { get; set; }
         public decimal ServiceCost { get; set; }
         public string Description { get; set; }
+        public Guid UserId { get; set; }
         public User User { get; set; }
+
+        public EmployeeProfile() => User = new User();
     }
 
     public class EmployeeProfileConfiguration : IEntityTypeConfiguration<EmployeeProfile>

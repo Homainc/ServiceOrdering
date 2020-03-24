@@ -9,5 +9,7 @@ namespace OrderingService.Domain
         public decimal ServiceCost { get; set; }
         public string Description { get; set; }
         public UserDTO User { get; set; }
+
+        public EmployeeProfileDTO() => User = new UserDTO();
     }
 }

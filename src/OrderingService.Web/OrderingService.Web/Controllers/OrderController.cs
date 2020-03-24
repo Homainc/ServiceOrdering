@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
@@ -8,6 +10,7 @@ using OrderingService.Web.Interfaces;
 
 namespace OrderingService.Web.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
@@ -21,10 +24,12 @@ namespace OrderingService.Web.Controllers
         [HttpGet("employee/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetEmployeeOrdersAsync([FromQuery] string id, CancellationToken token = default)
+        public async Task<IActionResult> GetEmployeeOrdersAsync([FromQuery] string id, [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1,
+            CancellationToken token = default)
         {
             IPagedResponse<OrderDTO> response;
-            var result = await OrderService.GetEmployeeOrdersAsync(new System.Guid(id), token);
+            var result = await OrderService.GetPagedEmployeeOrdersAsync(new Guid(id), pageSize, pageNumber, token);
             if (result.DidError)
             {
                 response = new PagedResponse<OrderDTO>(result.ErrorMessage);

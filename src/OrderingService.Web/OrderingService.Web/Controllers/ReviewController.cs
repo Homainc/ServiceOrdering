@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,11 @@ namespace OrderingService.Web.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetUserReviewsAsync([FromQuery] string id, CancellationToken token = default)
+        public async Task<IActionResult> GetUserReviewsAsync([FromQuery] string id, [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1, CancellationToken token = default)
         {
             IPagedResponse<ReviewDTO> response;
-            var result = await ReviewService.GetUserReviewsAsync(new System.Guid(id), token);
+            var result = await ReviewService.GetPagedReviewsAsync(new Guid(id), pageSize, pageNumber, token);
             if (result.DidError)
             {
                 response = new PagedResponse<ReviewDTO>(result.ErrorMessage);

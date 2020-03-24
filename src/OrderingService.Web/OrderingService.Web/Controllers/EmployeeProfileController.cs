@@ -5,7 +5,6 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
-using OrderingService.Domain.Logic;
 using OrderingService.Domain.Logic.Interfaces;
 using OrderingService.Web.Interfaces;
 
@@ -26,20 +25,22 @@ namespace OrderingService.Web.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetAllAsync(
-            [FromQuery] string serviceName,
-            [FromQuery] decimal? serviceMaxCost,
+        public async Task<IActionResult> GetEmployeesAsync(
+            [FromQuery] string serviceName = null,
+            [FromQuery] decimal? serviceMaxCost = null,
+            [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1,
             CancellationToken token = default)
         {
-            IPagedResult<EmployeeProfileDTO> response;
-            var result = await EmployeeService.FilterEmployeeProfilesAsync(serviceName, serviceMaxCost, token);
+            IPagedResponse<EmployeeProfileDTO> response;
+            var result = await EmployeeService.GetPagedEmployeesAsync(serviceName, serviceMaxCost, pageSize, pageNumber, token);
             if (result.DidError)
             {
-                response = new PagedResult<EmployeeProfileDTO>(result.ErrorMessage);
+                response = new PagedResponse<EmployeeProfileDTO>(result.ErrorMessage);
                 return BadRequest(response);
             }
 
-            response = new PagedResult<EmployeeProfileDTO>(result.Value);
+            response = new PagedResponse<EmployeeProfileDTO>(result.Value);
             return Ok(response);
         }
 
@@ -61,7 +62,7 @@ namespace OrderingService.Web.Controllers
             }
 
             employeeProfileDto.Id = new Guid(User.Identity.Name);
-            var result = await EmployeeService.CreateEmployeeProfileAsync(employeeProfileDto, token);
+            var result = await EmployeeService.CreateEmployeeAsync(employeeProfileDto, token);
             if (result.DidError)
             {
                 response = new Response<EmployeeProfileDTO>(result.ErrorMessage);
@@ -90,7 +91,7 @@ namespace OrderingService.Web.Controllers
             }
 
             employeeProfileDto.Id = new Guid(User.Identity.Name);
-            var result = await EmployeeService.UpdateEmployeeServiceAsync(employeeProfileDto, token);
+            var result = await EmployeeService.UpdateEmployeeAsync(employeeProfileDto, token);
             if (result.DidError)
             {
                 response = new Response<EmployeeProfileDTO>(result.ErrorMessage);
@@ -108,7 +109,7 @@ namespace OrderingService.Web.Controllers
         public async Task<IActionResult> DeleteAsync([FromQuery] string id, CancellationToken token = default)
         {
             IResponse<EmployeeProfileDTO> response;
-            var result = await EmployeeService.DeleteEmployeeProfileAsync(new Guid(id), token);
+            var result = await EmployeeService.DeleteEmployeeAsync(new Guid(id), token);
             if (result.DidError)
             {
                 response = new Response<EmployeeProfileDTO>(ModelState.GetErrorsString());
