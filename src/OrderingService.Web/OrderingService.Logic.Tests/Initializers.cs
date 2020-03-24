@@ -70,14 +70,14 @@ namespace OrderingService.Logic.Tests
             var appSettings = new AppSettings { Secret = "db_test1111111111111111111111111111111111111111111111" };
             mockOptions.Setup(x => x.Value).Returns(appSettings);
 
-            return new UserService(FakeUow(name), logger, Mapper, hasher, mockOptions.Object);
+            return new UserService(FakeUow(name), Mapper, hasher, mockOptions.Object);
         }
 
         public static EmployeeService FakeEmployeeService(string name)
         {
             var logger = Mock.Of<ILogger<EmployeeService>>();
 
-            return new EmployeeService(FakeUow(name), logger, Mapper);
+            return new EmployeeService(FakeUow(name), Mapper);
         }
     }
 }

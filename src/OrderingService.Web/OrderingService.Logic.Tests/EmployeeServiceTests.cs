@@ -21,7 +21,7 @@ namespace OrderingService.Logic.Tests
             employeeDto.User.Id = userService.SignUpAsync(employeeDto.User, default).Result.Value.Id;
             
             // Action
-            var result = employeeService.CreateEmployeeProfileAsync(employeeDto, default).Result;
+            var result = employeeService.CreateEmployeeAsync(employeeDto, default).Result;
 
             // Assert
             Assert.False(result.DidError);
@@ -43,7 +43,7 @@ namespace OrderingService.Logic.Tests
             }
             using (var employeeService = Initializers.FakeEmployeeService(dbName))
             {
-                employeeProfile.Id = employeeService.CreateEmployeeProfileAsync(employeeProfile, default).Result.Value.Id;
+                employeeProfile.Id = employeeService.CreateEmployeeAsync(employeeProfile, default).Result.Value.Id;
             }
 
             // Action
@@ -51,7 +51,7 @@ namespace OrderingService.Logic.Tests
             employeeProfile.ServiceCost = 10;
             employeeProfile.Description = "best+test";
             using var employeeService2 = Initializers.FakeEmployeeService(dbName);
-            var result = employeeService2.UpdateEmployeeServiceAsync(employeeProfile, default).Result;
+            var result = employeeService2.UpdateEmployeeAsync(employeeProfile, default).Result;
 
             // Assert
             Assert.False(result.DidError);
@@ -72,12 +72,12 @@ namespace OrderingService.Logic.Tests
             }
             using (var employeeService = Initializers.FakeEmployeeService(dbName))
             {
-                employeeProfile.Id = employeeService.CreateEmployeeProfileAsync(employeeProfile, default).Result.Value.Id;
+                employeeProfile.Id = employeeService.CreateEmployeeAsync(employeeProfile, default).Result.Value.Id;
             }
 
             // Action
             using var employeeService2 = Initializers.FakeEmployeeService(dbName);
-            var result = employeeService2.DeleteEmployeeProfileAsync(employeeProfile.Id, default).Result;
+            var result = employeeService2.DeleteEmployeeAsync(employeeProfile.Id, default).Result;
 
             // Assert
             Assert.False(result.DidError);

@@ -42,7 +42,7 @@ const SignUpPage = props => {
                                 .required("Last name is required")
                                 .max(20, "Last name must be at most 20 characters"),
                             phoneNumber: Yup.string(),
-                            imageUrl: Yup.string().url()
+                            imageUrl: Yup.string()
                         })}
                         onSubmit={values => {
                             signUp({
