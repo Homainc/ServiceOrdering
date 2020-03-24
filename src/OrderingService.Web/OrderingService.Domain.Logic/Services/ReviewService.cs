@@ -34,7 +34,7 @@ namespace OrderingService.Domain.Logic.Services
             
             reviewDto.Date = DateTime.Now;
             var review = Mapper.Map<Review>(reviewDto);
-            await Database.Reviews.CreateAsync(review, token); 
+            Database.Reviews.Create(review); 
             await Database.SaveAsync(token);
 
             return new Result<ReviewDTO>(Mapper.Map<ReviewDTO>(review));

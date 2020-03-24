@@ -36,7 +36,7 @@ namespace OrderingService.Domain.Logic.Services
 
             orderDto.Date = DateTime.Now;
             var order = Mapper.Map<ServiceOrder>(orderDto);
-            await Database.ServiceOrders.CreateAsync(order, token);
+            Database.ServiceOrders.Create(order);
             await Database.SaveAsync(token);
 
             return new Result<OrderDTO>(Mapper.Map<OrderDTO>(order));

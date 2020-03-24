@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
 using OrderingService.Web.Interfaces;
@@ -15,22 +16,29 @@ namespace OrderingService.Web.Controllers
     public class AccountController : ControllerBase
     {
         private IUserService UserService { get; }
-        public AccountController(IUserService userService) =>
+        private ILogger<AccountController> Logger { get; }
+
+        public AccountController(IUserService userService, ILogger<AccountController> logger)
+        {
             UserService = userService;
+            Logger = logger;
+        }
 
         [HttpPost("auth")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Auth(
+        public async Task<IActionResult> AuthAsync(
             [FromBody]
             [CustomizeValidator(RuleSet = "LogIn")]
             UserDTO userDto, 
             CancellationToken token = default)
         {
+            Logger.LogDebug("{0} has been invoked", nameof(AuthAsync));
             IResponse<UserDTO> response;
             if (!ModelState.IsValid)
             {
                 response = new Response<UserDTO>(ModelState.GetErrorsString());
+                Logger.LogDebug("Validation errors occurred: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -38,6 +46,7 @@ namespace OrderingService.Web.Controllers
             if (result.DidError)
             {
                 response = new Response<UserDTO>(result.ErrorMessage);
+                Logger.LogDebug("BLL error occured: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -48,16 +57,18 @@ namespace OrderingService.Web.Controllers
         [HttpPost("sign-up")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> SignUp(
+        public async Task<IActionResult> SignUpAsync(
             [FromBody]
             [CustomizeValidator(RuleSet = "Create")]
             UserDTO userDto,
             CancellationToken token = default)
         {
+            Logger.LogDebug("{0} has been invoked", nameof(SignUpAsync));
             IResponse<UserDTO> response;
             if (!ModelState.IsValid)
             {
                 response = new Response<UserDTO>(ModelState.GetErrorsString());
+                Logger.LogDebug("Validation errors occurred: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -65,6 +76,7 @@ namespace OrderingService.Web.Controllers
             if (result.DidError)
             {
                 response = new Response<UserDTO>(result.ErrorMessage);
+                Logger.LogDebug("BLL error occured: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -77,12 +89,14 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<IActionResult> GetProfile(CancellationToken token = default)
+        public async Task<IActionResult> GetProfileAsync(CancellationToken token = default)
         {
+            Logger.LogDebug("{0} has been invoked", nameof(GetProfileAsync));
             IResponse<UserDTO> response;
             if (!ModelState.IsValid)
             {
                 response = new Response<UserDTO>(ModelState.GetErrorsString());
+                Logger.LogDebug("Validation errors occurred: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -90,6 +104,7 @@ namespace OrderingService.Web.Controllers
             if (result.DidError)
             {
                 response = new Response<UserDTO>(result.ErrorMessage);
+                Logger.LogDebug("BLL error occured: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -108,10 +123,12 @@ namespace OrderingService.Web.Controllers
             UserDTO userDto,
             CancellationToken token = default)
         {
+            Logger.LogDebug("{0} has been invoked", nameof(UpdateProfileAsync));
             IResponse<UserDTO> response;
             if (!ModelState.IsValid)
             {
                 response = new Response<UserDTO>(ModelState.GetErrorsString());
+                Logger.LogDebug("Validation errors occurred: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -120,6 +137,7 @@ namespace OrderingService.Web.Controllers
             if (result.DidError)
             {
                 response = new Response<UserDTO>(result.ErrorMessage);
+                Logger.LogDebug("BLL error occured: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 

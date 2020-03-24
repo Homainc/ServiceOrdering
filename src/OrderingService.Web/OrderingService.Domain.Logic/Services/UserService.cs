@@ -43,7 +43,7 @@ namespace OrderingService.Domain.Logic.Services
             user = Mapper.Map<User>(userDto);
             user.HashedPassword = PasswordHasher.HashPassword(user, userDto.Password);
             user.RoleId = (await Database.Roles.GetAll().SingleOrDefaultAsync(x => x.Name == userDto.Role, token)).Id;
-            await Database.Users.CreateAsync(user, token);
+            Database.Users.Create(user);
 
             await Database.SaveAsync(token);
             return new Result<UserDTO>(Mapper.Map<UserDTO>(user));

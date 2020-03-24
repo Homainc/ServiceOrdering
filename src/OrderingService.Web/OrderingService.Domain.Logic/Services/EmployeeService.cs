@@ -52,13 +52,13 @@ namespace OrderingService.Domain.Logic.Services
             if (serviceType == null)
             {
                 serviceType = new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
-                await Database.ServiceTypes.CreateAsync(serviceType, token);
+                Database.ServiceTypes.Create(serviceType);
             }
 
             employeeProfile = Mapper.Map<EmployeeProfile>(employeeProfileDto);
             employeeProfile.ServiceType = serviceType;
 
-            await Database.EmployeeProfiles.CreateAsync(employeeProfile, token);
+            Database.EmployeeProfiles.Create(employeeProfile);
             await Database.SaveAsync(token);
 
             return new Result<EmployeeProfileDTO>(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
@@ -76,7 +76,7 @@ namespace OrderingService.Domain.Logic.Services
             if (serviceType == null)
             {
                 serviceType = new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
-                await Database.ServiceTypes.CreateAsync(serviceType, token);
+                Database.ServiceTypes.Create(serviceType);
             }
 
             employeeProfile = Mapper.Map<EmployeeProfile>(employeeProfileDto);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
 using OrderingService.Web.Interfaces;
@@ -16,9 +17,11 @@ namespace OrderingService.Web.Controllers
     public class OrderController : ControllerBase
     {
         private IOrderService OrderService { get; }
-        public OrderController(IOrderService orderService)
+        private ILogger<OrderController> Logger { get; }
+        public OrderController(IOrderService orderService, ILogger<OrderController> logger)
         {
             OrderService = orderService;
+            Logger = logger;
         }
 
         [HttpGet("employee/{id}")]
@@ -28,11 +31,13 @@ namespace OrderingService.Web.Controllers
             [FromQuery] int pageNumber = 1,
             CancellationToken token = default)
         {
+            Logger.LogDebug("{0} has been invoked", nameof(GetEmployeeOrdersAsync));
             IPagedResponse<OrderDTO> response;
             var result = await OrderService.GetPagedEmployeeOrdersAsync(new Guid(id), pageSize, pageNumber, token);
             if (result.DidError)
             {
                 response = new PagedResponse<OrderDTO>(result.ErrorMessage);
+                Logger.LogDebug("BLL error occured: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -49,10 +54,12 @@ namespace OrderingService.Web.Controllers
             OrderDTO orderDto,
             CancellationToken token = default)
         {
+            Logger.LogDebug("{0} has been invoked", nameof(CreateAsync));
             IResponse<OrderDTO> response;
             if (!ModelState.IsValid)
             {
                 response = new Response<OrderDTO>(ModelState.GetErrorsString());
+                Logger.LogDebug("Validation errors occurred: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -60,6 +67,7 @@ namespace OrderingService.Web.Controllers
             if (result.DidError)
             {
                 response = new Response<OrderDTO>(result.ErrorMessage);
+                Logger.LogDebug("BLL error occured: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -72,10 +80,12 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> CloseAsync([FromQuery] int id, CancellationToken token = default)
         {
+            Logger.LogDebug("{0} has been invoked", nameof(CloseAsync));
             IResponse<OrderDTO> response;
             if (!ModelState.IsValid)
             {
                 response = new Response<OrderDTO>(ModelState.GetErrorsString());
+                Logger.LogDebug("Validation errors occurred: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -83,6 +93,7 @@ namespace OrderingService.Web.Controllers
             if (result.DidError)
             {
                 response = new Response<OrderDTO>(result.ErrorMessage);
+                Logger.LogDebug("BLL error occured: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
@@ -95,17 +106,13 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> DeleteAsync([FromQuery] int id, CancellationToken token = default)
         {
+            Logger.LogDebug("{0} has been invoked", nameof(DeleteAsync));
             IResponse<OrderDTO> response;
-            if (!ModelState.IsValid)
-            {
-                response = new Response<OrderDTO>(ModelState.GetErrorsString());
-                return BadRequest(response);
-            }
-
             var result = await OrderService.DeleteAsync(id, token);
             if (result.DidError)
             {
                 response = new Response<OrderDTO>(result.ErrorMessage);
+                Logger.LogDebug("BLL error occured: {0}", response.ErrorMessage);
                 return BadRequest(response);
             }
 
