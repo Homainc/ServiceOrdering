@@ -35,13 +35,13 @@ namespace OrderingService.Domain.Logic.Services
             AppSettings = appSettings.Value;
         }
 
-        public async Task<IResponse<UserDTO>> CreateAsync(UserDTO userDto, CancellationToken token)
+        public async Task<IResult<UserDTO>> CreateAsync(UserDTO userDto, CancellationToken token)
         {
             var user = await Database.Users.GetAll()
                 .SingleOrDefaultAsync(x => x.Email == userDto.Email, token);
 
             if (user != null)
-                return Response<UserDTO>.ValidationError("User with this email already exists");
+                return new Result<UserDTO>("User with this email already exists");
 
             user = Mapper.Map<User>(userDto);
             user.HashedPassword = PasswordHasher.HashPassword(user, userDto.Password);
@@ -49,18 +49,18 @@ namespace OrderingService.Domain.Logic.Services
             await Database.Users.CreateAsync(user, token);
 
             await Database.SaveAsync(token);
-            return Response<UserDTO>.Success(Mapper.Map<UserDTO>(user));
+            return new Result<UserDTO>(Mapper.Map<UserDTO>(user));
         }
 
-        public async Task<IResponse<UserDTO>> AuthenticateAsync(UserDTO userDto, CancellationToken token)
+        public async Task<IResult<UserDTO>> AuthenticateAsync(UserDTO userDto, CancellationToken token)
         {
             var user = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Email == userDto.Email, token);
             if(user == null)
-                return Response<UserDTO>.ValidationError("Email or password is wrong");
+                return new Result<UserDTO>("Email or password is wrong");
 
             var result = PasswordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
             if (result == PasswordVerificationResult.Failed)
-                return Response<UserDTO>.ValidationError("Email or password is wrong");
+                return new Result<UserDTO>("Email or password is wrong");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
@@ -77,10 +77,10 @@ namespace OrderingService.Domain.Logic.Services
 
             userDto = Mapper.Map<UserDTO>(user);
             userDto.Token = tokenHandler.WriteToken(userToken);
-            return Response<UserDTO>.Success(userDto);
+            return new Result<UserDTO>(userDto);
         }
 
-        public async Task<IResponse<UserDTO>> SignUpAsync(UserDTO userDto, CancellationToken token)
+        public async Task<IResult<UserDTO>> SignUpAsync(UserDTO userDto, CancellationToken token)
         {
             userDto.Role = "user";
             var result = await CreateAsync(userDto, token);
@@ -89,17 +89,19 @@ namespace OrderingService.Domain.Logic.Services
             return await AuthenticateAsync(userDto, token);
         }
 
-        public async Task<IResponse<UserDTO>> GetUserByIdAsync(Guid id, CancellationToken token)
+        public async Task<IResult<UserDTO>> GetUserByIdAsync(Guid id, CancellationToken token)
         {
             var userProfile = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
-            return Response<UserDTO>.Success(Mapper.Map<UserDTO>(userProfile));
+            if(userProfile == null)
+                return new Result<UserDTO>($"User with id {id} not found");
+            return new Result<UserDTO>(Mapper.Map<UserDTO>(userProfile));
         }
 
-        public async Task<IResponse<UserDTO>> UpdateProfileAsync(UserDTO userDto, CancellationToken token)
+        public async Task<IResult<UserDTO>> UpdateProfileAsync(UserDTO userDto, CancellationToken token)
         {
             var user = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == userDto.Id, token);
             if (user == null)
-                Response<UserDTO>.NotFound($"User with id {userDto.Id} not found");
+                return new Result<UserDTO>($"User with id {userDto.Id} not found");
 
             user.PhoneNumber = userDto.PhoneNumber;
             Database.Users.Update(user);
@@ -108,7 +110,7 @@ namespace OrderingService.Domain.Logic.Services
             Database.Users.Update(userProfile);
 
             await Database.SaveAsync(token);
-            return Response<UserDTO>.Success(userDto);
+            return new Result<UserDTO>(userDto);
         }
 
         public void Dispose() => Database.Dispose();

@@ -1,41 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using OrderingService.Domain.Logic.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace OrderingService.Web
 {
-    public static class ResponseExtension
+    public static class ModelStateDictionaryExtension
     {
-        public static async Task<IActionResult> ToHttpResponseAsync<T>(this Task<IResponse<T>> response)
+        public static string GetErrorsString(this ModelStateDictionary model)
         {
-            switch ((await response).ResponseResult)
-            {
-                case ResponseResult.ValidationError:
-                    return new ObjectResult(response)
-                    {
-                        StatusCode = (int) HttpStatusCode.BadRequest
-                    };
-                case ResponseResult.NotFound:
-                    return new ObjectResult(response)
-                    {
-                        StatusCode = (int) HttpStatusCode.NotFound
-                    };
-                case ResponseResult.InternalError:
-                    return new ObjectResult(response)
-                    {
-                        StatusCode = (int) HttpStatusCode.InternalServerError
-                    };
-                default:
-                    return new ObjectResult(response)
-                    {
-                        StatusCode = (int)HttpStatusCode.OK
-                    };
-            }
+            var errors = model.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+            return String.Join(";\n", errors);
         }
     }
 }

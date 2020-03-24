@@ -42,10 +42,10 @@ namespace OrderingService.Domain.Logic
             });
 
             services.AddAutoMapper(typeof(UserMapperProfile), typeof(EmployeeMapperProfile), typeof(ReviewMapperProfile), typeof(OrderMapperProfile));
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IEmployeeService, EmployeeService>();
-            services.AddTransient<IReviewService, ReviewService>();
-            services.AddTransient<IOrderService, OrderService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IReviewService, ReviewService>();
+            services.AddScoped<IOrderService, OrderService>();
             return services;
         }
     }

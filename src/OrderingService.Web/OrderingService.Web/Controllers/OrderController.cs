@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
+using OrderingService.Web.Interfaces;
 
 namespace OrderingService.Web.Controllers
 {
@@ -17,19 +18,89 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpGet("employee/{id}")]
-        public async Task<IActionResult> GetEmployeeOrdersAsync(string id, CancellationToken token = default) =>
-            await OrderService.GetEmployeeOrdersAsync(new System.Guid(id), token).ToHttpResponseAsync();
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetEmployeeOrdersAsync(string id, CancellationToken token = default)
+        {
+            IPagedResponse<OrderDTO> response;
+            var result = await OrderService.GetEmployeeOrdersAsync(new System.Guid(id), token);
+            if (result.DidError)
+            {
+                response = new PagedResponse<OrderDTO>(result.ErrorMessage);
+                return BadRequest(response);
+            }
+
+            response = new PagedResponse<OrderDTO>(result.Value);
+            return Ok(response);
+        }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(OrderDTO orderDto, CancellationToken token = default) =>
-            await OrderService.CreateAsync(orderDto, token).ToHttpResponseAsync();
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> CreateAsync(OrderDTO orderDto, CancellationToken token = default)
+        {
+            IResponse<OrderDTO> response;
+            if (!ModelState.IsValid)
+            {
+                response = new Response<OrderDTO>(ModelState.GetErrorsString());
+                return BadRequest(response);
+            }
+
+            var result = await OrderService.CreateAsync(orderDto, token);
+            if (result.DidError)
+            {
+                response = new Response<OrderDTO>(result.ErrorMessage);
+                return BadRequest(response);
+            }
+
+            response = new Response<OrderDTO>(result.Value);
+            return Ok(response);
+        }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> CloseAsync(int id, CancellationToken token = default) =>
-            await OrderService.CloseAsync(id, token).ToHttpResponseAsync();
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> CloseAsync(int id, CancellationToken token = default)
+        {
+            IResponse<OrderDTO> response;
+            if (!ModelState.IsValid)
+            {
+                response = new Response<OrderDTO>(ModelState.GetErrorsString());
+                return BadRequest(response);
+            }
+
+            var result = await OrderService.CloseAsync(id, token);
+            if (result.DidError)
+            {
+                response = new Response<OrderDTO>(result.ErrorMessage);
+                return BadRequest(response);
+            }
+
+            response = new Response<OrderDTO>(result.Value);
+            return Ok(response);
+        }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id, CancellationToken token = default) =>
-            await OrderService.DeleteAsync(id, token).ToHttpResponseAsync();
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeleteAsync(int id, CancellationToken token = default)
+        {
+            IResponse<OrderDTO> response;
+            if (!ModelState.IsValid)
+            {
+                response = new Response<OrderDTO>(ModelState.GetErrorsString());
+                return BadRequest(response);
+            }
+
+            var result = await OrderService.DeleteAsync(id, token);
+            if (result.DidError)
+            {
+                response = new Response<OrderDTO>(result.ErrorMessage);
+                return BadRequest(response);
+            }
+
+            response = new Response<OrderDTO>(result.Value);
+            return Ok(response);
+        }
     }
 }

@@ -6,10 +6,10 @@ namespace OrderingService.Domain.Logic.Interfaces
 {
     public interface IUserService : IDisposable
     {
-        Task<IResponse<UserDTO>> SignUpAsync(UserDTO userDto, CancellationToken token);
-        Task<IResponse<UserDTO>> CreateAsync(UserDTO userDto, CancellationToken token);
-        Task<IResponse<UserDTO>> AuthenticateAsync(UserDTO userDto, CancellationToken token);
-        Task<IResponse<UserDTO>> GetUserByIdAsync(Guid id, CancellationToken token);
-        Task<IResponse<UserDTO>> UpdateProfileAsync(UserDTO userDto, CancellationToken token);
+        Task<IResult<UserDTO>> SignUpAsync(UserDTO userDto, CancellationToken token);
+        Task<IResult<UserDTO>> CreateAsync(UserDTO userDto, CancellationToken token);
+        Task<IResult<UserDTO>> AuthenticateAsync(UserDTO userDto, CancellationToken token);
+        Task<IResult<UserDTO>> GetUserByIdAsync(Guid id, CancellationToken token);
+        Task<IResult<UserDTO>> UpdateProfileAsync(UserDTO userDto, CancellationToken token);
     }
 }

@@ -17,8 +17,8 @@ namespace OrderingService.Data
             //configure your Data Layer services here
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(config.GetSection("AppSettings:ConnectionString").Value));
-            services.TryAddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddTransient<IUnitOfWork, ApplicationUnitOfWork>();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IUnitOfWork, ApplicationUnitOfWork>();
             return services;
         }
     }

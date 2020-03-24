@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
+using OrderingService.Web.Interfaces;
 
 namespace OrderingService.Web.Controllers
 {
@@ -16,29 +17,101 @@ namespace OrderingService.Web.Controllers
         public AccountController(IUserService userService) =>
             UserService = userService;
 
-        [HttpPost]
-        public async Task<IActionResult> Create(UserDTO userDto, CancellationToken token = default) => 
-            await UserService.CreateAsync(userDto, token).ToHttpResponseAsync();
-
         [HttpPost("auth")]
-        public async Task<IActionResult> Auth(UserDTO userDto, CancellationToken token = default) =>
-            await UserService.AuthenticateAsync(userDto, token).ToHttpResponseAsync();
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> Auth(UserDTO userDto, CancellationToken token = default)
+        {
+            IResponse<UserDTO> response;
+            if (!ModelState.IsValid)
+            {
+                response = new Response<UserDTO>(ModelState.GetErrorsString());
+                return BadRequest(response);
+            }
+
+            var result = await UserService.AuthenticateAsync(userDto, token);
+            if (result.DidError)
+            {
+                response = new Response<UserDTO>(result.ErrorMessage);
+                return BadRequest(response);
+            }
+
+            response = new Response<UserDTO>(result.Value);
+            return Ok(response);
+        }
 
         [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUp(UserDTO userDto, CancellationToken token = default) =>
-            await UserService.SignUpAsync(userDto, token).ToHttpResponseAsync();
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> SignUp(UserDTO userDto, CancellationToken token = default)
+        {
+            IResponse<UserDTO> response;
+            if (!ModelState.IsValid)
+            {
+                response = new Response<UserDTO>(ModelState.GetErrorsString());
+                return BadRequest(response);
+            }
+
+            var result = await UserService.SignUpAsync(userDto, token);
+            if (result.DidError)
+            {
+                response = new Response<UserDTO>(result.ErrorMessage);
+                return BadRequest(response);
+            }
+
+            response = new Response<UserDTO>(result.Value);
+            return Ok(response);
+        }
 
         [Authorize]
         [HttpGet("profile")]
-        public async Task<IActionResult> GetProfile(CancellationToken token = default) =>
-            await UserService.GetUserByIdAsync(new Guid(User.Identity.Name), token).ToHttpResponseAsync();
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<IActionResult> GetProfile(CancellationToken token = default)
+        {
+            IResponse<UserDTO> response;
+            if (!ModelState.IsValid)
+            {
+                response = new Response<UserDTO>(ModelState.GetErrorsString());
+                return BadRequest(response);
+            }
+
+            var result = await UserService.GetUserByIdAsync(new Guid(User.Identity.Name), token);
+            if (result.DidError)
+            {
+                response = new Response<UserDTO>(result.ErrorMessage);
+                return BadRequest(response);
+            }
+
+            response = new Response<UserDTO>(result.Value);
+            return Ok(response);
+        }
 
         [Authorize]
         [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> UpdateProfileAsync(UserDTO userDto, CancellationToken token = default)
         {
+            IResponse<UserDTO> response;
+            if (!ModelState.IsValid)
+            {
+                response = new Response<UserDTO>(ModelState.GetErrorsString());
+                return BadRequest(response);
+            }
+
             userDto.Id = new Guid(User.Identity.Name);
-            return await UserService.UpdateProfileAsync(userDto, token).ToHttpResponseAsync();
+            var result = await UserService.UpdateProfileAsync(userDto, token);
+            if (result.DidError)
+            {
+                response = new Response<UserDTO>(result.ErrorMessage);
+                return BadRequest(response);
+            }
+
+            response = new Response<UserDTO>(result.Value);
+            return Ok(response);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public void Dispose() => Database.Dispose();
 
-        public async Task<IResponse<IEnumerable<EmployeeProfileDTO>>> FilterEmployeeProfilesAsync(string serviceName,
+        public async Task<IPagedResult<EmployeeProfileDTO>> FilterEmployeeProfilesAsync(string serviceName,
             decimal? maxServiceCost, CancellationToken token)
         {
             var employee = Database.EmployeeProfiles.GetAll();
@@ -36,17 +36,17 @@ namespace OrderingService.Domain.Logic.Services
             if (maxServiceCost.HasValue)
                 employee = employee.Where(e => e.ServiceCost <= maxServiceCost.Value);
 
-            return Response<IEnumerable<EmployeeProfileDTO>>.Success(
-                await employee.ProjectTo<EmployeeProfileDTO>(Mapper.ConfigurationProvider).ToListAsync(token));
+            return new PagedResult<EmployeeProfileDTO>(await employee
+                .ProjectTo<EmployeeProfileDTO>(Mapper.ConfigurationProvider).ToListAsync(token));
         }
 
-        public async Task<IResponse<EmployeeProfileDTO>> CreateEmployeeProfileAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
+        public async Task<IResult<EmployeeProfileDTO>> CreateEmployeeProfileAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
         {
             var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == employeeProfileDto.Id, token);
 
             if (employeeProfile != null)
             {
-                var result = Response<EmployeeProfileDTO>.ValidationError("Employee profile already exist");
+                var result = new Result<EmployeeProfileDTO>("Employee profile already exist");
                 Logger.LogError(result.ErrorMessage);
                 return result;
             }
@@ -69,16 +69,16 @@ namespace OrderingService.Domain.Logic.Services
             await Database.SaveAsync(token);
 
             Logger.LogInformation($"Employee Profile(cost: {employeeProfile.ServiceCost}, service name: {employeeProfile.ServiceType.Name}) was added");
-            return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
+            return new Result<EmployeeProfileDTO>(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
 
-        public async Task<IResponse<EmployeeProfileDTO>> UpdateEmployeeServiceAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
+        public async Task<IResult<EmployeeProfileDTO>> UpdateEmployeeServiceAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
         {
             var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == employeeProfileDto.Id, token);
 
             if (employeeProfile == null)
             {
-                var result = Response<EmployeeProfileDTO>.NotFound($"Employee profile with id {employeeProfileDto.Id} not found");
+                var result = new Result<EmployeeProfileDTO>($"Employee profile with id {employeeProfileDto.Id} not found");
                 Logger.LogError(result.ErrorMessage);
                 return result;
             }
@@ -98,24 +98,25 @@ namespace OrderingService.Domain.Logic.Services
             await Database.SaveAsync(token);
 
             Logger.LogInformation($"Employee Profile(cost: {employeeProfile.ServiceCost}, service name: {employeeProfile.ServiceType.Name}) was updated");
-            return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
+            return new Result<EmployeeProfileDTO>(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
 
-        public async Task<IResponse<EmployeeProfileDTO>> DeleteEmployeeProfileAsync(Guid employeeId, CancellationToken token)
+        public async Task<IResult<EmployeeProfileDTO>> DeleteEmployeeProfileAsync(Guid employeeId, CancellationToken token)
         {
             var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(e => e.Id == employeeId, token);
 
             if (employeeProfile == null)
             {
-                var result = Response<EmployeeProfileDTO>.NotFound("Employee profile not found");
+                var result = new Result<EmployeeProfileDTO>("Employee profile not found");
                 Logger.LogError(result.ErrorMessage);
+                return result;
             }
 
             Database.EmployeeProfiles.Delete(employeeProfile);
             await Database.SaveAsync(token);
 
             Logger.LogInformation($"Employee profile from user id {employeeId} was deleted");
-            return Response<EmployeeProfileDTO>.Success(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
+            return new Result<EmployeeProfileDTO>(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
         }
     }
 }
