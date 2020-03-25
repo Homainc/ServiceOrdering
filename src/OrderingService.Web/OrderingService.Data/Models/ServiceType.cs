@@ -16,7 +16,7 @@ namespace OrderingService.Data.Models
                 .ValueGeneratedOnAdd();
             builder.HasAlternateKey(x => x.Name);
             builder.Property(x => x.Name)
-                .HasMaxLength(20);
+                .HasMaxLength(50);
         }
     }
 }

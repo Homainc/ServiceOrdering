@@ -8,8 +8,7 @@ namespace OrderingService.Domain
         public string ServiceType { get; set; }
         public decimal ServiceCost { get; set; }
         public string Description { get; set; }
+        public Guid UserId { get; set; }
         public UserDTO User { get; set; }
-
-        public EmployeeProfileDTO() => User = new UserDTO();
     }
 }

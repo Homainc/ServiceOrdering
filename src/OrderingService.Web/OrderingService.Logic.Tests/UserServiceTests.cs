@@ -69,6 +69,37 @@ namespace OrderingService.Logic.Tests
 
             // Assert
             Assert.True(result.DidError);
-        } 
+        }
+
+        [Fact]
+        public void Can_update_user()
+        {
+            // Assign
+            const string dbName = "Can_update_user";
+            var user = Initializers.DefaultUser;
+            IResult<UserDTO> result;
+            using (var service = Initializers.FakeUserService(dbName))
+            {
+                result = service.CreateAsync(user, default).Result;
+            }
+            user = result.Value;
+
+            // Action
+            using (var service = Initializers.FakeUserService(dbName))
+            {
+                user.FirstName = "new first name";
+                user.LastName = "new last name";
+                user.ImageUrl = "new image url";
+                user.Email = "email@new.com";
+                result = service.UpdateProfileAsync(user, default).Result;
+            }
+
+            // Assert
+            Assert.False(result.DidError);
+            Assert.Equal(user.Email, result.Value.Email);
+            Assert.Equal(user.LastName, result.Value.LastName);
+            Assert.Equal(user.FirstName, result.Value.FirstName);
+            Assert.Equal(user.ImageUrl, result.Value.ImageUrl);
+        }
     }
 }

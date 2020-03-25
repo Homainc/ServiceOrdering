@@ -23,14 +23,14 @@ namespace OrderingService.Data.Models
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.FirstName)
-                .IsRequired().HasMaxLength(20);
+                .IsRequired().HasMaxLength(30);
             builder.Property(x => x.LastName)
-                .IsRequired().HasMaxLength(20);
+                .IsRequired().HasMaxLength(30);
             builder.Property(x => x.ImageUrl)
-                .HasMaxLength(40)
+                .HasMaxLength(200)
                 .IsRequired(false);
             builder.HasAlternateKey(x => x.Email);
-            builder.Property(x => x.Email).HasMaxLength(20);
+            builder.Property(x => x.Email).HasMaxLength(50);
             builder.HasOne(x => x.EmployeeProfile)
                 .WithOne(x => x.User)
                 .HasForeignKey<EmployeeProfile>(x => x.UserId)
@@ -38,8 +38,6 @@ namespace OrderingService.Data.Models
             builder.HasOne(x => x.Role)
                 .WithMany()
                 .HasForeignKey(x => x.RoleId);
-            builder.Property(x => x.PhoneNumber)
-                .HasMaxLength(12);
         }
     }
 }

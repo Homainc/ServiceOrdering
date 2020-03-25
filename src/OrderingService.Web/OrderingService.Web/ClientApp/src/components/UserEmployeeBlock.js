@@ -1,17 +1,18 @@
 import * as Yup from 'yup';
 import React, { useState } from 'react';
-import { Col, Row, ListGroupItem, ListGroupItemHeading, Button, ListGroupItemText } from 'reactstrap';
+import { Col, Row, ListGroupItem, ListGroupItemHeading, Button, ListGroupItemText, Spinner } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import { ValidationTextField } from './ValidationTextField';
 import { LoadingButton } from './LoadingButton';
-import { profileActions } from '../actions/profile.actions';
+import { employeeActions } from '../actions';
 import { connect } from 'react-redux';
 
 const UserEmployeeBlock = props => {
 
     const [state, setState] = useState({ editMode: false });
 
-    const employeeProfile = props.profile && props.profile.employeeProfile;
+    const employeeProfile = props.employeeProfile ? props.employeeProfile : 
+        props.profile && props.profile.employeeProfile;
 
     const handleProfileProcessed = () => {
         setState({ editMode: false });
@@ -27,14 +28,16 @@ const UserEmployeeBlock = props => {
             props.createEmployeeProfile(profile)
                 .then(handleProfileProcessed);
         else
-            props.updateEmployeeProfile(profile)
+            props.updateEmployeeProfile({...profile, id: employeeProfile.id})
                 .then(handleProfileProcessed);
     };
 
     return(
         <ListGroupItem>
             <Row>
-                <Col><ListGroupItemHeading>Employee profile</ListGroupItemHeading></Col>
+                <Col className="py-2"><ListGroupItemHeading>Employee profile</ListGroupItemHeading></Col>
+                {!state.editMode && employeeProfile && (
+                <Col sm="5" md="4" lg="3"><Button color="link" onClick={() => setState({ editMode: true })}>Edit employee profile</Button></Col>)}
             </Row>
             {!employeeProfile && !state.editMode && (<>
             <Row><ListGroupItemText className="p-3">You didn't create a employee profile</ListGroupItemText></Row>
@@ -44,9 +47,17 @@ const UserEmployeeBlock = props => {
             </>)}
             {!state.editMode && employeeProfile && (<>
             <ListGroupItemHeading>Service type</ListGroupItemHeading>
-            <ListGroupItemText>{employeeProfile && employeeProfile.serviceType}</ListGroupItemText>
+            <ListGroupItemText className="text-secondary">{employeeProfile && employeeProfile.serviceType}</ListGroupItemText>
             <ListGroupItemHeading>Service cost</ListGroupItemHeading>
-            <ListGroupItemText>{employeeProfile && employeeProfile.serviceCost}</ListGroupItemText>
+            <ListGroupItemText className="text-secondary">{employeeProfile && employeeProfile.serviceCost}</ListGroupItemText>
+            <ListGroupItemHeading>Description</ListGroupItemHeading>
+            <ListGroupItemText className="text-secondary">{employeeProfile && employeeProfile.description}</ListGroupItemText>
+            {employeeProfile && !state.editMode && (<>
+            <Spinner className={props.employeeDeleting?'':'collapse'} size="sm" color="danger"/>
+            <Button color="link"
+                className="text-danger" 
+                onClick={() => props.deleteEmployeeProfile(employeeProfile)} 
+                disabled={props.employeeDeleting}>Delete employee profile</Button></>)}
             </>)}
             {state.editMode && (
                 <Formik
@@ -70,16 +81,20 @@ const UserEmployeeBlock = props => {
                         <ValidationTextField 
                             id="serviceType"
                             name="serviceType" 
-                            label="Service Type"/>
+                            label="Service Type"
+                            disabled={props.employeeProcessing}/>
                         <ValidationTextField 
                             id="serviceCost" 
                             name="serviceCost" 
-                            label="Service Cost"/>
+                            label="Service Cost"
+                            disabled={props.employeeProcessing}/>
                         <ValidationTextField 
                             id="description" 
                             name="description" 
-                            label="Description"/>
-                        <LoadingButton type="submit" color="success">Save</LoadingButton>
+                            label="Description"
+                            type="textarea"
+                            disabled={props.employeeProcessing}/>
+                        <LoadingButton type="submit" color="success" isLoading={props.employeeProcessing}>Save</LoadingButton>
                         <Button
                             className="ml-1" 
                             onClick={() => {
@@ -95,15 +110,18 @@ const UserEmployeeBlock = props => {
 };
 
 const mapStateToProps = state => {
-    const { profileProcessing } = state.profile;
+    const { employeeProfile, employeeProcessing, employeeDeleting } = state.employee;
     return {
-        profileProcessing
+        employeeProcessing,
+        employeeDeleting,
+        employeeProfile
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    createEmployeeProfile: employeeProfile => dispatch(profileActions.createEmployeeProfile(employeeProfile)),
-    updateEmployeeProfile: employeeProfile => dispatch(profileActions.updateEmployeeProfile(employeeProfile))
+    createEmployeeProfile: employeeProfile => dispatch(employeeActions.createEmployeeProfile(employeeProfile)),
+    updateEmployeeProfile: employeeProfile => dispatch(employeeActions.updateEmployeeProfile(employeeProfile)),
+    deleteEmployeeProfile: employeeProfile => dispatch(employeeActions.deleteEmployeeProfile(employeeProfile))
 });
 
 const connectedUserEmployeeBlock = connect(mapStateToProps, mapDispatchToProps)(UserEmployeeBlock);

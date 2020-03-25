@@ -43,7 +43,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<IResult<EmployeeProfileDTO>> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
         {
-            var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == employeeProfileDto.Id, token);
+            var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.UserId == employeeProfileDto.UserId, token);
             if (employeeProfile != null)
                 return new Result<EmployeeProfileDTO>("Employee profile already exist");
 

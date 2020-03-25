@@ -63,11 +63,11 @@ const UserPersonalBlock = props => {
                     <Col>
                         {!state.editMode ? (<>
                             <ListGroupItemHeading>First name</ListGroupItemHeading>
-                            <ListGroupItemText>{props.profile && props.profile.firstName}</ListGroupItemText>
+                            <ListGroupItemText className="text-secondary">{props.profile && props.profile.firstName}</ListGroupItemText>
                             <ListGroupItemHeading>Last name</ListGroupItemHeading>
-                            <ListGroupItemText>{props.profile && props.profile.lastName}</ListGroupItemText>
+                            <ListGroupItemText className="text-secondary">{props.profile && props.profile.lastName}</ListGroupItemText>
                             <ListGroupItemHeading>Phone number</ListGroupItemHeading>
-                            <ListGroupItemText>{props.profile && props.profile.phoneNumber}</ListGroupItemText>
+                            <ListGroupItemText className="text-secondary">{props.profile && props.profile.phoneNumber}</ListGroupItemText>
                         </>):(<>
                             <Alert isOpen={!!props.alert.message} color={props.alert.type}>{props.alert.message}</Alert>
                             <ValidationTextField 

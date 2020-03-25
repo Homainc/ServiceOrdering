@@ -69,7 +69,7 @@ namespace OrderingService.Web.Controllers
                 return BadRequest(response);
             }
 
-            employeeProfileDto.Id = new Guid(User.Identity.Name);
+            employeeProfileDto.UserId = new Guid(User.Identity.Name);
             var result = await EmployeeService.CreateEmployeeAsync(employeeProfileDto, token);
             if (result.DidError)
             {
@@ -101,7 +101,7 @@ namespace OrderingService.Web.Controllers
                 return BadRequest(response);
             }
 
-            employeeProfileDto.Id = new Guid(User.Identity.Name);
+            employeeProfileDto.UserId = new Guid(User.Identity.Name);
             var result = await EmployeeService.UpdateEmployeeAsync(employeeProfileDto, token);
             if (result.DidError)
             {
@@ -114,7 +114,7 @@ namespace OrderingService.Web.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]

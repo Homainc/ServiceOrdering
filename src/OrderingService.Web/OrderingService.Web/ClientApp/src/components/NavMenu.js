@@ -27,26 +27,26 @@ class NavMenu extends Component {
     const { loggedIn, user } = this.props.authentication;
     return (
       <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
+        <Navbar color="dark" className="navbar-expand-sm navbar-toggleable-sm ng-dark border-bottom box-shadow mb-3" dark>
           <Container>
             <NavbarBrand tag={Link} to="/">Ordering Service</NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                  <NavLink tag={Link} className="text-light" to="/">Home</NavLink>
                 </NavItem>
                 { loggedIn? (
                   <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/profile"><UserWithAvatar user={user}/></NavLink>
+                    <NavLink tag={Link} className="text-light" to="/profile"><UserWithAvatar user={user}/></NavLink>
                   </NavItem>
                 ):(
                   <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/signup">Sign Up</NavLink>
+                    <NavLink tag={Link} className="text-light" to="/signup">Sign Up</NavLink>
                   </NavItem>
                 ) } 
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/login">{loggedIn? 'Logout' : 'Login'}</NavLink>
+                  <NavLink tag={Link} className="text-light" to="/login">{loggedIn? 'Logout' : 'Login'}</NavLink>
                 </NavItem>
               </ul>
             </Collapse>

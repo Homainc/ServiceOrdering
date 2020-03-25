@@ -100,11 +100,8 @@ namespace OrderingService.Domain.Logic.Services
             if (user == null)
                 return new Result<UserDTO>($"User with id {userDto.Id} not found");
 
-            user.PhoneNumber = userDto.PhoneNumber;
+            Mapper.Map(userDto, user);
             Database.Users.Update(user);
-
-            var userProfile = Mapper.Map<User>(userDto);
-            Database.Users.Update(userProfile);
 
             await Database.SaveAsync(token);
             return new Result<UserDTO>(userDto);

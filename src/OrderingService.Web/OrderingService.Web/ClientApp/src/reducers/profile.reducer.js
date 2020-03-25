@@ -30,32 +30,6 @@ export function profile(state = initialState, action) {
             };
         case profileConstants.PROFILE_UPDATE_FAILURE:
             return {};
-
-        // CREATE EMPLOYEE PROFILE
-        case profileConstants.EMPLOYEE_PROFILE_CREATE_REQUEST:
-            return {
-                employeeProcessing: true,
-                employeeProfile: action.employeeProfile
-            };
-        case profileConstants.EMPLOYEE_PROFILE_CREATE_SUCCESS:
-            return {
-                employeeProfile: action.employeeProfile
-            };
-        case profileConstants.EMPLOYEE_PROFILE_CREATE_FAILURE:
-            return {};
-
-        // UPDATE EMPLOYEE PROFILE
-        case profileConstants.EMPLOYEE_PROFILE_UPDATE_REQUEST:
-            return {
-                employeeProcessing: true,
-                employeeProfile: action.employeeProfile
-            };
-        case profileConstants.EMPLOYEE_PROFILE_UPDATE_SUCCESS:
-            return {
-                employeeProfile: action.employeeProfile
-            };
-        case profileConstants.EMPLOYEE_PROFILE_UPDATE_FAILURE:
-            return {};
         
         default:
             return state;

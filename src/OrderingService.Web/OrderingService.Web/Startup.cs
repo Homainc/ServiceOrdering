@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using OrderingService.Domain.Logic;
 using OrderingService.Web.Validators;
 
@@ -28,6 +29,10 @@ namespace OrderingService.Web
 
 
             services.AddControllersWithViews()
+                .AddNewtonsoftJson(cfg =>
+                    {
+                        cfg.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    })
                 .AddFluentValidation(fv =>
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<UserDtoValidator>();
