@@ -32,6 +32,8 @@ namespace OrderingService.Data.Models
                 .WithMany()
                 .HasForeignKey(x => x.EmployeeId)
                 .OnDelete(DeleteBehavior.ClientCascade);
+            builder.Property(x => x.Price)
+                .HasColumnType("decimal(18,4)");
         }
     } 
 }

@@ -27,6 +27,7 @@ namespace OrderingService.Data.Models
             builder.Property(x => x.LastName)
                 .IsRequired().HasMaxLength(20);
             builder.Property(x => x.ImageUrl)
+                .HasMaxLength(40)
                 .IsRequired(false);
             builder.HasAlternateKey(x => x.Email);
             builder.Property(x => x.Email).HasMaxLength(20);
@@ -37,6 +38,8 @@ namespace OrderingService.Data.Models
             builder.HasOne(x => x.Role)
                 .WithMany()
                 .HasForeignKey(x => x.RoleId);
+            builder.Property(x => x.PhoneNumber)
+                .HasMaxLength(12);
         }
     }
 }

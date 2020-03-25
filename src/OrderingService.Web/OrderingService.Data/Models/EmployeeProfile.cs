@@ -25,6 +25,8 @@ namespace OrderingService.Data.Models
             builder.HasOne(x => x.ServiceType)
                 .WithMany();
             builder.Property(x => x.Description).HasMaxLength(255);
+            builder.Property(x => x.ServiceCost)
+                .HasColumnType("decimal(18,4)");
         }
     }
 }
