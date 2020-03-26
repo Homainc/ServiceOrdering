@@ -5,22 +5,27 @@ import { UserWithAvatar } from './UserWithAvatar';
 export const EmployeeItem = props => {
     return(
         <ListGroup className="mb-3">
-            <ListGroupItem>
+            <ListGroupItem className="bg-light">
                 <Row>
                     <Col>Service type: {props.employee.serviceType}</Col>
-                    <Col lg="2" md="2" sm="3" xs="4" className="text-primary align-self-end text-right">$ {props.employee.serviceCost.toFixed(2)}</Col>
+                    <Col lg="2" md="2" sm="3" xs="4" className="text-primary align-self-end text-right font-weight-bold">$ {props.employee.serviceCost.toFixed(2)}</Col>
                 </Row>
             </ListGroupItem>
             <ListGroupItem>
-                <p className="text-bold">Description:</p>
-                <p className="text-secondary">{props.employee.description}</p>
+                <Row>
+                    <Col lg="3" md="3" sm="4" xs="4">
+                    <img src={props.employee.user.imageUrl} className="rounded" height="130" width="130"/>
+                    </Col>
+                    <Col><p className="text-bold">Description:</p>
+                <p className="text-secondary">{props.employee.description}</p></Col>
+                </Row>
             </ListGroupItem>
             <ListGroupItem>
                 <Row>
-                    <Col><UserWithAvatar user={props.employee.user}/></Col>
+                    <Col>{props.employee.user.firstName} {props.employee.user.lastName}</Col>
                     <Col lg="2" md="3" sm="4" xs="5" className="align-self-end text-right">
-                        <Button color="link" size="sm">Details</Button>
-                        <Button size="sm">Employ</Button>
+                        <Button color="link" size="sm" className="mr-2">Details</Button>
+                        <Button size="sm" color="success" outline>Employ</Button>
                     </Col>
                 </Row>
                 </ListGroupItem>

@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.EF
@@ -34,6 +32,7 @@ namespace OrderingService.Data.EF
                 new Role{Id = 2, Name = "admin"}
             };
             builder.Entity<Role>().HasData(roles);
+            DataSeeder.Seed(builder);
         }
     }
 }
