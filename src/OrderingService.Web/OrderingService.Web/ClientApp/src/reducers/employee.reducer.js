@@ -39,6 +39,17 @@ export function employee(state = {}, action) {
         case employeeConstants.EMPLOYEE_PROFILE_DELETE_FAILURE:
             return {};
         
+        // LIST EMPLOYEE PROFILE
+        case employeeConstants.EMPLOYEE_LOAD_REQUEST:
+            return {};
+        case employeeConstants.EMPLOYEE_LOAD_SUCCESS:
+            return {
+                employeeList: action.employeeList
+            };
+        case employeeConstants.EMPLOYEE_LOAD_FAILURE:
+            return {};
+
+        
         default:
             return state;
     }

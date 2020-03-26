@@ -1,11 +1,30 @@
 import React, { Component } from 'react';
+import { EmployeeList } from '../components';
+import { employeeActions } from '../actions';
+import { connect } from 'react-redux';
 
-export class HomePage extends Component {
+class HomePage extends Component {
+
+    componentDidMount(){
+        this.props.loadEmployees();    
+    }
     render() {
         return (
-            <div>
-                <h1>Header</h1>
-            </div>
+            <EmployeeList employees={this.props.employeeList}/>
         );
     }
 }
+
+const mapStateToProps = state => {
+    const { employeeList } = state.employee;
+    return {
+        employeeList
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+    loadEmployees: () => dispatch(employeeActions.loadEmployees())
+});
+
+const connectedHomePage = connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export { connectedHomePage as HomePage };

@@ -15,6 +15,7 @@ const UserPersonalBlock = props => {
     const handleProfileUpdated = () => {
         setState({ editMode: false });
     };
+    const { profile } = props;
 
     return(
         <ListGroupItem>
@@ -30,12 +31,13 @@ const UserPersonalBlock = props => {
                 </Col>
             </Row>
             <Formik
-                initialValues={props.profile? {
-                    firstName: props.profile.firstName,
-                    lastName: props.profile.lastName,
-                    imageUrl: props.profile.imageUrl,
-                    phoneNumber: props.profile.phoneNumber
-                }: {}}
+                initialValues={profile || {
+                    imageUrl: '',
+                    lastName: '',
+                    firstName: '',
+                    phoneNumber: ''
+                }}
+                enableReinitialize={true}
                 validationSchema={Yup.object({
                     firstName: Yup.string()
                         .required("First name is required")

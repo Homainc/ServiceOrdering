@@ -4,7 +4,8 @@ import { employeeConstants } from '../constants';
 export const employeeActions = {
     updateEmployeeProfile,
     createEmployeeProfile,
-    deleteEmployeeProfile
+    deleteEmployeeProfile,
+    loadEmployees
 };
 
 function createEmployeeProfile(employeeProfile){
@@ -59,4 +60,22 @@ function deleteEmployeeProfile(employeeProfile){
     function request(employeeProfile) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_REQUEST, employeeProfile }; }
     function success() { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_SUCCESS }; }
     function failure(error) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_FAILURE, error }; } 
+}
+
+function loadEmployees(){
+    return dispatch => {
+        dispatch(request());
+
+        return employeeService.loadEmployees()
+            .then(list => {
+                dispatch(success(list));
+            },
+            error => {
+                dispatch(failure(error));
+            });
+    };
+
+    function request() { return { type: employeeConstants.EMPLOYEE_LOAD_REQUEST }; }
+    function success(employeeList) { return { type: employeeConstants.EMPLOYEE_LOAD_SUCCESS, employeeList }; }
+    function failure(error) { return { type: employeeConstants.EMPLOYEE_LOAD_FAILURE, error }; } 
 }

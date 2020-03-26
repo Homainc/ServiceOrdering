@@ -1,10 +1,6 @@
-﻿using System;
-using AutoMapper;
-using OrderingService.Data.Models;
-using OrderingService.Domain;
+﻿using OrderingService.Domain;
 using OrderingService.Domain.Logic.Interfaces;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace OrderingService.Logic.Tests
 {
@@ -81,6 +77,45 @@ namespace OrderingService.Logic.Tests
 
             // Assert
             Assert.False(result.DidError);
+        }
+
+        [Fact]
+        public void Can_employee_paging_and_filtering()
+        {
+            // Assign
+            const string dbName = "Can_employee_paging_filtering";
+            string[] serviceTypes = {"IT-specialist", "plumber", "doctor", "sales rep", "nurse", "guitarist", "teacher", "engineer", "architect"};
+            for (int i = 1; i < 10; i++)
+            {
+                var current = Initializers.DefaultEmployeeProfile;
+                using (var userService = Initializers.FakeUserService(dbName))
+                {
+                    current.User.Email = $"test{i}@gmail.com";
+                    current.UserId = userService.CreateAsync(current.User, default).Result.Value.Id;
+                }
+                using (var employeeService = Initializers.FakeEmployeeService(dbName))
+                {
+                    current.ServiceCost = i;
+                    current.ServiceType = serviceTypes[i-1];
+                    employeeService.CreateEmployeeAsync(current, default).Wait();
+                }
+            }
+
+            // Action
+            IPagedResult<EmployeeProfileDTO> result1, result2, result3;
+            using (var employeeService = Initializers.FakeEmployeeService(dbName))
+            {
+                result1 = employeeService.GetPagedEmployeesAsync("nurse", 10, 1, 1, default).Result;
+                result2 = employeeService.GetPagedEmployeesAsync(null, null, 3, 1, default).Result;
+                result3 = employeeService.GetPagedEmployeesAsync(null, null, 5, 2, default).Result;
+            }
+
+            // Assert
+            Assert.False(result1.DidError);
+            Assert.Equal(1, result1.PagesCount);
+            Assert.False(result2.DidError);
+            Assert.Equal(3, result2.PagesCount);
+            Assert.False(result3.DidError);
         }
     }
 }

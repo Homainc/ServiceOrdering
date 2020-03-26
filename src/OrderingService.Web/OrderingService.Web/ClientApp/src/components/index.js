@@ -8,3 +8,5 @@ export * from './UserWithAvatar';
 export * from './LoadingContainer';
 export * from './UserPersonalBlock';
 export * from './UserEmployeeBlock';
+export * from './EmployeeList';
+export * from './EmployeeItem';

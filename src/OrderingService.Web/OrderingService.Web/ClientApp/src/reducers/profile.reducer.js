@@ -1,9 +1,6 @@
 import { profileConstants } from '../constants';
 
-let user = JSON.parse(localStorage.getItem('user'));
-const initialState = user ? { profile: user } : {};
-
-export function profile(state = initialState, action) {
+export function profile(state = {}, action) {
     switch(action.type){
         // GET PROFILE
         case profileConstants.PROFILE_REQUEST:

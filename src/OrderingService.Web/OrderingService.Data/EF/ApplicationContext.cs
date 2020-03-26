@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.EF
@@ -26,10 +28,12 @@ namespace OrderingService.Data.EF
             builder.ApplyConfiguration(new ServiceOrderConfiguration());
             builder.ApplyConfiguration(new ServiceTypeConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
-            builder.Entity<Role>().HasData(
-                new Role {Id = 1, Name = "user"},
-                new Role {Id = 2, Name = "admin"}
-                );
+            var roles = new Role[]
+            {
+                new Role{Id = 1, Name = "user"},
+                new Role{Id = 2, Name = "admin"}
+            };
+            builder.Entity<Role>().HasData(roles);
         }
     }
 }

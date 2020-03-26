@@ -4,7 +4,8 @@ import { handleResponse, authHeader } from "../helpers";
 export const employeeService = {
     createEmployeeProfile,
     updateEmployeeProfile,
-    deleteEmployeeProfile
+    deleteEmployeeProfile,
+    loadEmployees
 };
 
 function createEmployeeProfile(profile){
@@ -34,11 +35,18 @@ function updateEmployeeProfile(profile){
 }
 
 function deleteEmployeeProfile(id){
-    console.log(id);
     const requestOptions = {
         method: 'DELETE',
         headers: authHeader()
     };
     return fetch(`${config.apiUrl}/employeeProfile/?id=${id}`, requestOptions)
+        .then(handleResponse);
+}
+
+function loadEmployees(){
+    const requestOptions = {
+        method: 'GET',
+    };
+    return fetch(`${config.apiUrl}/employeeProfile`, requestOptions)
         .then(handleResponse);
 }
