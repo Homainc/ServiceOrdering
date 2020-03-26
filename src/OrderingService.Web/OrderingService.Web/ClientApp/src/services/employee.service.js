@@ -1,5 +1,5 @@
 import config from '../config';
-import { handleResponse, authHeader } from "../helpers";
+import { handleResponse, authHeader, handleResponseWithData } from "../helpers";
 
 export const employeeService = {
     createEmployeeProfile,
@@ -43,10 +43,10 @@ function deleteEmployeeProfile(id){
         .then(handleResponse);
 }
 
-function loadEmployees(){
+function loadEmployees(pageNumber){
     const requestOptions = {
         method: 'GET',
     };
-    return fetch(`${config.apiUrl}/employeeProfile`, requestOptions)
-        .then(handleResponse);
+    return fetch(`${config.apiUrl}/employeeProfile?pageNumber=${pageNumber}`, requestOptions)
+        .then(handleResponseWithData);
 }

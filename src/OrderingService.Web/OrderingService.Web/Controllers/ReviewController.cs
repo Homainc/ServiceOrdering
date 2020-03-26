@@ -38,7 +38,7 @@ namespace OrderingService.Web.Controllers
                 return BadRequest(response);
             }
 
-            response = new PagedResponse<ReviewDTO>(result.Value);
+            response = new PagedResponse<ReviewDTO>(result.Value, result.PagesCount);
             return Ok(response);
         }
 

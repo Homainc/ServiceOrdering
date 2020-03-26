@@ -31,6 +31,7 @@ class App extends React.Component {
   render () {
     return (
       <Layout basename={baseUrl} history={history}>
+        <Route path='/page/:page' component={HomePage}/>
         <PrivateRoute path='/profile' component={ProfilePage} />
         <Route path='/signup' component={SignUpPage} />
         <Route path='/login' component={LoginPage}/>

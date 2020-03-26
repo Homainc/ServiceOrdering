@@ -46,7 +46,7 @@ namespace OrderingService.Web.Controllers
                 return BadRequest(response);
             }
 
-            response = new PagedResponse<EmployeeProfileDTO>(result.Value);
+            response = new PagedResponse<EmployeeProfileDTO>(result.Value, result.PagesCount);
             return Ok(response);
         }
 

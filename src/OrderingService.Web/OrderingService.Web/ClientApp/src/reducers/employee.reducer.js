@@ -41,10 +41,13 @@ export function employee(state = {}, action) {
         
         // LIST EMPLOYEE PROFILE
         case employeeConstants.EMPLOYEE_LOAD_REQUEST:
-            return {};
+            return {
+                listLoading: true
+            };
         case employeeConstants.EMPLOYEE_LOAD_SUCCESS:
             return {
-                employeeList: action.employeeList
+                employeeList: action.employeeList,
+                pagesCount: action.pagesCount
             };
         case employeeConstants.EMPLOYEE_LOAD_FAILURE:
             return {};

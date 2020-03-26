@@ -62,13 +62,13 @@ function deleteEmployeeProfile(employeeProfile){
     function failure(error) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_FAILURE, error }; } 
 }
 
-function loadEmployees(){
+function loadEmployees(pageNumber){
     return dispatch => {
         dispatch(request());
 
-        return employeeService.loadEmployees()
-            .then(list => {
-                dispatch(success(list));
+        return employeeService.loadEmployees(pageNumber)
+            .then(data => {
+                dispatch(success(data.model, data.pagesCount));
             },
             error => {
                 dispatch(failure(error));
@@ -76,6 +76,6 @@ function loadEmployees(){
     };
 
     function request() { return { type: employeeConstants.EMPLOYEE_LOAD_REQUEST }; }
-    function success(employeeList) { return { type: employeeConstants.EMPLOYEE_LOAD_SUCCESS, employeeList }; }
+    function success(employeeList, pagesCount) { return { type: employeeConstants.EMPLOYEE_LOAD_SUCCESS, employeeList, pagesCount }; }
     function failure(error) { return { type: employeeConstants.EMPLOYEE_LOAD_FAILURE, error }; } 
 }

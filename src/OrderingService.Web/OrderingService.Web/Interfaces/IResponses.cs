@@ -16,5 +16,6 @@ namespace OrderingService.Web.Interfaces
     public interface IPagedResponse<out T> : IResponse
     {
         IEnumerable<T> Model { get; }
+        int PagesCount { get; }
     }
 }

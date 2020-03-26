@@ -41,7 +41,7 @@ namespace OrderingService.Web.Controllers
                 return BadRequest(response);
             }
 
-            response = new PagedResponse<OrderDTO>(result.Value);
+            response = new PagedResponse<OrderDTO>(result.Value, result.PagesCount);
             return Ok(response);
         }
 

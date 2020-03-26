@@ -25,7 +25,13 @@ namespace OrderingService.Web
         public IEnumerable<T> Model { get; }
         public bool DidError => ErrorMessage != null;
         public string ErrorMessage { get; }
+        public int PagesCount { get; }
         public PagedResponse(string errorMessage) => ErrorMessage = errorMessage;
-        public PagedResponse(IEnumerable<T> model) => Model = model;
+
+        public PagedResponse(IEnumerable<T> model, int pagesCount)
+        {
+            Model = model;
+            PagesCount = pagesCount;
+        }
     }
 }
