@@ -14,7 +14,10 @@ namespace OrderingService.Data.EF
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-            Database.Migrate();
+            if (Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+                Database.Migrate();
+            else
+                Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -7,8 +7,10 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
+using OrderingService.Domain.Logic.Code;
+using OrderingService.Domain.Logic.Code.Exceptions;
+using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Domain.Logic.Helpers;
-using OrderingService.Domain.Logic.Interfaces;
 
 namespace OrderingService.Domain.Logic.Services
 {
@@ -41,11 +43,11 @@ namespace OrderingService.Domain.Logic.Services
                 pageSize, pageNumber);
         }
 
-        public async Task<IResult<EmployeeProfileDTO>> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
+        public async Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
         {
             var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.UserId == employeeProfileDto.UserId, token);
             if (employeeProfile != null)
-                return new Result<EmployeeProfileDTO>("Employee profile already exist");
+                throw new LogicException("Employee profile already exist");
 
             var serviceType = await Database.ServiceTypes.GetAll()
                 .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()), token);
@@ -61,15 +63,14 @@ namespace OrderingService.Domain.Logic.Services
             Database.EmployeeProfiles.Create(employeeProfile);
             await Database.SaveAsync(token);
 
-            return new Result<EmployeeProfileDTO>(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
+            return Mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
 
-        public async Task<IResult<EmployeeProfileDTO>> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
+        public async Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
         {
             var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == employeeProfileDto.Id, token);
             if (employeeProfile == null)
-                return new Result<EmployeeProfileDTO>($"Employee profile with id {employeeProfileDto.Id} not found");
-          
+                throw new LogicException($"Employee profile with id {employeeProfileDto.Id} not found");
 
             var serviceType = await Database.ServiceTypes.GetAll()
                 .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()), token);
@@ -85,20 +86,20 @@ namespace OrderingService.Domain.Logic.Services
             Database.EmployeeProfiles.Update(employeeProfile);
             await Database.SaveAsync(token);
 
-            return new Result<EmployeeProfileDTO>(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
+            return Mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
 
-        public async Task<IResult<EmployeeProfileDTO>> DeleteEmployeeAsync(Guid employeeId, CancellationToken token)
+        public async Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId, CancellationToken token)
         {
             var employeeProfile = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(e => e.Id == employeeId, token);
 
             if (employeeProfile == null)
-                return new Result<EmployeeProfileDTO>("Employee profile not found");
+                throw new LogicException("Employee profile not found");
 
             Database.EmployeeProfiles.Delete(employeeProfile);
             await Database.SaveAsync(token);
 
-            return new Result<EmployeeProfileDTO>(Mapper.Map<EmployeeProfileDTO>(employeeProfile));
+            return Mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
     }
 }

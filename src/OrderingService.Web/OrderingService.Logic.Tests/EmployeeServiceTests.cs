@@ -1,5 +1,5 @@
 ﻿using OrderingService.Domain;
-using OrderingService.Domain.Logic.Interfaces;
+using OrderingService.Domain.Logic.Code.Interfaces;
 using Xunit;
 
 namespace OrderingService.Logic.Tests
@@ -114,7 +114,7 @@ namespace OrderingService.Logic.Tests
             Assert.False(result1.DidError);
             Assert.Equal(1, result1.PagesCount);
             Assert.False(result2.DidError);
-            Assert.Equal(3, result2.PagesCount);
+            Assert.Equal(6, result2.PagesCount);
             Assert.False(result3.DidError);
         }
     }

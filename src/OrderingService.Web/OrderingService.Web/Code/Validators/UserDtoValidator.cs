@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using OrderingService.Domain;
 
-namespace OrderingService.Web.Validators
+namespace OrderingService.Web.Code.Validators
 {
     public class UserDtoValidator : AbstractValidator<UserDTO>
     {

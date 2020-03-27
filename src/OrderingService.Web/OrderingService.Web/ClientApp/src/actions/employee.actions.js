@@ -68,7 +68,7 @@ function loadEmployees(pageNumber){
 
         return employeeService.loadEmployees(pageNumber)
             .then(data => {
-                dispatch(success(data.model, data.pagesCount));
+                dispatch(success(data.value, data.pagesCount));
             },
             error => {
                 dispatch(failure(error));

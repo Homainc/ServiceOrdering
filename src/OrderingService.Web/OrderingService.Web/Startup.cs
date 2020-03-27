@@ -8,7 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using OrderingService.Domain.Logic;
-using OrderingService.Web.Validators;
+using OrderingService.Web.Code.Filters;
+using OrderingService.Web.Code.Validators;
 
 namespace OrderingService.Web
 {
@@ -27,14 +28,17 @@ namespace OrderingService.Web
             services.AddDomainServices(Configuration);
             services.AddOpenApiDocument();
 
-
-            services.AddControllersWithViews()
+            services.AddControllersWithViews(opt => {
+                opt.Filters.Add(typeof(LoggingAttribute));
+                opt.Filters.Add(typeof(LogicExceptionAttribute));
+            })
                 .AddNewtonsoftJson(cfg =>
                     {
                         cfg.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     })
                 .AddFluentValidation(fv =>
                 {
+                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                     fv.RegisterValidatorsFromAssemblyContaining<UserDtoValidator>();
                     fv.RegisterValidatorsFromAssemblyContaining<OrderDtoValidator>();
                     fv.RegisterValidatorsFromAssemblyContaining<ReviewDtoValidator>();

@@ -48,5 +48,5 @@ function loadEmployees(pageNumber){
         method: 'GET',
     };
     return fetch(`${config.apiUrl}/employeeProfile?pageNumber=${pageNumber}`, requestOptions)
-        .then(handleResponseWithData);
+        .then(handleResponse);
 }

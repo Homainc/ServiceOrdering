@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OrderingService.Data;
+using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Domain.Logic.Helpers;
-using OrderingService.Domain.Logic.Interfaces;
 using OrderingService.Domain.Logic.MapperProfiles;
 using OrderingService.Domain.Logic.Services;
 

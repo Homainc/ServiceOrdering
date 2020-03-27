@@ -1,5 +1,5 @@
 ﻿using OrderingService.Domain;
-using OrderingService.Domain.Logic.Interfaces;
+using OrderingService.Domain.Logic.Code.Interfaces;
 using Xunit;
 
 namespace OrderingService.Logic.Tests

@@ -7,8 +7,10 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
+using OrderingService.Domain.Logic.Code;
+using OrderingService.Domain.Logic.Code.Exceptions;
+using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Domain.Logic.Helpers;
-using OrderingService.Domain.Logic.Interfaces;
 
 namespace OrderingService.Domain.Logic.Services
 {
@@ -24,47 +26,47 @@ namespace OrderingService.Domain.Logic.Services
 
         public void Dispose() => Database.Dispose();
 
-        public async Task<IResult<OrderDTO>> CreateAsync(OrderDTO orderDto, CancellationToken token)
+        public async Task<OrderDTO> CreateAsync(OrderDTO orderDto, CancellationToken token)
         {
             var orderEmployee = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.EmployeeId, token);
             if (orderEmployee == null)
-                return new Result<OrderDTO>($"Employee with id {orderDto.EmployeeId} not found");
+                throw new LogicException($"Employee with id {orderDto.EmployeeId} not found");
 
             var orderClient = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.ClientId, token);
             if (orderClient == null)
-                return new Result<OrderDTO>($"Client with id {orderDto.ClientId} not found");
+                throw new LogicException($"Client with id {orderDto.ClientId} not found");
 
             orderDto.Date = DateTime.Now;
             var order = Mapper.Map<ServiceOrder>(orderDto);
             Database.ServiceOrders.Create(order);
             await Database.SaveAsync(token);
 
-            return new Result<OrderDTO>(Mapper.Map<OrderDTO>(order));
+            return Mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<IResult<OrderDTO>> CloseAsync(int id, CancellationToken token)
+        public async Task<OrderDTO> CloseAsync(int id, CancellationToken token)
         {
             var order = await Database.ServiceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (order == null)
-                return new Result<OrderDTO>($"Order with id {id} not found");
+                throw new LogicException($"Order with id {id} not found");
 
             order.IsClosed = true;
             Database.ServiceOrders.Update(order);
             await Database.SaveAsync(token);
 
-            return new Result<OrderDTO>(Mapper.Map<OrderDTO>(order));
+            return Mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<IResult<OrderDTO>> DeleteAsync(int id, CancellationToken token)
+        public async Task<OrderDTO> DeleteAsync(int id, CancellationToken token)
         {
             var order = await Database.ServiceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (order == null)
-                return new Result<OrderDTO>($"Order with id {id} not found");
+                throw new LogicException($"Order with id {id} not found");
 
             Database.ServiceOrders.Delete(order);
             await Database.SaveAsync(token);
 
-            return new Result<OrderDTO>(Mapper.Map<OrderDTO>(order));
+            return Mapper.Map<OrderDTO>(order);
         }
 
         public async Task<IPagedResult<OrderDTO>> GetPagedEmployeeOrdersAsync(Guid employeeId, int pageSize,

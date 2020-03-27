@@ -7,8 +7,10 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
+using OrderingService.Domain.Logic.Code;
+using OrderingService.Domain.Logic.Code.Exceptions;
+using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Domain.Logic.Helpers;
-using OrderingService.Domain.Logic.Interfaces;
 
 namespace OrderingService.Domain.Logic.Services
 {
@@ -21,35 +23,35 @@ namespace OrderingService.Domain.Logic.Services
             Database = db;
             Mapper = mapper;
         }
-        public async Task<IResult<ReviewDTO>> CreateAsync(ReviewDTO reviewDto, CancellationToken token)
+        public async Task<ReviewDTO> CreateAsync(ReviewDTO reviewDto, CancellationToken token)
         {
             var reviewEmployee = await Database.EmployeeProfiles.GetAll()
                 .SingleOrDefaultAsync(x => x.Id == reviewDto.EmployeeId, token);
             if (reviewEmployee == null)
-                return new Result<ReviewDTO>($"Employee with id {reviewDto.EmployeeId} not found!");
+                throw new LogicException($"Employee with id {reviewDto.EmployeeId} not found!");
             
             var reviewClient = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == reviewDto.ClientId, token);
             if (reviewClient == null)
-                return new Result<ReviewDTO>($"Client with id {reviewDto.ClientId} not found!");
+                throw new LogicException($"Client with id {reviewDto.ClientId} not found!");
             
             reviewDto.Date = DateTime.Now;
             var review = Mapper.Map<Review>(reviewDto);
             Database.Reviews.Create(review); 
             await Database.SaveAsync(token);
 
-            return new Result<ReviewDTO>(Mapper.Map<ReviewDTO>(review));
+            return Mapper.Map<ReviewDTO>(review);
         }
 
-        public async Task<IResult<ReviewDTO>> DeleteAsync(int id, CancellationToken token)
+        public async Task<ReviewDTO> DeleteAsync(int id, CancellationToken token)
         {
             var review = await Database.Reviews.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (review == null)
-                return new Result<ReviewDTO>($"Review with id {id} not found");
+                throw new LogicException($"Review with id {id} not found");
 
             Database.Reviews.Delete(review);
             await Database.SaveAsync(token);
 
-            return new Result<ReviewDTO>(Mapper.Map<ReviewDTO>(review));
+            return Mapper.Map<ReviewDTO>(review);
         }
 
         public async Task<IPagedResult<ReviewDTO>> GetPagedReviewsAsync(Guid userId, int pageSize, int pageNumber, CancellationToken token)
