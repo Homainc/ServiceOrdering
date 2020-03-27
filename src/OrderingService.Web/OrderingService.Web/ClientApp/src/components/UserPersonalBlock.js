@@ -37,7 +37,6 @@ const UserPersonalBlock = props => {
                     firstName: '',
                     phoneNumber: ''
                 }}
-                enableReinitialize={true}
                 validationSchema={Yup.object({
                     firstName: Yup.string()
                         .required("First name is required")
@@ -46,7 +45,8 @@ const UserPersonalBlock = props => {
                         .required("Last name is required")
                         .max(20, "Last name must be at most 20 characters"),
                     phoneNumber: Yup.string()
-                        .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/, "Incorrect phone number")
+                        .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/, "Incorrect phone number"),
+                    imageUrl: Yup.string().url().notRequired()
                 })}
                 onSubmit={(values) => {
                     props.updateProfile({
