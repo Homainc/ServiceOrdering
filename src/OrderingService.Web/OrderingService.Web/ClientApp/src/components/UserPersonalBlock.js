@@ -31,11 +31,12 @@ const UserPersonalBlock = props => {
                 </Col>
             </Row>
             <Formik
-                initialValues={profile || {
-                    imageUrl: '',
-                    lastName: '',
-                    firstName: '',
-                    phoneNumber: ''
+                enableReinitialize={true}
+                initialValues={{
+                    imageUrl: (profile && profile.imageUrl) || '',
+                    lastName: (profile && profile.lastName) || '',
+                    firstName: (profile && profile.firstName) || '',
+                    phoneNumber: (profile && profile.phoneNumber) || ''
                 }}
                 validationSchema={Yup.object({
                     firstName: Yup.string()
@@ -45,8 +46,8 @@ const UserPersonalBlock = props => {
                         .required("Last name is required")
                         .max(20, "Last name must be at most 20 characters"),
                     phoneNumber: Yup.string()
-                        .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/, "Incorrect phone number"),
-                    imageUrl: Yup.string().url().notRequired()
+                        .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/, "Incorrect phone number")
+                        .notRequired()
                 })}
                 onSubmit={(values) => {
                     props.updateProfile({

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Card, Row, Col, Button } from 'reactstrap';
-import { LoadingContainer, Rating } from '../components';
+import { LoadingContainer, Rating, ReviewsBlock } from '../components';
 import { employeeActions } from '../actions';
 import { connect } from 'react-redux';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -10,10 +10,11 @@ import '@fortawesome/fontawesome-free/css/all.css';
 const EmployeePage = props => {
 
     const { id } = useParams();
+    const { loadEmployeeProfile } = props;
 
     useEffect(() => {
-        props.loadEmployeeProfile(id);
-    }, []);
+        loadEmployeeProfile(id);
+    }, [ id, loadEmployeeProfile ]);
 
     const { employeeProfile } = props;
 
@@ -30,8 +31,9 @@ const EmployeePage = props => {
                         <a href={`mailto:${employeeProfile && employeeProfile.user.email}`}>{employeeProfile && employeeProfile.user.email}</a>
                     </Col>
                     <Col className="text-center">
+                        Average rate<br/>
+                        <Rating rate={3.4} reviews={10}/><br/>
                         <Button className="my-2" color="success" outline>Hire for $ {employeeProfile && employeeProfile.serviceCost.toFixed(2)}</Button>
-                        <br/><Rating rate={3.4} reviews={10}/>
                     </Col>
                 </Row>
                 <hr/>
@@ -45,6 +47,7 @@ const EmployeePage = props => {
                 <Row>
                     <Col><h5>Reviews (5)</h5></Col>
                 </Row>
+                <ReviewsBlock employeeId={employeeProfile && employeeProfile.id} user={employeeProfile && employeeProfile.user}/>
             </Card>
         </LoadingContainer>
     );

@@ -11,3 +11,4 @@ export * from './UserEmployeeBlock';
 export * from './EmployeeItem';
 export * from './PaginationBlock';
 export * from './Rating';
+export * from './ReviewsBlock';

@@ -8,7 +8,7 @@ export function handleResponse(response){
                 window.location.reload(true);
             }
 
-            const error = (data && data.errorMessage) || response.statusText;
+            const error = (data && data.errorMessage) || data.errors || response.statusText;
             return Promise.reject(error);
         }
         return data;

@@ -4,7 +4,7 @@ import { Col, Row, ListGroupItem, ListGroupItemHeading, Button, ListGroupItemTex
 import { Formik, Form } from 'formik';
 import { ValidationTextField } from './ValidationTextField';
 import { LoadingButton } from './LoadingButton';
-import { employeeActions } from '../actions';
+import { employeeActions, profileActions } from '../actions';
 import { connect } from 'react-redux';
 
 const UserEmployeeBlock = props => {
@@ -56,15 +56,15 @@ const UserEmployeeBlock = props => {
             <Spinner className={props.employeeDeleting?'':'collapse'} size="sm" color="danger"/>
             <Button color="link"
                 className="text-danger" 
-                onClick={() => props.deleteEmployeeProfile(employeeProfile)} 
+                onClick={() => props.deleteEmployeeProfile(employeeProfile).then(props.loadProfile())} 
                 disabled={props.employeeDeleting}>Delete employee profile</Button></>)}
             </>)}
             {state.editMode && (
                 <Formik
-                    initialValues={employeeProfile || {
-                        serviceType: '',
-                        serviceCost: '',
-                        description: ''
+                    initialValues={{
+                        serviceType: (employeeProfile && employeeProfile.serviceType) || '',
+                        serviceCost: (employeeProfile && employeeProfile.serviceCost) || '',
+                        description: (employeeProfile && employeeProfile.description) || ''
                     }}
                     validationSchema={Yup.object({
                         serviceType: Yup.string()
@@ -121,7 +121,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     createEmployeeProfile: employeeProfile => dispatch(employeeActions.createEmployeeProfile(employeeProfile)),
     updateEmployeeProfile: employeeProfile => dispatch(employeeActions.updateEmployeeProfile(employeeProfile)),
-    deleteEmployeeProfile: employeeProfile => dispatch(employeeActions.deleteEmployeeProfile(employeeProfile))
+    deleteEmployeeProfile: employeeProfile => dispatch(employeeActions.deleteEmployeeProfile(employeeProfile)),
+    loadProfile: () => dispatch(profileActions.loadProfile())
 });
 
 const connectedUserEmployeeBlock = connect(mapStateToProps, mapDispatchToProps)(UserEmployeeBlock);

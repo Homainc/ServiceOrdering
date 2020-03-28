@@ -47,7 +47,7 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         public async Task<IActionResult> UpdateProfileAsync(
-            [FromBody] [CustomizeValidator(RuleSet = "Id,SignUp")]
+            [FromBody] [CustomizeValidator(RuleSet = "Update")]
             UserDTO userDto,
             CancellationToken token = default) => Ok(await _userService.UpdateProfileAsync(userDto, token));
     }

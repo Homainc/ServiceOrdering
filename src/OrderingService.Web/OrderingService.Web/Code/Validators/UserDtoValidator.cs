@@ -19,7 +19,12 @@ namespace OrderingService.Web.Code.Validators
                 RuleFor(x => x.Email).NotEmpty();
                 RuleFor(x => x.Password).NotEmpty();
             });
-            RuleSet("Id", () => { RuleFor(x => x.Id).NotNull(); });
+            RuleSet("Update", () => { 
+                RuleFor(x => x.Id).NotNull();
+                RuleFor(x => x.Email).NotEmpty().EmailAddress();
+                RuleFor(x => x.FirstName).NotEmpty().MaximumLength(20);
+                RuleFor(x => x.LastName).NotEmpty().MaximumLength(20);
+            });
         }
     }
 }
