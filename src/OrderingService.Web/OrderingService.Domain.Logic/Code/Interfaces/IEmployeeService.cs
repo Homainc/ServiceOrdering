@@ -6,6 +6,7 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
 {
     public interface IEmployeeService
     {
+        Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id, CancellationToken token);
         Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(string serviceName, decimal? maxServiceCost,
             int pageSize, int pageNumber, CancellationToken token);
 

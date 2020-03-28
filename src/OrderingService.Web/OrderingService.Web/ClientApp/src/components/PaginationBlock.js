@@ -4,7 +4,7 @@ import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 export const PaginationBlock = props => {
 
-    const pagesNumbers = [...Array(props.pagesCount).keys()];;
+    const pagesNumbers = [...Array(props.pagesCount).keys()];
     const pagesButtons = pagesNumbers.map(num => 
         <PaginationItem key={num + 1} active={props.pageNumber === num + 1}>
             <PaginationLink tag={Link}  to={`/page/${num + 1}`}>{num + 1}</PaginationLink>

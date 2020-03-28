@@ -14,16 +14,16 @@ namespace OrderingService.Web.Controllers
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
-        private IOrderService OrderService { get; }
-        public OrderController(IOrderService orderService) => OrderService = orderService;
+        private readonly IOrderService _orderService;
+        public OrderController(IOrderService orderService) => _orderService = orderService;
 
         [HttpGet("employee/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetEmployeeOrdersAsync([FromQuery] string id, [FromQuery] int pageSize = 5,
+        public async Task<IActionResult> GetEmployeeOrdersAsync([FromRoute] string id, [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1,
             CancellationToken token = default) =>
-            Ok(await OrderService.GetPagedEmployeeOrdersAsync(new Guid(id), pageSize, pageNumber, token));
+            Ok(await _orderService.GetPagedEmployeeOrdersAsync(new Guid(id), pageSize, pageNumber, token));
 
         [HttpPost]
         [ProducesResponseType(200)]
@@ -32,18 +32,18 @@ namespace OrderingService.Web.Controllers
             [FromBody]
             [CustomizeValidator(RuleSet = "Create")]
             OrderDTO orderDto,
-            CancellationToken token = default) => Ok(await OrderService.CreateAsync(orderDto, token));
+            CancellationToken token = default) => Ok(await _orderService.CreateAsync(orderDto, token));
 
         [HttpPut("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CloseAsync([FromQuery] int id, CancellationToken token = default) =>
-            Ok(await OrderService.CloseAsync(id, token));
+        public async Task<IActionResult> CloseAsync([FromRoute] int id, CancellationToken token = default) =>
+            Ok(await _orderService.CloseAsync(id, token));
 
         [HttpDelete("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> DeleteAsync([FromQuery] int id, CancellationToken token = default) =>
-            Ok(await OrderService.DeleteAsync(id, token));
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, CancellationToken token = default) =>
+            Ok(await _orderService.DeleteAsync(id, token));
     }
 }

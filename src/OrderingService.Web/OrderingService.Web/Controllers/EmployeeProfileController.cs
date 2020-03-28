@@ -14,9 +14,15 @@ namespace OrderingService.Web.Controllers
     [Route("api/[controller]")]
     public class EmployeeProfileController : ControllerBase
     {
-        private IEmployeeService EmployeeService { get; }
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeeProfileController(IEmployeeService employeeService) => EmployeeService = employeeService;
+        public EmployeeProfileController(IEmployeeService employeeService) => _employeeService = employeeService;
+
+        [AllowAnonymous]
+        [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> GetEmployeeByIdAsync([FromRoute] string id, CancellationToken token = default) => 
+            Ok(await _employeeService.GetEmployeeByIdAsync(new Guid(id), token));
 
         [AllowAnonymous]
         [HttpGet]
@@ -28,7 +34,7 @@ namespace OrderingService.Web.Controllers
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1,
             CancellationToken token = default) =>
-            Ok(await EmployeeService.GetPagedEmployeesAsync(serviceName, serviceMaxCost, pageSize, pageNumber, token));
+            Ok(await _employeeService.GetPagedEmployeesAsync(serviceName, serviceMaxCost, pageSize, pageNumber, token));
 
         [HttpPost]
         [ProducesResponseType(200)]
@@ -41,7 +47,7 @@ namespace OrderingService.Web.Controllers
             CancellationToken token = default)
         {
             employeeProfileDto.UserId = new Guid(User.Identity.Name);
-            return Ok(await EmployeeService.CreateEmployeeAsync(employeeProfileDto, token));
+            return Ok(await _employeeService.CreateEmployeeAsync(employeeProfileDto, token));
         }
 
         [HttpPut]
@@ -55,7 +61,7 @@ namespace OrderingService.Web.Controllers
             CancellationToken token = default)
         {
             employeeProfileDto.UserId = new Guid(User.Identity.Name);
-            return Ok(await EmployeeService.UpdateEmployeeAsync(employeeProfileDto, token));
+            return Ok(await _employeeService.UpdateEmployeeAsync(employeeProfileDto, token));
         }
 
         [HttpDelete]
@@ -63,6 +69,6 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         public async Task<IActionResult> DeleteAsync([FromQuery] string id, CancellationToken token = default) => 
-            Ok(await EmployeeService.DeleteEmployeeAsync(new Guid(id), token));
+            Ok(await _employeeService.DeleteEmployeeAsync(new Guid(id), token));
     }
 }

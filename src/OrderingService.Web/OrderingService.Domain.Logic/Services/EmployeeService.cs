@@ -101,5 +101,15 @@ namespace OrderingService.Domain.Logic.Services
 
             return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
+
+        public async Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id, CancellationToken token)
+        {
+            var employeeProfile = await _employees.GetAll().SingleOrDefaultAsync(e => e.Id == id, token);
+
+            if(employeeProfile == null)
+                throw new LogicException($"Employee with id {id} not found");
+            
+            return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
+        }
     }
 }

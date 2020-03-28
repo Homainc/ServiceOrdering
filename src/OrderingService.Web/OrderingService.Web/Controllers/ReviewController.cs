@@ -12,15 +12,15 @@ namespace OrderingService.Web.Controllers
     [Route("api/[controller]")]
     public class ReviewController : ControllerBase
     {
-        private IReviewService ReviewService { get; }
-        public ReviewController(IReviewService reviewService) => ReviewService = reviewService;
+        private readonly IReviewService _reviewService;
+        public ReviewController(IReviewService reviewService) => _reviewService = reviewService;
 
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetUserReviewsAsync([FromQuery] string id, [FromQuery] int pageSize = 5,
+        public async Task<IActionResult> GetUserReviewsAsync([FromRoute] string id, [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1, CancellationToken token = default) =>
-            Ok(await ReviewService.GetPagedReviewsAsync(new Guid(id), pageSize, pageNumber, token));
+            Ok(await _reviewService.GetPagedReviewsAsync(new Guid(id), pageSize, pageNumber, token));
 
         [HttpPost]
         [ProducesResponseType(200)]
@@ -28,12 +28,12 @@ namespace OrderingService.Web.Controllers
         public async Task<IActionResult> CreateAsync(
             [FromBody] [CustomizeValidator(RuleSet = "Create")]
             ReviewDTO reviewDto,
-            CancellationToken token = default) => Ok(await ReviewService.CreateAsync(reviewDto, token));
+            CancellationToken token = default) => Ok(await _reviewService.CreateAsync(reviewDto, token));
 
         [HttpDelete("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> DeleteAsync([FromQuery] int id, CancellationToken token) =>
-            Ok(await ReviewService.DeleteAsync(id, token));
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, CancellationToken token) =>
+            Ok(await _reviewService.DeleteAsync(id, token));
     }
 }

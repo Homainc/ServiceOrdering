@@ -12,6 +12,7 @@ import './custom.css'
 import { SignUpPage } from './SignUpPage';
 import { connect } from 'react-redux';
 import { ProfilePage } from './ProfilePage';
+import { EmployeePage } from './EmployeePage';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 
@@ -31,6 +32,7 @@ class App extends React.Component {
   render () {
     return (
       <Layout basename={baseUrl} history={history}>
+        <Route path='/employee/:id' component={EmployeePage}/>
         <Route path='/page/:page' component={HomePage}/>
         <PrivateRoute path='/profile' component={ProfilePage} />
         <Route path='/signup' component={SignUpPage} />

@@ -10,3 +10,4 @@ export * from './UserPersonalBlock';
 export * from './UserEmployeeBlock';
 export * from './EmployeeItem';
 export * from './PaginationBlock';
+export * from './Rating';

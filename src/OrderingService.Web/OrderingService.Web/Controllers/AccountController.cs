@@ -13,9 +13,9 @@ namespace OrderingService.Web.Controllers
     [Route("api/[controller]")]
     public class AccountController : Controller
     {
-        private IUserService UserService { get; }
+        private readonly IUserService _userService;
 
-        public AccountController(IUserService userService) => UserService = userService;
+        public AccountController(IUserService userService) => _userService = userService;
 
         [HttpPost("auth")]
         [ProducesResponseType(200)]
@@ -23,7 +23,7 @@ namespace OrderingService.Web.Controllers
         public async Task<IActionResult> AuthAsync(
             [FromBody] [CustomizeValidator(RuleSet = "LogIn")]
             UserDTO userDto,
-            CancellationToken token = default) => Ok(await UserService.AuthenticateAsync(userDto, token));
+            CancellationToken token = default) => Ok(await _userService.AuthenticateAsync(userDto, token));
 
         [HttpPost("sign-up")]
         [ProducesResponseType(200)]
@@ -31,7 +31,7 @@ namespace OrderingService.Web.Controllers
         public async Task<IActionResult> SignUpAsync(
             [FromBody] [CustomizeValidator(RuleSet = "SignUp")]
             UserDTO userDto,
-            CancellationToken token = default) => Ok(await UserService.SignUpAsync(userDto, token));
+            CancellationToken token = default) => Ok(await _userService.SignUpAsync(userDto, token));
 
         [Authorize]
         [HttpGet("profile")]
@@ -39,7 +39,7 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         public async Task<IActionResult> GetProfileAsync(CancellationToken token = default) =>
-            Ok(await UserService.GetUserByIdAsync(new Guid(User.Identity.Name), token));
+            Ok(await _userService.GetUserByIdAsync(new Guid(User.Identity.Name), token));
 
         [Authorize]
         [HttpPut]
@@ -49,6 +49,6 @@ namespace OrderingService.Web.Controllers
         public async Task<IActionResult> UpdateProfileAsync(
             [FromBody] [CustomizeValidator(RuleSet = "Id,SignUp")]
             UserDTO userDto,
-            CancellationToken token = default) => Ok(await UserService.UpdateProfileAsync(userDto, token));
+            CancellationToken token = default) => Ok(await _userService.UpdateProfileAsync(userDto, token));
     }
 }

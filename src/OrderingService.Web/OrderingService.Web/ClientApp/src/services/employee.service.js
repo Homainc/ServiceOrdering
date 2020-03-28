@@ -1,11 +1,12 @@
 import config from '../config';
-import { handleResponse, authHeader, handleResponseWithData } from "../helpers";
+import { handleResponse, authHeader } from "../helpers";
 
 export const employeeService = {
     createEmployeeProfile,
     updateEmployeeProfile,
     deleteEmployeeProfile,
-    loadEmployees
+    loadEmployees,
+    loadEmployeeProfile
 };
 
 function createEmployeeProfile(profile){
@@ -48,5 +49,13 @@ function loadEmployees(pageNumber){
         method: 'GET',
     };
     return fetch(`${config.apiUrl}/employeeProfile?pageNumber=${pageNumber}`, requestOptions)
+        .then(handleResponse);
+}
+
+function loadEmployeeProfile(id){
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/employeeProfile/${id}`, requestOptions)
         .then(handleResponse);
 }

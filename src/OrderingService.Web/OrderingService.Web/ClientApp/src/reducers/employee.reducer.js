@@ -40,19 +40,30 @@ export function employee(state = {}, action) {
             return {};
         
         // LIST EMPLOYEE PROFILE
-        case employeeConstants.EMPLOYEE_LOAD_REQUEST:
+        case employeeConstants.EMPLOYEES_LOAD_REQUEST:
             return {
                 listLoading: true
             };
-        case employeeConstants.EMPLOYEE_LOAD_SUCCESS:
+        case employeeConstants.EMPLOYEES_LOAD_SUCCESS:
             return {
                 employeeList: action.employeeList,
                 pagesCount: action.pagesCount
             };
-        case employeeConstants.EMPLOYEE_LOAD_FAILURE:
+        case employeeConstants.EMPLOYEES_LOAD_FAILURE:
             return {};
 
-        
+        // LOAD EMPLOYEE PROFILE
+        case employeeConstants.EMPLOYEE_PROFILE_LOAD_REQUEST:
+            return {
+                employeeProfileLoading: true
+            };
+        case employeeConstants.EMPLOYEE_PROFILE_LOAD_SUCCESS:
+            return {
+                employeeProfile: action.employeeProfile
+            };
+        case employeeConstants.EMPLOYEE_PROFILE_LOAD_FAILURE:
+            return {};
+
         default:
             return state;
     }
