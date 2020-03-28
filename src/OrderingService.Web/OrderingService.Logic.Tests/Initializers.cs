@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using OrderingService.Data.Repositories;
 using OrderingService.Data.EF;
 using OrderingService.Data.Models;
-using OrderingService.Data.Repositories;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Helpers;
 using OrderingService.Domain.Logic.MapperProfiles;
@@ -50,34 +49,25 @@ namespace OrderingService.Logic.Tests
             User = DefaultUser
         };
 
-        private static ApplicationUnitOfWork FakeUow(string name)
+        public static ApplicationContext FakeContext(string name)
         {
             var options = new DbContextOptionsBuilder<ApplicationContext>()
                 .UseInMemoryDatabase(databaseName: name)
                 .Options;
-            var context = new ApplicationContext(options);
-            return new ApplicationUnitOfWork(context);
+            return new ApplicationContext(options);
         }
 
-        public static UserService FakeUserService(string name)
+        public static UserService FakeUserService(ApplicationContext db)
         {
-
-            var logger = Mock.Of<ILogger<UserService>>();
-
-            var hasher = new PasswordHasher<User>();
-
             var mockOptions = new Mock<IOptions<AppSettings>>();
             var appSettings = new AppSettings { Secret = "db_test1111111111111111111111111111111111111111111111" };
             mockOptions.Setup(x => x.Value).Returns(appSettings);
 
-            return new UserService(FakeUow(name), Mapper, hasher, mockOptions.Object);
+            return new UserService(new UserRepository(db), new SaveProvider(db), Mapper, 
+                new RoleRepository(db), new PasswordHasher<User>(), mockOptions.Object);
         }
 
-        public static EmployeeService FakeEmployeeService(string name)
-        {
-            var logger = Mock.Of<ILogger<EmployeeService>>();
-
-            return new EmployeeService(FakeUow(name), Mapper);
-        }
+        public static EmployeeService FakeEmployeeService(ApplicationContext db) => new EmployeeService(
+            new EmployeeProfileRepository(db), new ServiceTypeRepository(db), new SaveProvider(db), Mapper);
     }
 }

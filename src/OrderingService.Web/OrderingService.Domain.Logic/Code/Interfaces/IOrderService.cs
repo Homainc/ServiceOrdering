@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Code.Interfaces
 {
-    public interface IOrderService : IDisposable
+    public interface IOrderService
     {
         Task<OrderDTO> CreateAsync(OrderDTO orderDto, CancellationToken token);
         Task<OrderDTO> CloseAsync(int orderDto, CancellationToken token);

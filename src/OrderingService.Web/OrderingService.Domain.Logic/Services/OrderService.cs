@@ -14,72 +14,74 @@ using OrderingService.Domain.Logic.Helpers;
 
 namespace OrderingService.Domain.Logic.Services
 {
-    public class OrderService : IOrderService
+    public class OrderService : AbstractService, IOrderService
     {
-        private IUnitOfWork Database { get; }
-        private IMapper Mapper { get; }
-        public OrderService(IUnitOfWork db, IMapper mapper)
+        private readonly IRepository<ServiceOrder> _serviceOrders;
+        private readonly IRepository<EmployeeProfile> _employees;
+        private readonly IRepository<User> _users;
+
+        public OrderService(IRepository<ServiceOrder> serviceOrders, IRepository<EmployeeProfile> employees, 
+            IRepository<User> users, IMapper mapper, ISaveProvider saveProvider)
+            :base(mapper, saveProvider)
         {
-            Database = db;
-            Mapper = mapper;
+            _serviceOrders = serviceOrders;
+            _employees = employees;
+            _users = users;
         }
-
-        public void Dispose() => Database.Dispose();
-
         public async Task<OrderDTO> CreateAsync(OrderDTO orderDto, CancellationToken token)
         {
-            var orderEmployee = await Database.EmployeeProfiles.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.EmployeeId, token);
+            var orderEmployee = await _employees.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.EmployeeId, token);
             if (orderEmployee == null)
                 throw new LogicException($"Employee with id {orderDto.EmployeeId} not found");
 
-            var orderClient = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.ClientId, token);
+            var orderClient = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.ClientId, token);
             if (orderClient == null)
                 throw new LogicException($"Client with id {orderDto.ClientId} not found");
 
             orderDto.Date = DateTime.Now;
-            var order = Mapper.Map<ServiceOrder>(orderDto);
-            Database.ServiceOrders.Create(order);
-            await Database.SaveAsync(token);
+            var order = _mapper.Map<ServiceOrder>(orderDto);
+            _serviceOrders.Create(order);
+            await _saveProvider.SaveAsync(token);
 
-            return Mapper.Map<OrderDTO>(order);
+            return _mapper.Map<OrderDTO>(order);
         }
 
         public async Task<OrderDTO> CloseAsync(int id, CancellationToken token)
         {
-            var order = await Database.ServiceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
+            var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (order == null)
                 throw new LogicException($"Order with id {id} not found");
 
             order.IsClosed = true;
-            Database.ServiceOrders.Update(order);
-            await Database.SaveAsync(token);
+            _serviceOrders.Update(order);
+            await _saveProvider.SaveAsync(token);
 
-            return Mapper.Map<OrderDTO>(order);
+            return _mapper.Map<OrderDTO>(order);
         }
 
         public async Task<OrderDTO> DeleteAsync(int id, CancellationToken token)
         {
-            var order = await Database.ServiceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
+            var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (order == null)
                 throw new LogicException($"Order with id {id} not found");
 
-            Database.ServiceOrders.Delete(order);
-            await Database.SaveAsync(token);
+            _serviceOrders.Delete(order);
+            await _saveProvider.SaveAsync(token);
 
-            return Mapper.Map<OrderDTO>(order);
+            return _mapper.Map<OrderDTO>(order);
         }
 
         public async Task<IPagedResult<OrderDTO>> GetPagedEmployeeOrdersAsync(Guid employeeId, int pageSize,
             int pageNumber, CancellationToken token)
         {
-            var query = Database.ServiceOrders.GetAll()
+            var query = _serviceOrders.GetAll()
                 .Where(x => x.EmployeeId == employeeId && !x.IsClosed);
 
             int total = query.Count();
             query = query.Paged(pageSize, pageNumber);
 
             return new PagedResult<OrderDTO>(
-                await query.ProjectTo<OrderDTO>(Mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
+                await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
                 pageNumber);
         }
     }

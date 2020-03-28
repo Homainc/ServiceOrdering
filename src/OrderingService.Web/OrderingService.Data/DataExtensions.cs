@@ -17,7 +17,16 @@ namespace OrderingService.Data
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(config.GetSection("AppSettings:ConnectionString").Value));
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddScoped<IUnitOfWork, ApplicationUnitOfWork>();
+
+            // Repositories
+            services.AddScoped<IRepository<EmployeeProfile>, EmployeeProfileRepository>();
+            services.AddScoped<IRepository<Review>, ReviewRepository>();
+            services.AddScoped<IRepository<Role>, RoleRepository>();
+            services.AddScoped<IRepository<ServiceOrder>, ServiceOrderRepository>();
+            services.AddScoped<IRepository<ServiceType>, ServiceTypeRepository>();
+            services.AddScoped<IRepository<User>, UserRepository>();
+
+            services.AddScoped<ISaveProvider, SaveProvider>();
             return services;
         }
     }

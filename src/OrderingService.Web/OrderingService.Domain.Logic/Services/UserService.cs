@@ -9,59 +9,60 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
 using OrderingService.Domain.Logic.Helpers;
 using OrderingService.Domain.Logic.Code.Exceptions;
 using OrderingService.Domain.Logic.Code.Interfaces;
+using OrderingService.Data.Interfaces;
 
 namespace OrderingService.Domain.Logic.Services
 {
-    public class UserService : IUserService
+    public class UserService : AbstractService, IUserService
     {
-        private IUnitOfWork Database { get; }
-        private IMapper Mapper { get; }
-        private IPasswordHasher<User> PasswordHasher { get; }
-        private AppSettings AppSettings { get; }
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly AppSettings _appSettings;
+        private readonly IRepository<User> _users;
+        private readonly IRepository<Role> _roles;
 
-        public UserService(IUnitOfWork db, IMapper mapper, 
-            IPasswordHasher<User> passwordHasher, IOptions<AppSettings> appSettings)
+        public UserService(IRepository<User> users, ISaveProvider saveProvider, IMapper mapper, 
+            IRepository<Role> roles, IPasswordHasher<User> passwordHasher, IOptions<AppSettings> appSettings)
+                :base(mapper, saveProvider)
         {
-            Database = db;
-            Mapper = mapper;
-            PasswordHasher = passwordHasher;
-            AppSettings = appSettings.Value;
+            _passwordHasher = passwordHasher;
+            _appSettings = appSettings.Value;
+            _users = users;
+            _roles = roles;
         }
 
         public async Task<UserDTO> CreateAsync(UserDTO userDto, CancellationToken token)
         {
-            var user = await Database.Users.GetAll()
+            var user = await _users.GetAll()
                 .SingleOrDefaultAsync(x => x.Email == userDto.Email, token);
 
             if (user != null)
                 throw new LogicException("User with this email already exists");
 
-            user = Mapper.Map<User>(userDto);
-            user.HashedPassword = PasswordHasher.HashPassword(user, userDto.Password);
-            user.RoleId = (await Database.Roles.GetAll().SingleOrDefaultAsync(x => x.Name == userDto.Role, token)).Id;
-            Database.Users.Create(user);
+            user = _mapper.Map<User>(userDto);
+            user.HashedPassword = _passwordHasher.HashPassword(user, userDto.Password);
+            user.RoleId = (await _roles.GetAll().SingleOrDefaultAsync(x => x.Name == userDto.Role, token)).Id;
+            _users.Create(user);
 
-            await Database.SaveAsync(token);
-            return Mapper.Map<UserDTO>(user);
+            await _saveProvider.SaveAsync(token);
+            return _mapper.Map<UserDTO>(user);
         }
 
         public async Task<UserDTO> AuthenticateAsync(UserDTO userDto, CancellationToken token)
         {
-            var user = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Email == userDto.Email, token);
+            var user = await _users.GetAll().SingleOrDefaultAsync(x => x.Email == userDto.Email, token);
             if(user == null)
                 throw new LogicException("Email or password is wrong");
 
-            var result = PasswordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
+            var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
             if (result == PasswordVerificationResult.Failed)
                 throw new LogicException("Email or password is wrong");
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -73,7 +74,7 @@ namespace OrderingService.Domain.Logic.Services
             };
             var userToken = tokenHandler.CreateToken(tokenDescriptor);
 
-            userDto = Mapper.Map<UserDTO>(user);
+            userDto = _mapper.Map<UserDTO>(user);
             userDto.Token = tokenHandler.WriteToken(userToken);
             return userDto;
         }
@@ -87,26 +88,24 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserDTO> GetUserByIdAsync(Guid id, CancellationToken token)
         {
-            var userProfile = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
+            var userProfile = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if(userProfile == null)
                 throw new LogicException($"User with id {id} not found");
             
-            return Mapper.Map<UserDTO>(userProfile);
+            return _mapper.Map<UserDTO>(userProfile);
         }
 
         public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto, CancellationToken token)
         {
-            var user = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == userDto.Id, token);
+            var user = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == userDto.Id, token);
             if (user == null)
                 throw new LogicException($"User with id {userDto.Id} not found");
 
-            Mapper.Map(userDto, user);
-            Database.Users.Update(user);
+            _mapper.Map(userDto, user);
+            _users.Update(user);
 
-            await Database.SaveAsync(token);
+            await _saveProvider.SaveAsync(token);
             return userDto;
         }
-
-        public void Dispose() => Database.Dispose();
     }
 }

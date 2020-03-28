@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Code.Interfaces
 {
-    public interface IReviewService : IDisposable
+    public interface IReviewService
     {
         Task<IPagedResult<ReviewDTO>> GetPagedReviewsAsync(Guid userId, int pageSize, int pageNumber, CancellationToken token);
         Task<ReviewDTO> CreateAsync(ReviewDTO reviewDto, CancellationToken token);

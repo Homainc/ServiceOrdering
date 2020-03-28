@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Code.Interfaces
 {
-    public interface IUserService : IDisposable
+    public interface IUserService
     {
         Task<UserDTO> SignUpAsync(UserDTO userDto, CancellationToken token);
         Task<UserDTO> CreateAsync(UserDTO userDto, CancellationToken token);

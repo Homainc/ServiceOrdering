@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Code.Interfaces
 {
-    public interface IEmployeeService : IDisposable
+    public interface IEmployeeService
     {
         Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(string serviceName, decimal? maxServiceCost,
             int pageSize, int pageNumber, CancellationToken token);

@@ -1,5 +1,5 @@
 ﻿using OrderingService.Domain;
-using OrderingService.Domain.Logic.Code.Interfaces;
+using OrderingService.Domain.Logic.Code.Exceptions;
 using Xunit;
 
 namespace OrderingService.Logic.Tests
@@ -11,44 +11,38 @@ namespace OrderingService.Logic.Tests
         {
             // Assign
             var user = Initializers.DefaultUser;
-            IResult<UserDTO> result;
+            using var context = Initializers.FakeContext("Can_create_user");
 
             // Action
-            using (var service = Initializers.FakeUserService("Can_create_user"))
-            {
-                result = service.CreateAsync(user, default).Result;
-            }
+            var service = Initializers.FakeUserService(context);
+            var createdUser = service.CreateAsync(user, default).Result;
 
             // Assert
-            Assert.False(result.DidError);
-            Assert.Equal(user.Email, result.Value.Email);
-            Assert.Equal("user", result.Value.Role);
+            Assert.Equal(user.Email, createdUser.Email);
+            Assert.Equal("user", createdUser.Role);
         }
 
         [Fact]
         public void Can_auth_user()
         {
             // Assign
-            IResult<UserDTO> result;
             var user = Initializers.DefaultUser;
+            using var context = Initializers.FakeContext("Can_auth_user");
 
             // Action
-            using (var service = Initializers.FakeUserService("Can_auth_user"))
-            {
-                service.CreateAsync(user, default).Wait();
-                result = service.AuthenticateAsync(user, default).Result;
-            }
+            var service = Initializers.FakeUserService(context);
+            service.CreateAsync(user, default).Wait();
+            var createdUser = service.AuthenticateAsync(user, default).Result;
 
             // Assert
-            Assert.False(result.DidError);
-            Assert.NotNull(result.Value.Token);
+            Assert.NotNull(createdUser.Token);
         }
 
         [Fact]
-        public void Can_not_create_user_with_same_email()
+        public async void Can_not_create_user_with_same_email()
         {
             // Assign
-            IResult<UserDTO> result;
+            using var context = Initializers.FakeContext("Can_not_create_user_with_same_email");
             var user = Initializers.DefaultUser;
             var sameEmailUser = new UserDTO
             {
@@ -60,15 +54,12 @@ namespace OrderingService.Logic.Tests
                 Email = user.Email
             };
 
-            // Action
-            using(var service = Initializers.FakeUserService("Can_not_create_user_with_same_email"))
-            {
-                service.CreateAsync(user, default).Wait();
-                result = service.CreateAsync(sameEmailUser, default).Result;
-            }
-
             // Assert
-            Assert.True(result.DidError);
+            await Assert.ThrowsAsync<LogicException>(async () => {
+                var service = Initializers.FakeUserService(context);
+                await service.CreateAsync(user, default);
+                await service.CreateAsync(sameEmailUser, default);
+            });
         }
 
         [Fact]
@@ -77,29 +68,27 @@ namespace OrderingService.Logic.Tests
             // Assign
             const string dbName = "Can_update_user";
             var user = Initializers.DefaultUser;
-            IResult<UserDTO> result;
-            using (var service = Initializers.FakeUserService(dbName))
-            {
-                result = service.CreateAsync(user, default).Result;
+            using(var context = Initializers.FakeContext(dbName)){
+                var service = Initializers.FakeUserService(context);
+                user = service.CreateAsync(user, default).Result;
             }
-            user = result.Value;
 
             // Action
-            using (var service = Initializers.FakeUserService(dbName))
-            {
-                user.FirstName = "new first name";
-                user.LastName = "new last name";
-                user.ImageUrl = "new image url";
-                user.Email = "email@new.com";
-                result = service.UpdateProfileAsync(user, default).Result;
+            user.FirstName = "new first name";
+            user.LastName = "new last name";
+            user.ImageUrl = "new image url";
+            user.Email = "email@new.com";
+            UserDTO updatedUser;
+            using(var context = Initializers.FakeContext(dbName)){
+                var service = Initializers.FakeUserService(context);
+                updatedUser = service.UpdateProfileAsync(user, default).Result;
             }
 
             // Assert
-            Assert.False(result.DidError);
-            Assert.Equal(user.Email, result.Value.Email);
-            Assert.Equal(user.LastName, result.Value.LastName);
-            Assert.Equal(user.FirstName, result.Value.FirstName);
-            Assert.Equal(user.ImageUrl, result.Value.ImageUrl);
+            Assert.Equal(user.Email, updatedUser.Email);
+            Assert.Equal(user.LastName, updatedUser.LastName);
+            Assert.Equal(user.FirstName, updatedUser.FirstName);
+            Assert.Equal(user.ImageUrl, updatedUser.ImageUrl);
         }
     }
 }

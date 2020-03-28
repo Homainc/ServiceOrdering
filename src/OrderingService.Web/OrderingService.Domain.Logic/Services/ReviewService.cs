@@ -14,58 +14,60 @@ using OrderingService.Domain.Logic.Helpers;
 
 namespace OrderingService.Domain.Logic.Services
 {
-    public class ReviewService : IReviewService
+    public class ReviewService : AbstractService, IReviewService
     {
-        private IUnitOfWork Database { get; }
-        private IMapper Mapper { get; }
-        public ReviewService(IUnitOfWork db, IMapper mapper)
+        private readonly IRepository<Review> _reviews;
+        private readonly IRepository<EmployeeProfile> _employees;
+        private readonly IRepository<User> _users;
+        public ReviewService(IRepository<Review> reviews, IRepository<EmployeeProfile> employees, 
+            IRepository<User> users, IMapper mapper, ISaveProvider saveProvider)
+            :base(mapper, saveProvider)
         {
-            Database = db;
-            Mapper = mapper;
+            _employees = employees;
+            _reviews = reviews;
+            _users = users;
         }
         public async Task<ReviewDTO> CreateAsync(ReviewDTO reviewDto, CancellationToken token)
         {
-            var reviewEmployee = await Database.EmployeeProfiles.GetAll()
+            var reviewEmployee = await _employees.GetAll()
                 .SingleOrDefaultAsync(x => x.Id == reviewDto.EmployeeId, token);
             if (reviewEmployee == null)
                 throw new LogicException($"Employee with id {reviewDto.EmployeeId} not found!");
             
-            var reviewClient = await Database.Users.GetAll().SingleOrDefaultAsync(x => x.Id == reviewDto.ClientId, token);
+            var reviewClient = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == reviewDto.ClientId, token);
             if (reviewClient == null)
                 throw new LogicException($"Client with id {reviewDto.ClientId} not found!");
             
             reviewDto.Date = DateTime.Now;
-            var review = Mapper.Map<Review>(reviewDto);
-            Database.Reviews.Create(review); 
-            await Database.SaveAsync(token);
+            var review = _mapper.Map<Review>(reviewDto);
+            _reviews.Create(review); 
+            await _saveProvider.SaveAsync(token);
 
-            return Mapper.Map<ReviewDTO>(review);
+            return _mapper.Map<ReviewDTO>(review);
         }
 
         public async Task<ReviewDTO> DeleteAsync(int id, CancellationToken token)
         {
-            var review = await Database.Reviews.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
+            var review = await _reviews.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (review == null)
                 throw new LogicException($"Review with id {id} not found");
 
-            Database.Reviews.Delete(review);
-            await Database.SaveAsync(token);
+            _reviews.Delete(review);
+            await _saveProvider.SaveAsync(token);
 
-            return Mapper.Map<ReviewDTO>(review);
+            return _mapper.Map<ReviewDTO>(review);
         }
 
         public async Task<IPagedResult<ReviewDTO>> GetPagedReviewsAsync(Guid userId, int pageSize, int pageNumber, CancellationToken token)
         {
-            var query = Database.Reviews.GetAll().Where(x => x.EmployeeId == userId);
+            var query = _reviews.GetAll().Where(x => x.EmployeeId == userId);
 
             var total = query.Count();
             query = query.Paged(pageSize, pageNumber);
 
             return new PagedResult<ReviewDTO>(
-                await query.ProjectTo<ReviewDTO>(Mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
+                await query.ProjectTo<ReviewDTO>(_mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
                 pageNumber);
         }
-
-        public void Dispose() => Database.Dispose();
     }
 }

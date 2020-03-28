@@ -29,12 +29,16 @@ namespace OrderingService.Data.EF
             builder.ApplyConfiguration(new ServiceOrderConfiguration());
             builder.ApplyConfiguration(new ServiceTypeConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+
+            // Initialization of default roles
             var roles = new Role[]
             {
                 new Role{Id = 1, Name = "user"},
                 new Role{Id = 2, Name = "admin"}
             };
             builder.Entity<Role>().HasData(roles);
+
+            // Initilization of data for content
             DataSeeder.Seed(builder);
         }
     }

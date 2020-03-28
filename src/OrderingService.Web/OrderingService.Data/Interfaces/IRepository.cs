@@ -1,9 +1,6 @@
 ﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.EF;
-using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Interfaces
 {
