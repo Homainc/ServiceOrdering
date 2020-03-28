@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, Row, Col, Button } from 'reactstrap';
+import { useParams, Link } from 'react-router-dom';
+import { Card, Row, Col, Button, Badge } from 'reactstrap';
 import { LoadingContainer, Rating, ReviewsBlock } from '../components';
 import { employeeActions } from '../actions';
 import { connect } from 'react-redux';
@@ -27,13 +27,14 @@ const EmployeePage = props => {
                     </Col>
                     <Col xm='4' sm='4'>
                         <h5>{employeeProfile && employeeProfile.user.firstName} {employeeProfile && employeeProfile.user.lastName}</h5>
-                        <p>{employeeProfile && employeeProfile.user.phoneNumber}</p>
+                        <h5><Badge color="info">{employeeProfile && employeeProfile.serviceType}</Badge></h5>
+                        <p>{employeeProfile && employeeProfile.user.phoneNumber || 'Phone number not specified'}</p>
                         <a href={`mailto:${employeeProfile && employeeProfile.user.email}`}>{employeeProfile && employeeProfile.user.email}</a>
                     </Col>
                     <Col className="text-center">
                         Average rate<br/>
                         <Rating rate={3.4} reviews={10}/><br/>
-                        <Button className="my-2" color="success" outline>Hire for $ {employeeProfile && employeeProfile.serviceCost.toFixed(2)}</Button>
+                        <Button tag={Link} to={`/order/${employeeProfile && employeeProfile.id}`} className="my-2" color="success" outline>Hire for $ {employeeProfile && employeeProfile.serviceCost.toFixed(2)}</Button>
                     </Col>
                 </Row>
                 <hr/>
