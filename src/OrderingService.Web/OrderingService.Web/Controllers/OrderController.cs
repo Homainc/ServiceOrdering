@@ -34,11 +34,23 @@ namespace OrderingService.Web.Controllers
             OrderDTO orderDto,
             CancellationToken token = default) => Ok(await _orderService.CreateAsync(orderDto, token));
 
-        [HttpPut("{id:int}")]
+        [HttpPut("take/{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CloseAsync([FromRoute] int id, CancellationToken token = default) =>
-            Ok(await _orderService.CloseAsync(id, token));
+            Ok(await _orderService.TakeOrderAsync(id, token));
+
+        [HttpPut("decline/{id:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeclineAsync([FromRoute] int id, CancellationToken token = default) =>
+            Ok(await _orderService.DeclineOrderAsync(id, token));
+
+        [HttpPut("confirm/{id:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> ConfirmCompletionAsync([FromRoute] int id, CancellationToken token = default) =>
+            Ok(await _orderService.ConfirmOrderCompletion(id, token));
 
         [HttpDelete("{id:int}")]
         [ProducesResponseType(200)]

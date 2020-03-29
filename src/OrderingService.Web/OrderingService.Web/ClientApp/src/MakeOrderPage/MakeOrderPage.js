@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { employeeActions } from '../actions';
 import { connect } from 'react-redux';
 import { Card, Col, Row, Button, Badge, Form } from 'reactstrap';
+import { DatePicker } from 'react-datepicker';
 import { Formik } from 'formik';
 
 const MakeOrderPage = props => {
@@ -54,7 +55,7 @@ const MakeOrderPage = props => {
                         <h5>Approximate date of order completion</h5>
                         <Row>
                             <Col className='mt-2'>
-                                <p>DATE</p>
+                                <DatePicker showTimeSelect timeFormat='HH:mm'/>
                             </Col>
                         </Row>
                         <Row className='justify-content-center p-3'>

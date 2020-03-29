@@ -4,17 +4,25 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace OrderingService.Data.Models
 {
+    public enum OrderStatus {
+        WaitingForEmplpoyee,
+        InProgress,
+        Declined,
+        Done
+    }
+
     public class ServiceOrder
     {
         public int Id { get; set; }
         public Guid ClientId { get; set; }
         public User Client { get; set; }
         public Guid EmployeeId { get; set; }
-        public User Employee { get; set; }
-        public string Description { get; set; }
+        public EmployeeProfile Employee { get; set; }
+        public string ServiceDetails { get; set; }
+        public string BriefTask { get; set; }
         public decimal Price { get; set; }
         public DateTime Date { get; set; }
-        public bool IsClosed { get; set; }
+        public OrderStatus Status { get; set; }
     }
 
     public class ServiceOrderConfiguration : IEntityTypeConfiguration<ServiceOrder>{
@@ -22,7 +30,10 @@ namespace OrderingService.Data.Models
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd();
-            builder.Property(x => x.Description)
+            builder.Property(x => x.BriefTask)
+                .HasMaxLength(50)
+                .IsRequired();
+            builder.Property(x => x.ServiceDetails)
                 .HasMaxLength(255);
             builder.HasOne(x => x.Client)
                 .WithMany()

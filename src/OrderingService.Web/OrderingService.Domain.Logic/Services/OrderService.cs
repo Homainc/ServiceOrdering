@@ -46,16 +46,42 @@ namespace OrderingService.Domain.Logic.Services
             return _mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<OrderDTO> CloseAsync(int id, CancellationToken token)
-        {
+        public async Task<OrderDTO> TakeOrderAsync(int id, CancellationToken token){
             var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
-            if (order == null)
-                throw new LogicException($"Order with id {id} not found");
-
-            order.IsClosed = true;
+            if(order == null)
+                throw new LogicException("Order not found");
+            if(order.Status != OrderStatus.WaitingForEmplpoyee)
+                throw new LogicException("Order have already taken/declined");
+            
+            order.Status = OrderStatus.InProgress;
             _serviceOrders.Update(order);
             await _saveProvider.SaveAsync(token);
+            return _mapper.Map<OrderDTO>(order);
+        }
 
+        public async Task<OrderDTO> DeclineOrderAsync(int id, CancellationToken token){
+            var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
+            if(order == null)
+                throw new LogicException("Order not found");
+            if(order.Status != OrderStatus.WaitingForEmplpoyee)
+                throw new LogicException("Order have already taken/declined");
+
+            order.Status = OrderStatus.Declined;
+            _serviceOrders.Update(order);
+            await _saveProvider.SaveAsync(token);
+            return _mapper.Map<OrderDTO>(order);
+        }
+
+        public async Task<OrderDTO> ConfirmOrderCompletion(int id, CancellationToken token){
+            var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
+            if(order == null)
+                throw new LogicException("Order not found");
+            if(order.Status != OrderStatus.InProgress)
+                throw new LogicException($"Can't confirm order on that stage ({order.Status})");
+            
+            order.Status = OrderStatus.Done;
+            _serviceOrders.Update(order);
+            await _saveProvider.SaveAsync(token);
             return _mapper.Map<OrderDTO>(order);
         }
 
@@ -75,10 +101,10 @@ namespace OrderingService.Domain.Logic.Services
             int pageNumber, CancellationToken token)
         {
             var query = _serviceOrders.GetAll()
-                .Where(x => x.EmployeeId == employeeId && !x.IsClosed);
+                .Where(x => x.EmployeeId == employeeId);
 
             int total = query.Count();
-            query = query.Paged(pageSize, pageNumber);
+            query = query.Paged(pageSize, pageNumber).OrderBy(x => x.Status);
 
             return new PagedResult<OrderDTO>(
                 await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
