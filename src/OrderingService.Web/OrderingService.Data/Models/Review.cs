@@ -12,7 +12,7 @@ namespace OrderingService.Data.Models
         public Guid ClientId { get; set; }
         public User Client { get; set; }
         public Guid EmployeeId { get; set; }
-        public float Rate { get; set; }
+        public int Rate { get; set; }
         public EmployeeProfile Employee { get; set; }
     }
 

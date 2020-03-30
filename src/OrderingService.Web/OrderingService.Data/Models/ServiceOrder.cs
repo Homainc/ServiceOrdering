@@ -1,16 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using OrderingService.Common;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace OrderingService.Data.Models
 {
-    public enum OrderStatus {
-        WaitingForEmplpoyee,
-        InProgress,
-        Declined,
-        Done
-    }
-
     public class ServiceOrder
     {
         public int Id { get; set; }
@@ -20,7 +14,9 @@ namespace OrderingService.Data.Models
         public EmployeeProfile Employee { get; set; }
         public string ServiceDetails { get; set; }
         public string BriefTask { get; set; }
+        public string Address { get; set; }
         public decimal Price { get; set; }
+        public string ContactPhone { get; set; }
         public DateTime Date { get; set; }
         public OrderStatus Status { get; set; }
     }

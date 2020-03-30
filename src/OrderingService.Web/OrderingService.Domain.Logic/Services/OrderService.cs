@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using OrderingService.Common;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.Interfaces;
@@ -30,16 +31,15 @@ namespace OrderingService.Domain.Logic.Services
         }
         public async Task<OrderDTO> CreateAsync(OrderDTO orderDto, CancellationToken token)
         {
-            var orderEmployee = await _employees.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.EmployeeId, token);
+            var order = _mapper.Map<ServiceOrder>(orderDto);
+            var orderEmployee = await _employees.GetAll().SingleOrDefaultAsync(x => x.Id == order.EmployeeId, token);
             if (orderEmployee == null)
                 throw new LogicException($"Employee with id {orderDto.EmployeeId} not found");
 
-            var orderClient = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == orderDto.ClientId, token);
+            var orderClient = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == order.ClientId, token);
             if (orderClient == null)
                 throw new LogicException($"Client with id {orderDto.ClientId} not found");
 
-            orderDto.Date = DateTime.Now;
-            var order = _mapper.Map<ServiceOrder>(orderDto);
             _serviceOrders.Create(order);
             await _saveProvider.SaveAsync(token);
 

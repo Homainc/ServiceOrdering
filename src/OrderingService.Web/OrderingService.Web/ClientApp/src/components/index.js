@@ -12,3 +12,4 @@ export * from './EmployeeItem';
 export * from './PaginationBlock';
 export * from './Rating';
 export * from './ReviewsBlock';
+export * from './FormikDatePicker';

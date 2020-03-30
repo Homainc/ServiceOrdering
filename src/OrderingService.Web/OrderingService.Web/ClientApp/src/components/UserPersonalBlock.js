@@ -70,7 +70,7 @@ const UserPersonalBlock = props => {
                             <ListGroupItemHeading>Last name</ListGroupItemHeading>
                             <ListGroupItemText className="text-secondary">{props.profile && props.profile.lastName}</ListGroupItemText>
                             <ListGroupItemHeading>Phone number</ListGroupItemHeading>
-                            <ListGroupItemText className="text-secondary">{props.profile && props.profile.phoneNumber || 'Not specified'}</ListGroupItemText>
+                            <ListGroupItemText className="text-secondary">{(props.profile && props.profile.phoneNumber) || 'Not specified'}</ListGroupItemText>
                         </>):(<>
                             <Alert isOpen={!!props.alert.message} color={props.alert.type}>{props.alert.message}</Alert>
                             <ValidationTextField 

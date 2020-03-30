@@ -28,7 +28,7 @@ const EmployeePage = props => {
                     <Col xm='4' sm='4'>
                         <h5>{employeeProfile && employeeProfile.user.firstName} {employeeProfile && employeeProfile.user.lastName}</h5>
                         <h5><Badge color="info">{employeeProfile && employeeProfile.serviceType}</Badge></h5>
-                        <p>{employeeProfile && employeeProfile.user.phoneNumber || 'Phone number not specified'}</p>
+                        <p>{(employeeProfile && employeeProfile.user.phoneNumber) || 'Phone number not specified'}</p>
                         <a href={`mailto:${employeeProfile && employeeProfile.user.email}`}>{employeeProfile && employeeProfile.user.email}</a>
                     </Col>
                     <Col className="text-center">

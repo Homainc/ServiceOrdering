@@ -1,0 +1,10 @@
+.toast-pos {
+    position: fixed;
+    top: 80px;
+    right: 3%;
+    cursor: pointer;
+}
+
+body {
+    background-image: url('/images/trees.png');
+}
