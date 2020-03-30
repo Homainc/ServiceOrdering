@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import React, { useState } from 'react';
-import { Col, Row, ListGroupItem, ListGroupItemHeading, ListGroupItemText, Button, Alert } from 'reactstrap';
+import { Col, Row, ListGroupItemHeading, ListGroupItemText, Button, Alert } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import { ValidationTextField } from './ValidationTextField';
 import { LoadingButton } from './LoadingButton';
@@ -18,7 +18,7 @@ const UserPersonalBlock = props => {
     const { profile } = props;
 
     return(
-        <ListGroupItem>
+        <>
             <Row>
                 <Col><ListGroupItemHeading className="p-1 pb-1">Personal data</ListGroupItemHeading></Col>
                 <Col sm="5" md="4" lg="3" className="d-flex">
@@ -101,7 +101,7 @@ const UserPersonalBlock = props => {
                 </Row></Form>
                 )}
             </Formik>
-        </ListGroupItem>
+        </>
     );
 };
 

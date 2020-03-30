@@ -1,11 +1,11 @@
 export const userConstants = {
-    LOGIN_REQUEST: 'USERS_LOGIN_REQUEST',
-    LOGIN_SUCCESS: 'USERS_LOGIN_SUCCESS',
-    LOGIN_FAILURE: 'USERS_LOGIN_FAILURE',
+    LOGIN_REQUEST: 'user/login [request]',
+    LOGIN_SUCCESS: 'user/login [success]',
+    LOGIN_FAILURE: 'user/login [failure]',
 
-    LOGOUT: 'LOGOUT',
+    LOGOUT: 'user/logout',
 
-    SIGN_UP_REQUEST: 'USERS_SIGN_UP_REQUEST',
-    SIGN_UP_SUCCESS: 'USERS_SIGN_UP_SUCCESS',
-    SIGN_UP_FAILURE: 'USERS_SIGN_UP_FAILURE'
+    SIGN_UP_REQUEST: 'user/sign up [request]',
+    SIGN_UP_SUCCESS: 'user/sign up [success]',
+    SIGN_UP_FAILURE: 'user/sign up [failure]'
 };

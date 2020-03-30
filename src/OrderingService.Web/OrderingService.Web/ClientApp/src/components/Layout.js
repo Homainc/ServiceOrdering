@@ -19,7 +19,7 @@ class Layout extends Component {
             <Container>
               {this.props.children}
             </Container>
-            <Toast className="toast-pos" isOpen={this.props.alert && this.props.alert.type == 'success'} onClick={() => this.props.clearAlerts()}>
+            <Toast className="toast-pos" isOpen={this.props.alert && this.props.alert.type === 'success'} onClick={() => this.props.clearAlerts()}>
               <ToastHeader>
                 Notice
               </ToastHeader>

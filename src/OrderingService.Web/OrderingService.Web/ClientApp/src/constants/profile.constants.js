@@ -1,9 +1,9 @@
 export const profileConstants = {
-    PROFILE_REQUEST: 'USERS_PROFILE_REQUEST',
-    PROFILE_SUCCESS: 'USERS_PROFILE_SUCCESS',
-    PROFILE_FAILURE: 'USERS_PROFILE_FAILURE',
+    PROFILE_REQUEST: 'profile/load [request]',
+    PROFILE_SUCCESS: 'profile/load [success]',
+    PROFILE_FAILURE: 'profile/load [failure]',
 
-    PROFILE_UPDATE_REQUEST: 'PROFILE_UPDATE_REQUEST',
-    PROFILE_UPDATE_SUCCESS: 'PROFILE_UPDATE_SUCCESS',
-    PROFILE_UPDATE_FAILURE: 'PROFILE_UPDATE_FAILURE',
+    PROFILE_UPDATE_REQUEST: 'profile/update [request]',
+    PROFILE_UPDATE_SUCCESS: 'profile/update [success]',
+    PROFILE_UPDATE_FAILURE: 'profile/update [failure]',
 };

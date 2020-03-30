@@ -11,7 +11,7 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
         Task<OrderDTO> DeclineOrderAsync(int orderDto, CancellationToken token);
         Task<OrderDTO> ConfirmOrderCompletion(int orderDto, CancellationToken token);
         Task<OrderDTO> DeleteAsync(int orderDto, CancellationToken token);
-
         Task<IPagedResult<OrderDTO>> GetPagedEmployeeOrdersAsync(Guid employeeId, int pageSize, int pageNumber, CancellationToken token);
+        Task<IPagedResult<OrderDTO>> GetPagedOrdersByUserAsync(Guid userId, int pageSize, int pageNumber, CancellationToken token);
     }
 }

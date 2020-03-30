@@ -4,7 +4,7 @@ import { LoadingContainer, Rating, ValidationTextField, FormikDatePicker, Loadin
 import { useParams } from 'react-router-dom';
 import { employeeActions } from '../actions';
 import { connect } from 'react-redux';
-import { Card, Col, Row, Button, Badge } from 'reactstrap';
+import { Card, Col, Row, Badge } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import { orderActions } from '../actions/order.actions';
 

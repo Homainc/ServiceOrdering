@@ -17,13 +17,13 @@ namespace OrderingService.Web.Controllers
         private readonly IOrderService _orderService;
         public OrderController(IOrderService orderService) => _orderService = orderService;
 
-        [HttpGet("employee/{id}")]
+        [HttpGet("user/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetEmployeeOrdersAsync([FromRoute] string id, [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1,
             CancellationToken token = default) =>
-            Ok(await _orderService.GetPagedEmployeeOrdersAsync(new Guid(id), pageSize, pageNumber, token));
+            Ok(await _orderService.GetPagedOrdersByUserAsync(new Guid(id), pageSize, pageNumber, token));
 
         [HttpPost]
         [ProducesResponseType(200)]

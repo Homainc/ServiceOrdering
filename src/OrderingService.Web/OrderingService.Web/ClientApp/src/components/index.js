@@ -13,3 +13,5 @@ export * from './PaginationBlock';
 export * from './Rating';
 export * from './ReviewsBlock';
 export * from './FormikDatePicker';
+export * from './OrdersTable';
+export * from './OrdersTableRow';

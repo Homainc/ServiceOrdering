@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import React, { useState } from 'react';
-import { Col, Row, ListGroupItem, ListGroupItemHeading, Button, ListGroupItemText, Spinner } from 'reactstrap';
+import { Col, Row, ListGroupItemHeading, Button, ListGroupItemText, Spinner } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import { ValidationTextField } from './ValidationTextField';
 import { LoadingButton } from './LoadingButton';
@@ -33,7 +33,7 @@ const UserEmployeeBlock = props => {
     };
 
     return(
-        <ListGroupItem>
+        <>
             <Row>
                 <Col className="py-2"><ListGroupItemHeading>Employee profile</ListGroupItemHeading></Col>
                 {!state.editMode && employeeProfile && (
@@ -105,7 +105,7 @@ const UserEmployeeBlock = props => {
                     )}
                 </Formik>
             )}
-        </ListGroupItem>
+        </>
     );
 };
 

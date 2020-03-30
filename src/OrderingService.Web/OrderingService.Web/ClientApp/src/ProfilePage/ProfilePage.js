@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Card, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
+import { Card, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { profileActions } from '../actions';
-import { LoadingContainer, UserPersonalBlock, UserEmployeeBlock } from '../components';
+import { LoadingContainer, UserPersonalBlock, UserEmployeeBlock, OrdersTable } from '../components';
 
 class ProfilePage extends Component {
 
@@ -15,14 +15,17 @@ class ProfilePage extends Component {
         return (
             <LoadingContainer isLoading={!!profileLoading}>
                 <Card body className="bg-light">
-                <UserPersonalBlock profile={profile}/>
-                <ListGroupItem>
+                    <UserPersonalBlock profile={profile}/>
+                    <hr/>
                     <ListGroupItemHeading>Email</ListGroupItemHeading>
                     <ListGroupItemText className="text-secondary">{profile && profile.email}</ListGroupItemText>
                     <ListGroupItemHeading>Password</ListGroupItemHeading>
-                   <ListGroupItemText className="text-secondary">*************</ListGroupItemText>
-                </ListGroupItem>
-                <UserEmployeeBlock profile={profile}/>
+                    <ListGroupItemText className="text-secondary">*************</ListGroupItemText>
+                    <hr/>
+                    <UserEmployeeBlock profile={profile}/>
+                    <hr/>
+                    <h5>My orders</h5>
+                    <OrdersTable userId={profile && profile.id}/>
                 </Card>    
             </LoadingContainer>
         );   

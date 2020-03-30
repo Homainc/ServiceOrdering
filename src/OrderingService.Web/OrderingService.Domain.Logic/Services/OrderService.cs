@@ -110,5 +110,19 @@ namespace OrderingService.Domain.Logic.Services
                 await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
                 pageNumber);
         }
+
+        public async Task<IPagedResult<OrderDTO>> GetPagedOrdersByUserAsync(Guid userId, int pageSize,
+            int pageNumber, CancellationToken token)
+        {
+            var query = _serviceOrders.GetAll()
+                .Where(x => x.ClientId == userId);
+
+            int total = query.Count();
+            query = query.Paged(pageSize, pageNumber).OrderBy(x => x.Status);
+
+            return new PagedResult<OrderDTO>(
+                await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
+                pageNumber);
+        }
     }
 }

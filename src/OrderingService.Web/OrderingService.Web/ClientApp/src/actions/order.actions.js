@@ -3,7 +3,8 @@ import { orderService } from '../services';
 import { history } from '../helpers';
 
 export const orderActions = {
-    createOrder
+    createOrder,
+    loadOrdersByUser
 };
 
 function createOrder(order){
@@ -23,4 +24,22 @@ function createOrder(order){
     function request() { return { type: orderConstants.ORDER_CREATE_REQUEST }; }
     function success(order) { return { type: orderConstants.ORDER_CREATE_SUCCESS, order }; }
     function failure() { return { type: orderConstants.ORDER_CREATE_FAILURE }; }
+}
+
+function loadOrdersByUser(user_id) {
+    return dispatch => {
+        dispatch(request());
+
+        orderService.loadOrdersByUser(user_id)
+            .then(data => {
+                dispatch(success(data.value));
+            },
+            error => {
+                dispatch(failure());
+            });
+    };
+
+    function request() { return { type: orderConstants.ORDER_LOAD_BY_USER_REQUEST }; }
+    function success(orders) { return { type: orderConstants.ORDER_LOAD_BY_USER_SUCCESS, orders }; }
+    function failure() { return { type: orderConstants.ORDER_LOAD_BY_USER_FAILURE }; }
 }
