@@ -20,10 +20,18 @@ namespace OrderingService.Web.Controllers
         [HttpGet("user/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetEmployeeOrdersAsync([FromRoute] string id, [FromQuery] int pageSize = 5,
+        public async Task<IActionResult> GetUserOrdersAsync([FromRoute] string id, [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1,
             CancellationToken token = default) =>
             Ok(await _orderService.GetPagedOrdersByUserAsync(new Guid(id), pageSize, pageNumber, token));
+        
+        [HttpGet("employee/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetEmployeeOrdersAsync([FromRoute] string id, [FromQuery] int pageSize = 5,
+            [FromQuery] int pageNumber = 1,
+            CancellationToken token = default) =>
+            Ok(await _orderService.GetPagedEmployeeOrdersAsync(new Guid(id), pageSize, pageNumber, token));
 
         [HttpPost]
         [ProducesResponseType(200)]
@@ -37,7 +45,7 @@ namespace OrderingService.Web.Controllers
         [HttpPut("take/{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CloseAsync([FromRoute] int id, CancellationToken token = default) =>
+        public async Task<IActionResult> TakeAsync([FromRoute] int id, CancellationToken token = default) =>
             Ok(await _orderService.TakeOrderAsync(id, token));
 
         [HttpPut("decline/{id:int}")]

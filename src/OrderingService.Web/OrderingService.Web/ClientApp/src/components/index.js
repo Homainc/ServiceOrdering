@@ -15,3 +15,4 @@ export * from './ReviewsBlock';
 export * from './FormikDatePicker';
 export * from './OrdersTable';
 export * from './OrdersTableRow';
+export * from './EmployeeOrderRow';

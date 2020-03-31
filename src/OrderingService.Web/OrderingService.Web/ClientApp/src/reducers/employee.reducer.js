@@ -47,7 +47,8 @@ export function employee(state = {}, action) {
         case employeeConstants.EMPLOYEES_LOAD_SUCCESS:
             return {
                 employeeList: action.employeeList,
-                pagesCount: action.pagesCount
+                pagesCount: action.pagesCount,
+                listLoading: false
             };
         case employeeConstants.EMPLOYEES_LOAD_FAILURE:
             return {};
