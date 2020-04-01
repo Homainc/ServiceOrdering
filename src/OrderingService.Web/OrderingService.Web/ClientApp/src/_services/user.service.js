@@ -4,7 +4,9 @@ import { handleResponse } from '../_helpers';
 export const userService = {
     login,
     logout,
-    signUp
+    signUp,
+    updateAuthUser,
+    updateAuthEmployeeProfile
 };
 
 function login(email, password) {
@@ -24,6 +26,18 @@ function login(email, password) {
 
 function logout(){
     localStorage.removeItem('user');
+}
+
+function updateAuthUser(user){
+    let oldUser = JSON.parse(localStorage.getItem('user'));
+    user.token = oldUser.token;
+    localStorage.setItem('user', JSON.stringify(user));
+}
+
+function updateAuthEmployeeProfile(employeeProfile){
+    let user = JSON.parse(localStorage.getItem('user'));
+    user.employeeProfile = employeeProfile;
+    localStorage.setItem('user', JSON.stringify(user));
 }
 
 function signUp(user){

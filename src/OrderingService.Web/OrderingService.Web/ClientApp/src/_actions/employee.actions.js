@@ -1,5 +1,6 @@
 import { employeeService } from '../_services';
 import { employeeConstants } from '../_constants';
+import { userActions } from './user.actions';
 
 export const employeeActions = {
     updateEmployeeProfile,
@@ -15,6 +16,7 @@ function createEmployeeProfile(employeeProfile){
 
         return employeeService.createEmployeeProfile(employeeProfile)
             .then(employeeProfile => {
+                dispatch(userActions.updateAuthEmployeeProfile(employeeProfile));
                 dispatch(success(employeeProfile));
             },
             error => {
@@ -33,6 +35,7 @@ function updateEmployeeProfile(employeeProfile){
 
         return employeeService.updateEmployeeProfile(employeeProfile)
             .then(employeeProfile => {
+                dispatch(userActions.updateAuthEmployeeProfile(employeeProfile));
                 dispatch(success(employeeProfile));
             },
             error => {
@@ -51,6 +54,7 @@ function deleteEmployeeProfile(employeeProfile){
 
         return employeeService.deleteEmployeeProfile(employeeProfile.id)
             .then(() => {
+                dispatch(userActions.updateAuthEmployeeProfile(null));
                 dispatch(success());
             },
             error => {

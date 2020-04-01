@@ -1,4 +1,4 @@
-import { userConstants } from "../_constants";
+import { userConstants, authenticationConstants } from "../_constants";
 import { userService } from "../_services";
 import { alertActions } from ".";
 import { history } from "../_helpers";
@@ -6,7 +6,9 @@ import { history } from "../_helpers";
 export const userActions = {
     login,
     logout,
-    signUp
+    signUp,
+    updateAuthUser,
+    updateAuthEmployeeProfile
 };
 
 function login(username, password){
@@ -52,4 +54,14 @@ function signUp(user){
     function request(user) { return { type: userConstants.SIGN_UP_REQUEST, user } }
     function success(user) { return { type: userConstants.SIGN_UP_SUCCESS, user } }
     function failure(error) { return { type: userConstants.SIGN_UP_FAILURE, error } }
+}
+
+function updateAuthUser(user){
+    userService.updateAuthUser(user);
+    return { type: authenticationConstants.AUTH_UPDATE_USER, user };
+}
+
+function updateAuthEmployeeProfile(employeeProfile){
+    userService.updateAuthEmployeeProfile(employeeProfile);
+    return { type: authenticationConstants.AUTH_UPDATE_EMPLOYEE_PROFILE, employeeProfile };
 }

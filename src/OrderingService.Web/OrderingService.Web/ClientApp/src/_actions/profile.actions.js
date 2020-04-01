@@ -1,6 +1,7 @@
 import { profileConstants } from "../_constants";
 import { profileService } from "../_services";
 import { history } from "../_helpers";
+import { userActions } from "./user.actions";
 
 export const profileActions = {
     loadProfile,
@@ -32,6 +33,7 @@ function updateProfile(profile){
 
         return profileService.updateProfile(profile)
             .then(profile => {
+                dispatch(userActions.updateAuthUser(profile));
                 dispatch(success(profile));
             },
             error => {
