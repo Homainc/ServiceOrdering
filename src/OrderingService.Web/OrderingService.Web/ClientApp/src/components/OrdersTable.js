@@ -1,21 +1,24 @@
 import React, { useEffect } from 'react';
 import { Table } from 'reactstrap';
-import { OrdersTableRow } from './OrdersTableRow';
+import { UserOrderRow } from './UserOrderRow';
 import { orderActions } from '../actions';
 import { connect } from 'react-redux';
 import './OrdersTable.css';
+import { ReviewModal } from './ReviewModal';
 
 const OrdersTable = props => {
     const { userId, loadOrdersByUser } = props;
 
     useEffect(() => {
-        loadOrdersByUser(userId);
+        if(!!userId)
+            loadOrdersByUser(userId);
     }, [userId, loadOrdersByUser]);
 
     const ordersRows = props.orders && props.orders.map(order => 
-        <OrdersTableRow key={order.id} {...order}/>
+        <UserOrderRow key={order.id} {...order}/>
     );
     return (
+        <>
         <Table className="mt-3 table-bordered">
             <thead>
                 <tr>
@@ -29,6 +32,8 @@ const OrdersTable = props => {
                 {ordersRows}
             </tbody>
         </Table>
+        <ReviewModal/> 
+        </>
     );
 };
 

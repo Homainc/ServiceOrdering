@@ -4,7 +4,7 @@ import { Button } from 'reactstrap';
 import { orderActions } from '../actions';
 import { connect } from 'react-redux';
 
-const OrderStatus = props => {
+const EmployeeOrderStatus = props => {
     const statusText = orderConstants.STATUS[props.status];
 
     return (
@@ -38,5 +38,5 @@ const mapDispatchToProps = dispatch => ({
     declineOrder: id => dispatch(orderActions.declineOrder(id))
 });
 
-const connectectOrderStatus = connect(mapStateToProps, mapDispatchToProps)(OrderStatus);
-export { connectectOrderStatus as OrderStatus };
+const connectectOrderStatus = connect(mapStateToProps, mapDispatchToProps)(EmployeeOrderStatus);
+export { connectectOrderStatus as EmployeeOrderStatus };

@@ -1,0 +1,9 @@
+.active-star{
+    color: orange;
+    transition-duration: 0.4s;
+};
+
+.rate-star {
+    cursor: pointer;
+    transition-duration: 0.4s;
+}

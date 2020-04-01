@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 
@@ -23,12 +24,17 @@ namespace OrderingService.Web.Controllers
             Ok(await _reviewService.GetPagedReviewsAsync(new Guid(id), pageSize, pageNumber, token));
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateAsync(
             [FromBody] [CustomizeValidator(RuleSet = "Create")]
             ReviewDTO reviewDto,
-            CancellationToken token = default) => Ok(await _reviewService.CreateAsync(reviewDto, token));
+            CancellationToken token = default)
+        {
+            reviewDto.ClientId = new Guid(User.Identity.Name);
+            return Ok(await _reviewService.CreateAsync(reviewDto, token));
+        }
 
         [HttpDelete("{id:int}")]
         [ProducesResponseType(200)]

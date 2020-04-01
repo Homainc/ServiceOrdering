@@ -14,5 +14,6 @@ export * from './Rating';
 export * from './ReviewsBlock';
 export * from './FormikDatePicker';
 export * from './OrdersTable';
-export * from './OrdersTableRow';
+export * from './UserOrderRow';
 export * from './EmployeeOrderRow';
+export * from './RatingInput';

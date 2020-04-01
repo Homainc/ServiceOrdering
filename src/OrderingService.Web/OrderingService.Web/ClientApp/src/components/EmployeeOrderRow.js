@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, UncontrolledCollapse } from 'reactstrap';
-import { OrderStatus } from './OrderStatus'; 
+import { EmployeeOrderStatus } from './EmployeeOrderStatus'; 
 
 export const EmployeeOrderRow = props => {
     return (
@@ -15,7 +15,7 @@ export const EmployeeOrderRow = props => {
                     <p><span className="font-weight-bold">Client contact phone: </span>{props.contactPhone}</p>
                 </UncontrolledCollapse>
             </td>
-            <td><OrderStatus orderId={props.id} status={props.status}/></td>
+            <td><EmployeeOrderStatus orderId={props.id} status={props.status}/></td>
             <td>{props.price.toFixed(2)}</td>
         </tr>
     );
