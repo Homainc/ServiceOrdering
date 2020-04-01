@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
-import { LoadingContainer, Rating, ValidationTextField, FormikDatePicker, LoadingButton } from '../components';
+import { LoadingContainer, Rating, ValidationTextField, FormikDatePicker, LoadingButton } from '../_components';
 import { useParams } from 'react-router-dom';
-import { employeeActions } from '../actions';
+import { employeeActions, orderActions } from '../_actions';
 import { connect } from 'react-redux';
 import { Card, Col, Row, Badge } from 'reactstrap';
 import { Formik, Form } from 'formik';
-import { orderActions } from '../actions/order.actions';
 
 const MakeOrderPage = props => {
     const { employeeId } = useParams();

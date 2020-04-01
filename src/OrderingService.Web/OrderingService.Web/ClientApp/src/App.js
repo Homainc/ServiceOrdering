@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route } from 'react-router';
 
-import { history } from './helpers';
-import { alertActions } from './actions';
+import { history } from './_helpers';
+import { alertActions } from './_actions';
 
-import { Layout, PrivateRoute } from './components';
+import { Layout, PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
 import { HomePage } from './HomePage';
 

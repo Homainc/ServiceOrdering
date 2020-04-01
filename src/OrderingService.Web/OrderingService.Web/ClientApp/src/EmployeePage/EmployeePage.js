@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, Row, Col, Button, Badge } from 'reactstrap';
-import { LoadingContainer, Rating, ReviewsBlock } from '../components';
-import { employeeActions } from '../actions';
+import { LoadingContainer, Rating } from '../_components';
+import { ReviewsBlock } from './ReviewsBlock';
+import { employeeActions } from '../_actions';
 import { connect } from 'react-redux';
 import '@fortawesome/fontawesome-free/css/all.css';
 

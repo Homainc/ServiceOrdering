@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Card, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
-import { profileActions } from '../actions';
-import { LoadingContainer, UserPersonalBlock, UserEmployeeBlock, UserOrdersTable } from '../components';
+import { profileActions } from '../_actions';
+import { LoadingContainer } from '../_components';
+import { UserEmployeeBlock } from './UserEmployeeBlock';
+import { UserPersonalBlock } from './UserPersonalBlock';
+import { UserOrdersTable } from './UserOrdersTable';
 
 class ProfilePage extends Component {
 

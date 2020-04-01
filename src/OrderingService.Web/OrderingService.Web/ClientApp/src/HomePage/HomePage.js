@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { LoadingContainer, EmployeeItem, PaginationBlock } from '../components';
-import { employeeActions } from '../actions';
+import { LoadingContainer, PaginationBlock } from '../_components';
+import { EmployeeItem } from './EmployeeItem';
+import { employeeActions } from '../_actions';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 

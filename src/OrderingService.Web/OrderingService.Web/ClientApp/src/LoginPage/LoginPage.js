@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { ValidationTextField, LoadingButton } from '../components';
+import { ValidationTextField, LoadingButton } from '../_components';
 import { Col, Card, Row, CardTitle, Alert } from 'reactstrap';
-import { userActions } from '../actions';
+import { userActions } from '../_actions';
 
 class LoginPage extends React.Component {
 

@@ -2,8 +2,8 @@ import React from 'react';
 import { Card, Row, Col, CardTitle, Alert } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { ValidationTextField, LoadingButton, ImageUpload } from '../components';
-import { userActions } from '../actions';
+import { ValidationTextField, LoadingButton, ImageUpload } from '../_components';
+import { userActions } from '../_actions';
 import { connect } from 'react-redux';
 
 const SignUpPage = props => {

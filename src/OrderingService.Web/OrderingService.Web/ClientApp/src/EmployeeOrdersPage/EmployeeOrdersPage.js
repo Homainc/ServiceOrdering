@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { Card, Table } from 'reactstrap';
-import { LoadingContainer, EmployeeOrderRow } from '../components';
+import { LoadingContainer } from '../_components';
+import { EmployeeOrderRow } from './EmployeeOrderRow';
 import { connect } from 'react-redux';
-import { orderActions } from '../actions';
+import { orderActions } from '../_actions';
 
 const EmployeeOrdersPage = props => {
     const id = props.user.employeeProfile.id;
