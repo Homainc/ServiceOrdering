@@ -29,7 +29,9 @@ const EmployeeOrdersPage = props => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orderRows}
+                        {orderRows && orderRows.length === 0 ? (
+                            <tr><td colSpan="4">You haven't got orders yet.</td></tr>
+                        ) : orderRows}
                     </tbody>
                 </Table>
             </Card>

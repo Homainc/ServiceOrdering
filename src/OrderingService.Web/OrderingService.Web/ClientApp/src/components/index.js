@@ -13,7 +13,7 @@ export * from './PaginationBlock';
 export * from './Rating';
 export * from './ReviewsBlock';
 export * from './FormikDatePicker';
-export * from './OrdersTable';
+export * from './UserOrdersTable';
 export * from './UserOrderRow';
 export * from './EmployeeOrderRow';
 export * from './RatingInput';

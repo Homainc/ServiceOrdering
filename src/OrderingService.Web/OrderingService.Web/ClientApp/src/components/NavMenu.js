@@ -39,10 +39,13 @@ class NavMenu extends Component {
                 { loggedIn? (
                   <>
                   <NavItem>
-                    <NavLink tag={Link} className="text-light" to="/orders">Orders</NavLink>
-                  </NavItem><NavItem>
-                    <NavLink tag={Link} className="text-light" to="/profile"><UserWithAvatar user={user}/></NavLink>
-                  </NavItem>
+                     <NavLink tag={Link} className="text-light" to="/profile"><UserWithAvatar user={user}/></NavLink>
+                   </NavItem>
+                  {user.employeeProfile && (
+                    <NavItem>
+                      <NavLink tag={Link} className="text-light" to="/orders">Orders</NavLink>
+                    </NavItem>
+                  )}
                   </>
                 ):(
                   <NavItem>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Card, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { profileActions } from '../actions';
-import { LoadingContainer, UserPersonalBlock, UserEmployeeBlock, OrdersTable } from '../components';
+import { LoadingContainer, UserPersonalBlock, UserEmployeeBlock, UserOrdersTable } from '../components';
 
 class ProfilePage extends Component {
 
@@ -25,7 +25,7 @@ class ProfilePage extends Component {
                     <UserEmployeeBlock profile={profile}/>
                     <hr/>
                     <h5>My orders</h5>
-                    <OrdersTable userId={profile && profile.id}/>
+                    <UserOrdersTable userId={profile && profile.id}/>
                 </Card>    
             </LoadingContainer>
         );   

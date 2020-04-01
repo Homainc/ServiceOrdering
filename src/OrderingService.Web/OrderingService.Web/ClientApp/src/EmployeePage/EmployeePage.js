@@ -44,10 +44,6 @@ const EmployeePage = props => {
                     <p className="text-secondary" >{employeeProfile && employeeProfile.description}</p>
                     </Col>
                 </Row>
-                <hr/>
-                <Row>
-                    <Col><h5>Reviews (5)</h5></Col>
-                </Row>
                 <ReviewsBlock employeeId={employeeProfile && employeeProfile.id} user={employeeProfile && employeeProfile.user}/>
             </Card>
         </LoadingContainer>

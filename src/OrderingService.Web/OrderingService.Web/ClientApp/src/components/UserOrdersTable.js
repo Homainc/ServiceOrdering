@@ -3,10 +3,10 @@ import { Table } from 'reactstrap';
 import { UserOrderRow } from './UserOrderRow';
 import { orderActions } from '../actions';
 import { connect } from 'react-redux';
-import './OrdersTable.css';
+import './UserOrdersTable.css';
 import { ReviewModal } from './ReviewModal';
 
-const OrdersTable = props => {
+const UserOrdersTable = props => {
     const { userId, loadOrdersByUser } = props;
 
     useEffect(() => {
@@ -29,7 +29,9 @@ const OrdersTable = props => {
                 </tr>
             </thead>
             <tbody>
-                {ordersRows}
+                {ordersRows && ordersRows.length === 0 ? (
+                    <tr><td colSpan="4">You haven't made orders yet.</td></tr>
+                ) : ordersRows}
             </tbody>
         </Table>
         <ReviewModal/> 
@@ -49,5 +51,5 @@ const mapDispatchToProps = dispatch => ({
     loadOrdersByUser: id => dispatch(orderActions.loadOrdersByUser(id))
 });
 
-const connectedOrdersTableRow = connect(mapStateToProps, mapDispatchToProps)(OrdersTable);
-export { connectedOrdersTableRow as OrdersTable };
+const connectedOrdersTableRow = connect(mapStateToProps, mapDispatchToProps)(UserOrdersTable);
+export { connectedOrdersTableRow as UserOrdersTable };
