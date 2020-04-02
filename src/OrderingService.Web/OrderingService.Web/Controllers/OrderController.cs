@@ -6,13 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
+using OrderingService.Web.Code;
 
 namespace OrderingService.Web.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class OrderController : ControllerBase
+    public class OrderController : AbstractApiController
     {
         private readonly IOrderService _orderService;
         public OrderController(IOrderService orderService) => _orderService = orderService;

@@ -10,9 +10,6 @@ namespace OrderingService.Data.Repositories
     {
         public EmployeeProfileRepository(ApplicationContext db) : base(db) { }
 
-        public override IQueryable<EmployeeProfile> GetAll() => _db.EmployeeProfiles
-            .Include(e => e.User)
-            .Include(e => e.ServiceType)
-            .AsNoTracking().AsQueryable();
+        public override IQueryable<EmployeeProfile> GetAll() => _db.EmployeeProfiles.AsQueryable();
     }
 }

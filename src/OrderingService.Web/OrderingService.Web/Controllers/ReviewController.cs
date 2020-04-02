@@ -6,12 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
+using OrderingService.Web.Code;
 
 namespace OrderingService.Web.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ReviewController : ControllerBase
+    public class ReviewController : AbstractApiController
     {
         private readonly IReviewService _reviewService;
         public ReviewController(IReviewService reviewService) => _reviewService = reviewService;

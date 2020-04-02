@@ -52,7 +52,7 @@ namespace OrderingService.Logic.Tests
         public static ApplicationContext FakeContext(string name)
         {
             var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: name)
+                .UseInMemoryDatabase(name)
                 .Options;
             return new ApplicationContext(options);
         }
@@ -69,5 +69,13 @@ namespace OrderingService.Logic.Tests
 
         public static EmployeeService FakeEmployeeService(ApplicationContext db) => new EmployeeService(
             new EmployeeProfileRepository(db), new ServiceTypeRepository(db), new SaveProvider(db), Mapper);
+
+        public static OrderService FakeOrderService(ApplicationContext db) => new OrderService(
+            new ServiceOrderRepository(db), new EmployeeProfileRepository(db), new UserRepository(db), Mapper,
+            new SaveProvider(db));
+
+        public static ReviewService FakeReviewService(ApplicationContext db) => new ReviewService(
+            new ReviewRepository(db), new EmployeeProfileRepository(db), new UserRepository(db), Mapper,
+            new SaveProvider(db));
     }
 }

@@ -68,9 +68,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
         {
-            var employeeProfile = await _employees.GetAll().SingleOrDefaultAsync(x => x.Id == employeeProfileDto.Id, token);
-            if (employeeProfile == null)
-                throw new LogicException($"Employee profile with id {employeeProfileDto.Id} not found");
+            var employeeProfile = await GetEmployeeByIdOrThrow(employeeProfileDto.Id, token);
 
             var serviceType = await _serviceTypes.GetAll()
                 .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()), token);
@@ -83,7 +81,6 @@ namespace OrderingService.Domain.Logic.Services
             employeeProfile = _mapper.Map<EmployeeProfile>(employeeProfileDto);
             employeeProfile.ServiceType = serviceType;
 
-            _employees.Update(employeeProfile);
             await _saveProvider.SaveAsync(token);
 
             return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
@@ -91,10 +88,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId, CancellationToken token)
         {
-            var employeeProfile = await _employees.GetAll().SingleOrDefaultAsync(e => e.Id == employeeId, token);
-
-            if (employeeProfile == null)
-                throw new LogicException("Employee profile not found");
+            var employeeProfile = await GetEmployeeByIdOrThrow(employeeId, token);
 
             _employees.Delete(employeeProfile);
             await _saveProvider.SaveAsync(token);
@@ -102,14 +96,15 @@ namespace OrderingService.Domain.Logic.Services
             return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
 
-        public async Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id, CancellationToken token)
+        public async Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id, CancellationToken token) => 
+            _mapper.Map<EmployeeProfileDTO>(await GetEmployeeByIdOrThrow(id, token));
+
+        private async Task<EmployeeProfile> GetEmployeeByIdOrThrow(Guid id, CancellationToken token)
         {
             var employeeProfile = await _employees.GetAll().SingleOrDefaultAsync(e => e.Id == id, token);
-
-            if(employeeProfile == null)
-                throw new LogicException($"Employee with id {id} not found");
-            
-            return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
+            if (employeeProfile == null)
+                throw new LogicException($"Employee profile with id {id} not found");
+            return employeeProfile;
         }
     }
 }

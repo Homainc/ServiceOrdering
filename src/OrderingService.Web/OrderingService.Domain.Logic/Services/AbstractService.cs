@@ -7,7 +7,7 @@ namespace OrderingService.Domain.Logic.Services
     {
         protected readonly IMapper _mapper;
         protected readonly ISaveProvider _saveProvider;
-        public AbstractService(IMapper mapper, ISaveProvider saveProvider)
+        protected AbstractService(IMapper mapper, ISaveProvider saveProvider)
         {
             _mapper = mapper;
             _saveProvider = saveProvider;

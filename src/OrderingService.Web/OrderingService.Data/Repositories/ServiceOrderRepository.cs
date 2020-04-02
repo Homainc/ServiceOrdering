@@ -10,6 +10,6 @@ namespace OrderingService.Data.Repositories
     {
         public ServiceOrderRepository(ApplicationContext db) : base(db) { }
 
-        public override IQueryable<ServiceOrder> GetAll() => _db.ServiceOrders.AsNoTracking().AsQueryable();
+        public override IQueryable<ServiceOrder> GetAll() => _db.ServiceOrders.AsQueryable();
     }
 }

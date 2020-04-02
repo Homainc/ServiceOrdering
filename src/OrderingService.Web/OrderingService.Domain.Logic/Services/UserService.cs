@@ -88,11 +88,11 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserDTO> GetUserByIdAsync(Guid id, CancellationToken token)
         {
-            var userProfile = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
-            if(userProfile == null)
+            var user = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
+            if(user == null)
                 throw new LogicException($"User with id {id} not found");
             
-            return _mapper.Map<UserDTO>(userProfile);
+            return _mapper.Map<UserDTO>(user);
         }
 
         public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto, CancellationToken token)
