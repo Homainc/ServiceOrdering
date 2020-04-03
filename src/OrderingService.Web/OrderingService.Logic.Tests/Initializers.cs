@@ -69,7 +69,7 @@ namespace OrderingService.Logic.Tests
         }
 
         public static EmployeeService FakeEmployeeService(ApplicationContext db) => new EmployeeService(
-            new EmployeeProfileRepository(db), new ServiceTypeRepository(db), new SaveProvider(db), Mapper);
+            new EmployeeProfileRepository(db), new UserRepository(db), new ServiceTypeRepository(db), new SaveProvider(db), Mapper);
 
         public static OrderService FakeOrderService(ApplicationContext db) => new OrderService(
             new ServiceOrderRepository(db), new EmployeeProfileRepository(db), new UserRepository(db), Mapper,

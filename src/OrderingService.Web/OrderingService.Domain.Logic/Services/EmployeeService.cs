@@ -18,12 +18,14 @@ namespace OrderingService.Domain.Logic.Services
     {
         private readonly IRepository<ServiceType> _serviceTypes;
         private readonly IRepository<EmployeeProfile> _employees;
-        public EmployeeService(IRepository<EmployeeProfile> employees, 
+        private readonly IRepository<User> _users;
+        public EmployeeService(IRepository<EmployeeProfile> employees, IRepository<User> users,
             IRepository<ServiceType> serviceTypes, ISaveProvider saveProvider, IMapper mapper)
             :base(mapper, saveProvider)
         {
             _serviceTypes = serviceTypes;
             _employees = employees;
+            _users = users;
         }
 
         public async Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(string serviceName,
@@ -102,6 +104,21 @@ namespace OrderingService.Domain.Logic.Services
         private async Task<EmployeeProfile> GetEmployeeByIdOrThrow(Guid id, CancellationToken token)
         {
             var employeeProfile = await _employees.GetAll().SingleOrDefaultAsync(e => e.Id == id, token);
+            employeeProfile = await ( 
+                from e in _employees.GetAll()
+                join u in _users.GetAll() on e.UserId equals u.Id
+                join st in _serviceTypes.GetAll() on e.ServiceTypeId equals st.Id
+                where e.Id == id
+                select new EmployeeProfile{
+                    Id = e.Id,
+                    ServiceTypeId = st.Id,
+                    ServiceType = st,
+                    ServiceCost = e.ServiceCost,
+                    UserId = u.Id,
+                    User = u,
+                    Description = e.Description
+                })
+                .FirstOrDefaultAsync(token);
             if (employeeProfile == null)
                 throw new LogicNotFoundException($"Employee profile with id {id} not found");
             return employeeProfile;

@@ -24,8 +24,8 @@ export const EmployeeItem = props => {
                 <Row>
                     <Col>{props.employee.user.firstName} {props.employee.user.lastName}</Col>
                     <Col lg="2" md="3" sm="4" xs="6" className="align-self-end text-right">
-                        <Button color="link" size="sm" className="mr-2">Details</Button>
-                        <Button size="sm" color="success" outline tag={Link} to={`/employee/${props.employee.id}`}>Employ</Button>
+                        <Button color="link" size="sm" className="mr-2" tag={Link} to={`/employee/${props.employee.id}`}>Profile</Button>
+                        <Button size="sm" color="success" outline tag={Link} to={`/order/${props.employee.id}`}>Hire</Button>
                     </Col>
                 </Row>
                 </ListGroupItem>

@@ -46,44 +46,14 @@ namespace OrderingService.Domain.Logic.Services
             return _mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<OrderDTO> TakeOrderAsync(int id, CancellationToken token)
-        {
-            var order = await GetOrderByIdOrThrow(id, token);
+        public async Task<OrderDTO> TakeOrderAsync(int id, CancellationToken token) =>
+            await SetOrderStatusAsync(id, OrderStatus.InProgress, token);
 
-            if(order.Status != OrderStatus.WaitingForEmplpoyee)
-                throw new LogicException("Order have already taken/declined");
-            order.Status = OrderStatus.InProgress;
+        public async Task<OrderDTO> DeclineOrderAsync(int id, CancellationToken token) =>
+            await SetOrderStatusAsync(id, OrderStatus.Declined, token);
 
-            await _saveProvider.SaveAsync(token);
-            
-            return _mapper.Map<OrderDTO>(order);
-        }
-
-        public async Task<OrderDTO> DeclineOrderAsync(int id, CancellationToken token)
-        {
-            var order = await GetOrderByIdOrThrow(id, token);
-
-            if(order.Status != OrderStatus.WaitingForEmplpoyee)
-                throw new LogicException("Order have already taken/declined");
-            order.Status = OrderStatus.Declined;
-
-            await _saveProvider.SaveAsync(token);
-            
-            return _mapper.Map<OrderDTO>(order);
-        }
-
-        public async Task<OrderDTO> ConfirmOrderCompletion(int id, CancellationToken token)
-        {
-            var order = await GetOrderByIdOrThrow(id, token);
-
-            if(order.Status != OrderStatus.InProgress)
-                throw new LogicException($"Can't confirm order on that stage ({order.Status})");
-            order.Status = OrderStatus.Done;
-
-            await _saveProvider.SaveAsync(token);
-            
-            return _mapper.Map<OrderDTO>(order);
-        }
+        public async Task<OrderDTO> ConfirmOrderCompletion(int id, CancellationToken token) =>
+            await SetOrderStatusAsync(id, OrderStatus.Done, token);
 
         public async Task<OrderDTO> DeleteAsync(int id, CancellationToken token)
         {
@@ -128,6 +98,26 @@ namespace OrderingService.Domain.Logic.Services
             if (order == null)
                 throw new LogicNotFoundException($"Order with id {id} not found");
             return order;
+        }
+
+        private async Task<OrderDTO> SetOrderStatusAsync(int id, OrderStatus status, CancellationToken token)
+        {
+            var order = await GetOrderByIdOrThrow(id, token);
+            switch(status){
+                case OrderStatus.Declined when order.Status == OrderStatus.WaitingForEmplpoyee:
+                    break;
+                case OrderStatus.InProgress when order.Status == OrderStatus.WaitingForEmplpoyee:
+                    break;
+                case OrderStatus.Done when order.Status == OrderStatus.InProgress:
+                    break;
+                default:
+                    throw new LogicException($"Unable to change status from {order.Status} to {status}");
+            }
+
+            order.Status = status;
+            await _saveProvider.SaveAsync(token);
+
+            return _mapper.Map<OrderDTO>(order);
         }
     }
 }

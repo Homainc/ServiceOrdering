@@ -78,13 +78,15 @@ const MakeOrderPage = props => {
                                     id='briefTask'
                                     name='briefTask'
                                     label='What you want employee to do? (briefly)'
-                                    placeholder='e.g, delivery'/>
+                                    placeholder='e.g, delivery'
+                                    disabled={props.isOrderCreating}/>
                                 <ValidationTextField
                                     id='serviceDetails'
                                     name='serviceDetails'
                                     label='Service details'
                                     type='textarea' 
-                                    placeholder='Specify your wishes to employee'/>
+                                    placeholder='Specify your wishes to employee'
+                                    disabled={props.isOrderCreating}/>
                             </Col>
                         </Row>
                         <hr/>
@@ -95,7 +97,8 @@ const MakeOrderPage = props => {
                                     id='address' 
                                     name='address' 
                                     label='Service completion address' 
-                                    placeholder='Specify the city, street'/>
+                                    placeholder='Specify the city, street'
+                                    disabled={props.isOrderCreating}/>
                             </Col>
                         </Row>
                         <hr/>
@@ -105,7 +108,8 @@ const MakeOrderPage = props => {
                                 <FormikDatePicker 
                                     id="date" 
                                     name="date" 
-                                    label="Specify the date"/>
+                                    label="Specify the date"
+                                    disabled={props.isOrderCreating}/>
                             </Col>
                         </Row>
                         <hr/>
@@ -116,7 +120,8 @@ const MakeOrderPage = props => {
                                     id="contactPhone" 
                                     name="contactPhone"
                                     placeholder="Specify your mobile or home number" 
-                                    label="Your contact phone"/>
+                                    label="Your contact phone"
+                                    disabled={props.isOrderCreating}/>
                             </Col>
                         </Row>
                         <Row className='justify-content-center p-3'>

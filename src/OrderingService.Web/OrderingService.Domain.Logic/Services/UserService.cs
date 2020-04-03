@@ -1,11 +1,11 @@
-﻿using System;
+﻿using System.Linq.Expressions;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using OrderingService.Data.Models;
 using OrderingService.Domain.Logic.Code.Exceptions;
 using OrderingService.Domain.Logic.Code.Interfaces;
@@ -53,13 +53,11 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserDTO> AuthenticateAsync(UserDTO userDto, CancellationToken token)
         {
-            var user = await _users.GetAll().SingleOrDefaultAsync(x => x.Email == userDto.Email, token);
-            if(user == null)
-                throw new LogicException("Email or password is wrong");
+            var user = await FindUserOrThrowAsync(x => x.Email == userDto.Email, token, "Incorrect email or password");
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
             if (result == PasswordVerificationResult.Failed)
-                throw new LogicException("Email or password is wrong");
+                throw new LogicException("Incorrect email or password");
 
             userDto = _mapper.Map<UserDTO>(user);
             userDto.Token = _tokenGenerator.GenerateUserToken(user);
@@ -74,11 +72,11 @@ namespace OrderingService.Domain.Logic.Services
         }
 
         public async Task<UserDTO> GetUserByIdAsync(Guid id, CancellationToken token) => 
-            _mapper.Map<UserDTO>(await GetUserByIdOrThrow(id, token));
+            _mapper.Map<UserDTO>(await FindUserOrThrowAsync(x => x.Id == id, token));
 
         public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto, CancellationToken token)
         {
-            var user = await GetUserByIdOrThrow(userDto.Id, token);
+            var user = await FindUserOrThrowAsync(x => x.Id == userDto.Id, token);
 
             _mapper.Map(userDto, user);
             
@@ -86,7 +84,7 @@ namespace OrderingService.Domain.Logic.Services
             return userDto;
         }
 
-        private async Task<User> GetUserByIdOrThrow(Guid id, CancellationToken token)
+        private async Task<User> FindUserOrThrowAsync(Expression<Func<User, bool>> selector, CancellationToken token = default, string customExceptionMessage = null)
         {
             var user = await (
                 from u in _users.GetAll()
@@ -95,7 +93,6 @@ namespace OrderingService.Domain.Logic.Services
                 from e in eGrouping.DefaultIfEmpty() 
                 join st in _serviceTypes.GetAll() on e.ServiceTypeId equals st.Id into stGrouping
                 from st in stGrouping.DefaultIfEmpty()
-                where u.Id == id
                 select new User
                 {
                     Email = u.Email,
@@ -112,11 +109,13 @@ namespace OrderingService.Domain.Logic.Services
                     LastName = u.LastName,
                     PhoneNumber = u.PhoneNumber,
                     Role = r,
-                    RoleId = r.Id
+                    RoleId = r.Id,
+                    HashedPassword = u.HashedPassword
                 })
+                .Where(selector)
                 .FirstOrDefaultAsync(token);
             if (user == null)
-                throw new LogicNotFoundException($"User with id {id} not found");
+                throw new LogicNotFoundException(customExceptionMessage ?? $"User not found");
             return user;
         }
     }
