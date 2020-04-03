@@ -50,7 +50,7 @@ namespace OrderingService.Domain.Logic.Services
         {
             var review = await _reviews.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (review == null)
-                throw new LogicException($"Review with id {id} not found");
+                throw new LogicNotFoundException($"Review with id {id} not found");
 
             _reviews.Delete(review);
             await _saveProvider.SaveAsync(token);

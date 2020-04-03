@@ -11,6 +11,6 @@ namespace OrderingService.Data.Repositories
     {
         public ServiceTypeRepository(ApplicationContext db):base(db) { }
 
-        public override IQueryable<ServiceType> GetAll() => _db.ServiceTypes.AsNoTracking().AsQueryable();
+        public override IQueryable<ServiceType> GetAll() => _db.ServiceTypes.AsQueryable();
     }
 }

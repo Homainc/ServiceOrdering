@@ -10,7 +10,6 @@ namespace OrderingService.Data.Repositories
     {
         public RoleRepository(ApplicationContext db) : base(db) { }
 
-        public override IQueryable<Role> GetAll() => _db.Roles
-            .AsNoTracking().AsQueryable();
+        public override IQueryable<Role> GetAll() => _db.Roles.AsQueryable();
     }
 }

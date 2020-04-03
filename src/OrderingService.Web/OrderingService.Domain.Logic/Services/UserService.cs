@@ -1,16 +1,12 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using OrderingService.Data.Models;
-using OrderingService.Domain.Logic.Helpers;
 using OrderingService.Domain.Logic.Code.Exceptions;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Data.Interfaces;
@@ -20,25 +16,29 @@ namespace OrderingService.Domain.Logic.Services
     public class UserService : AbstractService, IUserService
     {
         private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly AppSettings _appSettings;
+        private readonly ITokenGenerator _tokenGenerator;
         private readonly IRepository<User> _users;
         private readonly IRepository<Role> _roles;
+        private readonly IRepository<EmployeeProfile> _employees;
+        private readonly IRepository<ServiceType> _serviceTypes;
 
-        public UserService(IRepository<User> users, ISaveProvider saveProvider, IMapper mapper, 
-            IRepository<Role> roles, IPasswordHasher<User> passwordHasher, IOptions<AppSettings> appSettings)
-                :base(mapper, saveProvider)
+        public UserService(IRepository<User> users, ISaveProvider saveProvider, IMapper mapper,
+            IRepository<Role> roles, IPasswordHasher<User> passwordHasher, ITokenGenerator tokenGenerator,
+            IRepository<EmployeeProfile> employees, IRepository<ServiceType> serviceTypes)
+            : base(mapper, saveProvider)
         {
             _passwordHasher = passwordHasher;
-            _appSettings = appSettings.Value;
+            _tokenGenerator = tokenGenerator;
             _users = users;
             _roles = roles;
+            _employees = employees;
+            _serviceTypes = serviceTypes;
         }
 
         public async Task<UserDTO> CreateAsync(UserDTO userDto, CancellationToken token)
         {
             var user = await _users.GetAll()
                 .SingleOrDefaultAsync(x => x.Email == userDto.Email, token);
-
             if (user != null)
                 throw new LogicException("User with this email already exists");
 
@@ -61,21 +61,8 @@ namespace OrderingService.Domain.Logic.Services
             if (result == PasswordVerificationResult.Failed)
                 throw new LogicException("Email or password is wrong");
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var userToken = tokenHandler.CreateToken(tokenDescriptor);
-
             userDto = _mapper.Map<UserDTO>(user);
-            userDto.Token = tokenHandler.WriteToken(userToken);
+            userDto.Token = _tokenGenerator.GenerateUserToken(user);
             return userDto;
         }
 
@@ -86,26 +73,51 @@ namespace OrderingService.Domain.Logic.Services
             return await AuthenticateAsync(userDto, token);
         }
 
-        public async Task<UserDTO> GetUserByIdAsync(Guid id, CancellationToken token)
-        {
-            var user = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
-            if(user == null)
-                throw new LogicException($"User with id {id} not found");
-            
-            return _mapper.Map<UserDTO>(user);
-        }
+        public async Task<UserDTO> GetUserByIdAsync(Guid id, CancellationToken token) => 
+            _mapper.Map<UserDTO>(await GetUserByIdOrThrow(id, token));
 
         public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto, CancellationToken token)
         {
-            var user = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == userDto.Id, token);
-            if (user == null)
-                throw new LogicException($"User with id {userDto.Id} not found");
+            var user = await GetUserByIdOrThrow(userDto.Id, token);
 
             _mapper.Map(userDto, user);
-            _users.Update(user);
-
+            
             await _saveProvider.SaveAsync(token);
             return userDto;
+        }
+
+        private async Task<User> GetUserByIdOrThrow(Guid id, CancellationToken token)
+        {
+            var user = await (
+                from u in _users.GetAll()
+                join r in _roles.GetAll() on u.RoleId equals r.Id
+                join e in _employees.GetAll() on u.Id equals e.UserId into eGrouping
+                from e in eGrouping.DefaultIfEmpty() 
+                join st in _serviceTypes.GetAll() on e.ServiceTypeId equals st.Id into stGrouping
+                from st in stGrouping.DefaultIfEmpty()
+                where u.Id == id
+                select new User
+                {
+                    Email = u.Email,
+                    EmployeeProfile = e != null ? new EmployeeProfile {
+                        Id = e.Id,
+                        ServiceType = st,
+                        ServiceCost = e.ServiceCost,
+                        Description = e.Description,
+                        ServiceTypeId = e.ServiceTypeId
+                    }: null,
+                    FirstName = u.FirstName,
+                    Id = u.Id,
+                    ImageUrl = u.ImageUrl,
+                    LastName = u.LastName,
+                    PhoneNumber = u.PhoneNumber,
+                    Role = r,
+                    RoleId = r.Id
+                })
+                .FirstOrDefaultAsync(token);
+            if (user == null)
+                throw new LogicNotFoundException($"User with id {id} not found");
+            return user;
         }
     }
 }

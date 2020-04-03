@@ -53,10 +53,10 @@ const UserEmployeeBlock = props => {
             <ListGroupItemText className="text-secondary">{employeeProfile && employeeProfile.description}</ListGroupItemText>
             {employeeProfile && !state.editMode && (<>
             <Spinner className={props.employeeDeleting?'':'collapse'} size="sm" color="danger"/>
-            <Button color="link"
+            <Row><Button color="link"
                 className="text-danger" 
-                onClick={() => props.deleteEmployeeProfile(employeeProfile).then(props.loadProfile())} 
-                disabled={props.employeeDeleting}>Delete employee profile</Button></>)}
+                onClick={() => props.deleteEmployeeProfile(employeeProfile)} 
+                disabled={props.employeeDeleting}>Delete employee profile</Button></Row></>)}
             </>)}
             {state.editMode && (
                 <Formik

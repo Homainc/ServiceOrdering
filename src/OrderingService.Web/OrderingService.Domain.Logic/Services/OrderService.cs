@@ -126,7 +126,7 @@ namespace OrderingService.Domain.Logic.Services
         {
             var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
             if (order == null)
-                throw new LogicException($"Order with id {id} not found");
+                throw new LogicNotFoundException($"Order with id {id} not found");
             return order;
         }
     }

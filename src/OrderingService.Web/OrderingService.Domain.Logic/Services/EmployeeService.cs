@@ -103,7 +103,7 @@ namespace OrderingService.Domain.Logic.Services
         {
             var employeeProfile = await _employees.GetAll().SingleOrDefaultAsync(e => e.Id == id, token);
             if (employeeProfile == null)
-                throw new LogicException($"Employee profile with id {id} not found");
+                throw new LogicNotFoundException($"Employee profile with id {id} not found");
             return employeeProfile;
         }
     }

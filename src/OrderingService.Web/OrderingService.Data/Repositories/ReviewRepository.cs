@@ -10,7 +10,6 @@ namespace OrderingService.Data.Repositories
     {
         public ReviewRepository(ApplicationContext db) : base(db) { }
 
-        public override IQueryable<Review> GetAll() => _db.Reviews
-            .AsNoTracking().AsQueryable();
+        public override IQueryable<Review> GetAll() => _db.Reviews.AsQueryable();
     }
 }

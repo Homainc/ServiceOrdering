@@ -42,6 +42,7 @@ namespace OrderingService.Domain.Logic
             });
 
             services.AddAutoMapper(typeof(UserMapperProfile), typeof(EmployeeMapperProfile), typeof(ReviewMapperProfile), typeof(OrderMapperProfile));
+            services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IReviewService, ReviewService>();

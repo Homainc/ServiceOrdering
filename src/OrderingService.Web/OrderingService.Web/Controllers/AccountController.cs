@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
@@ -17,16 +19,16 @@ namespace OrderingService.Web.Controllers
         public AccountController(IUserService userService) => _userService = userService;
 
         [HttpPost("auth")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AuthAsync(
             [FromBody] [CustomizeValidator(RuleSet = "LogIn")]
             UserDTO userDto,
             CancellationToken token = default) => Ok(await _userService.AuthenticateAsync(userDto, token));
 
         [HttpPost("sign-up")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SignUpAsync(
             [FromBody] [CustomizeValidator(RuleSet = "SignUp")]
             UserDTO userDto,
@@ -34,17 +36,17 @@ namespace OrderingService.Web.Controllers
 
         [Authorize]
         [HttpGet("profile")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetProfileAsync(CancellationToken token = default) =>
             Ok(await _userService.GetUserByIdAsync(new Guid(User.Identity.Name), token));
 
         [Authorize]
         [HttpPut]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateProfileAsync(
             [FromBody] [CustomizeValidator(RuleSet = "Update")]
             UserDTO userDto,

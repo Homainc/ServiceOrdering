@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
@@ -19,14 +20,15 @@ namespace OrderingService.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEmployeeByIdAsync([FromRoute] string id, CancellationToken token = default) => 
             Ok(await _employeeService.GetEmployeeByIdAsync(new Guid(id), token));
 
         [AllowAnonymous]
         [HttpGet]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetEmployeesAsync(
             [FromQuery] string serviceName = null,
             [FromQuery] decimal? serviceMaxCost = null,
@@ -36,9 +38,9 @@ namespace OrderingService.Web.Controllers
             Ok(await _employeeService.GetPagedEmployeesAsync(serviceName, serviceMaxCost, pageSize, pageNumber, token));
 
         [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateAsync(
             [FromBody]
             [CustomizeValidator(RuleSet = "Create")]
@@ -50,9 +52,10 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpPut]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(
             [FromBody]
             [CustomizeValidator(RuleSet = "Id,Create")]
@@ -64,9 +67,10 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpDelete]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync([FromQuery] string id, CancellationToken token = default) => 
             Ok(await _employeeService.DeleteEmployeeAsync(new Guid(id), token));
     }

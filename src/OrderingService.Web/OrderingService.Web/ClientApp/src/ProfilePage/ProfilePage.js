@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Card, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { profileActions } from '../_actions';
@@ -7,32 +7,30 @@ import { UserEmployeeBlock } from './UserEmployeeBlock';
 import { UserPersonalBlock } from './UserPersonalBlock';
 import { UserOrdersTable } from './UserOrdersTable';
 
-class ProfilePage extends Component {
+const ProfilePage = props => { 
+    const { profile, profileLoading, loadProfile } = props;
 
-    componentDidMount(){
-        this.props.loadProfile();
-    }
+    useEffect(() => {
+        loadProfile();
+    }, [ loadProfile ]);
 
-    render(){
-        const { profile, profileLoading } = this.props;
-        return (
-            <LoadingContainer isLoading={!!profileLoading}>
-                <Card body className="bg-light">
-                    <UserPersonalBlock profile={profile}/>
-                    <hr/>
-                    <ListGroupItemHeading>Email</ListGroupItemHeading>
-                    <ListGroupItemText className="text-secondary">{profile && profile.email}</ListGroupItemText>
-                    <ListGroupItemHeading>Password</ListGroupItemHeading>
-                    <ListGroupItemText className="text-secondary">*************</ListGroupItemText>
-                    <hr/>
-                    <UserEmployeeBlock profile={profile}/>
-                    <hr/>
-                    <h5>My orders</h5>
-                    <UserOrdersTable userId={profile && profile.id}/>
-                </Card>    
-            </LoadingContainer>
-        );   
-    }
+    return (
+        <LoadingContainer isLoading={!!profileLoading}>
+            <Card body className="bg-light">
+                <UserPersonalBlock profile={profile}/>
+                <hr/>
+                <ListGroupItemHeading>Email</ListGroupItemHeading>
+                <ListGroupItemText className="text-secondary">{profile && profile.email}</ListGroupItemText>
+                <ListGroupItemHeading>Password</ListGroupItemHeading>
+                <ListGroupItemText className="text-secondary">*************</ListGroupItemText>
+                <hr/>
+                <UserEmployeeBlock profile={profile}/>
+                <hr/>
+                <h5>My orders</h5>
+                <UserOrdersTable userId={profile && profile.id}/>
+            </Card>    
+        </LoadingContainer>
+    );   
 }
 
 const mapStateToProps = state => {
