@@ -103,8 +103,7 @@ namespace OrderingService.Domain.Logic.Services
 
         private async Task<EmployeeProfile> GetEmployeeByIdOrThrow(Guid id, CancellationToken token)
         {
-            var employeeProfile = await _employees.GetAll().SingleOrDefaultAsync(e => e.Id == id, token);
-            employeeProfile = await ( 
+            var employeeProfile = await ( 
                 from e in _employees.GetAll()
                 join u in _users.GetAll() on e.UserId equals u.Id
                 join st in _serviceTypes.GetAll() on e.ServiceTypeId equals st.Id
