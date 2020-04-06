@@ -1,10 +1,8 @@
 ﻿using System.Linq.Expressions;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.Models;
 using OrderingService.Domain.Logic.Code.Exceptions;
 using OrderingService.Domain.Logic.Code.Interfaces;
@@ -31,12 +29,11 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserDTO> CreateAsync(UserDTO userDto)
         {
-            var user = await _users.GetAll()
-                .SingleOrDefaultAsync(x => x.Email == userDto.Email);
-            if (user != null)
+            // TODO: Implement this check in a filter
+            if (await _users.AnyUserAsync(x => x.Email == userDto.Email))
                 throw new LogicException("User with this email already exists");
 
-            user = _mapper.Map<User>(userDto);
+            var user = _mapper.Map<User>(userDto);
             user.HashedPassword = _passwordHasher.HashPassword(user, userDto.Password);
             user.RoleId = await _roles.GetRoleIdByNameAsync(userDto.Role);
             _users.Create(user);

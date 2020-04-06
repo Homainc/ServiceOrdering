@@ -47,5 +47,8 @@ namespace OrderingService.Data.Repositories {
                 .SingleOrDefaultAsync(filter, Token);
             return user;
         }
-    }
+
+        public async Task<bool> AnyUserAsync(Expression<Func<User, bool>> filter) => 
+            await Db.Users.AnyAsync(filter, Token);
+        }
 }

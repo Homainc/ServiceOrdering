@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Code.Interfaces
 {
     public interface IEmployeeService
     {
-        Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id, CancellationToken token);
+        Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id);
         Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(string serviceName, decimal? maxServiceCost,
-            int pageSize, int pageNumber, CancellationToken token);
+            int pageSize, int pageNumber);
 
-        Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto,
-            CancellationToken token);
+        Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto);
 
-        Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto,
-            CancellationToken token);
+        Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto);
 
-        Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId, CancellationToken token);
+        Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -17,20 +16,19 @@ namespace OrderingService.Domain.Logic.Services
     public class EmployeeService : AbstractService, IEmployeeService
     {
         private readonly IRepository<ServiceType> _serviceTypes;
-        private readonly IRepository<EmployeeProfile> _employees;
-        private readonly IRepository<User> _users;
-        public EmployeeService(IRepository<EmployeeProfile> employees, IRepository<User> users,
+        private readonly IEmployeeRepository _employees;
+        public EmployeeService(IEmployeeRepository employees,
             IRepository<ServiceType> serviceTypes, ISaveProvider saveProvider, IMapper mapper)
             :base(mapper, saveProvider)
         {
             _serviceTypes = serviceTypes;
             _employees = employees;
-            _users = users;
         }
 
         public async Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(string serviceName,
-            decimal? maxServiceCost, int pageSize, int pageNumber, CancellationToken token)
+            decimal? maxServiceCost, int pageSize, int pageNumber)
         {
+            // TODO: Move this to repository
             var employee = _employees.GetAll();
             if (serviceName != null)
                 employee = employee.Where(e => e.ServiceType.Name.Contains(serviceName));
@@ -41,83 +39,71 @@ namespace OrderingService.Domain.Logic.Services
             employee = employee.Paged(pageSize, pageNumber);
 
             return new PagedResult<EmployeeProfileDTO>(
-                await employee.ProjectTo<EmployeeProfileDTO>(_mapper.ConfigurationProvider).ToListAsync(token), total,
+                await employee.ProjectTo<EmployeeProfileDTO>(_mapper.ConfigurationProvider).ToListAsync(), total,
                 pageSize, pageNumber);
         }
 
-        public async Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
+        public async Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto)
         {
-            var employeeProfile = await _employees.GetAll().SingleOrDefaultAsync(x => x.UserId == employeeProfileDto.UserId, token);
-            if (employeeProfile != null)
+            // TODO: Move this check to filter
+            if (!(await _employees.AnyEmployeeAsync(x => x.UserId == employeeProfileDto.UserId)))
                 throw new LogicException("Employee profile already exist");
 
+            //TODO: Remove EF Core dependency
             var serviceType = await _serviceTypes.GetAll()
-                .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()), token);
+                .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()));
             if (serviceType == null)
             {
                 serviceType = new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
                 _serviceTypes.Create(serviceType);
             }
 
-            employeeProfile = _mapper.Map<EmployeeProfile>(employeeProfileDto);
+            var employeeProfile = _mapper.Map<EmployeeProfile>(employeeProfileDto);
             employeeProfile.ServiceType = serviceType;
 
             _employees.Create(employeeProfile);
-            await _saveProvider.SaveAsync(token);
+            await _saveProvider.SaveAsync();
 
             return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
 
-        public async Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto, CancellationToken token)
+        public async Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto)
         {
-            var employeeProfile = await GetEmployeeByIdOrThrow(employeeProfileDto.Id, token);
+            var employeeProfile = await GetEmployeeByIdOrThrow(employeeProfileDto.Id);
 
             var serviceType = await _serviceTypes.GetAll()
-                .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()), token);
+                .SingleOrDefaultAsync(s => s.Name.Equals(employeeProfileDto.ServiceType.ToLower()));
             if (serviceType == null)
             {
                 serviceType = new ServiceType {Name = employeeProfileDto.ServiceType.ToLower()};
                 _serviceTypes.Create(serviceType);
             }
 
-            employeeProfile = _mapper.Map<EmployeeProfile>(employeeProfileDto);
+            _mapper.Map(employeeProfileDto, employeeProfile);
             employeeProfile.ServiceType = serviceType;
 
-            await _saveProvider.SaveAsync(token);
+            await _saveProvider.SaveAsync();
 
             return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
 
-        public async Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId, CancellationToken token)
+        public async Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId)
         {
-            var employeeProfile = await GetEmployeeByIdOrThrow(employeeId, token);
+            var employeeProfile = await GetEmployeeByIdOrThrow(employeeId);
 
             _employees.Delete(employeeProfile);
-            await _saveProvider.SaveAsync(token);
+            await _saveProvider.SaveAsync();
 
             return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
 
-        public async Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id, CancellationToken token) => 
-            _mapper.Map<EmployeeProfileDTO>(await GetEmployeeByIdOrThrow(id, token));
+        public async Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id) => 
+            _mapper.Map<EmployeeProfileDTO>(await GetEmployeeByIdOrThrow(id));
 
-        private async Task<EmployeeProfile> GetEmployeeByIdOrThrow(Guid id, CancellationToken token)
+        private async Task<EmployeeProfile> GetEmployeeByIdOrThrow(Guid id)
         {
-            var employeeProfile = await ( 
-                from e in _employees.GetAll()
-                join u in _users.GetAll() on e.UserId equals u.Id
-                join st in _serviceTypes.GetAll() on e.ServiceTypeId equals st.Id
-                where e.Id == id
-                select new EmployeeProfile{
-                    Id = e.Id,
-                    ServiceTypeId = st.Id,
-                    ServiceType = st,
-                    ServiceCost = e.ServiceCost,
-                    UserId = u.Id,
-                    User = u,
-                    Description = e.Description
-                })
-                .FirstOrDefaultAsync(token);
+            var employeeProfile = await _employees.EagerSingleOrDefaultAsync(x => x.Id == id);
+            // TODO: Move this check to action controller
             if (employeeProfile == null)
                 throw new LogicNotFoundException($"Employee profile with id {id} not found");
             return employeeProfile;

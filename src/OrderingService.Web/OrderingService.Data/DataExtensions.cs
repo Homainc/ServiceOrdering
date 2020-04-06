@@ -19,9 +19,9 @@ namespace OrderingService.Data
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
             // Repositories
-            services.AddScoped<IRepository<EmployeeProfile>, EmployeeProfileRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeProfileRepository>();
             services.AddScoped<IRepository<Review>, ReviewRepository>();
-            services.AddScoped<IRepository<Role>, RoleRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRepository<ServiceOrder>, ServiceOrderRepository>();
             services.AddScoped<IRepository<ServiceType>, ServiceTypeRepository>();
             services.AddScoped<IUserRepository, UserRepository>();

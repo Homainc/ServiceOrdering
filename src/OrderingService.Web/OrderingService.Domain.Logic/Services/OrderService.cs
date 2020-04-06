@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using OrderingService.Common;
@@ -18,54 +17,54 @@ namespace OrderingService.Domain.Logic.Services
     public class OrderService : AbstractService, IOrderService
     {
         private readonly IRepository<ServiceOrder> _serviceOrders;
-        private readonly IRepository<EmployeeProfile> _employees;
-        private readonly IRepository<User> _users;
+        private readonly IEmployeeRepository _employees;
+        private readonly IUserRepository _users;
 
-        public OrderService(IRepository<ServiceOrder> serviceOrders, IRepository<EmployeeProfile> employees, 
-            IRepository<User> users, IMapper mapper, ISaveProvider saveProvider)
+        public OrderService(IRepository<ServiceOrder> serviceOrders, IEmployeeRepository employees, 
+            IUserRepository users, IMapper mapper, ISaveProvider saveProvider)
             :base(mapper, saveProvider)
         {
             _serviceOrders = serviceOrders;
             _employees = employees;
             _users = users;
         }
-        public async Task<OrderDTO> CreateAsync(OrderDTO orderDto, CancellationToken token)
+        public async Task<OrderDTO> CreateAsync(OrderDTO orderDto)
         {
             var order = _mapper.Map<ServiceOrder>(orderDto);
-            var orderEmployee = await _employees.GetAll().SingleOrDefaultAsync(x => x.Id == order.EmployeeId, token);
-            if (orderEmployee == null)
+
+            // TODO: Move these checks to action filter
+            if (!(await _employees.AnyEmployeeAsync(x => x.Id == order.EmployeeId)))
                 throw new LogicException($"Employee with id {orderDto.EmployeeId} not found");
 
-            var orderClient = await _users.GetAll().SingleOrDefaultAsync(x => x.Id == order.ClientId, token);
-            if (orderClient == null)
+            if (!(await _users.AnyUserAsync(x => x.Id == order.ClientId)))
                 throw new LogicException($"Client with id {orderDto.ClientId} not found");
 
             _serviceOrders.Create(order);
-            await _saveProvider.SaveAsync(token);
+            await _saveProvider.SaveAsync();
 
             return _mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<OrderDTO> TakeOrderAsync(int id, CancellationToken token) =>
-            await SetOrderStatusAsync(id, OrderStatus.InProgress, token);
+        public async Task<OrderDTO> TakeOrderAsync(int id) =>
+            await SetOrderStatusAsync(id, OrderStatus.InProgress);
 
-        public async Task<OrderDTO> DeclineOrderAsync(int id, CancellationToken token) =>
-            await SetOrderStatusAsync(id, OrderStatus.Declined, token);
+        public async Task<OrderDTO> DeclineOrderAsync(int id) =>
+            await SetOrderStatusAsync(id, OrderStatus.Declined);
 
-        public async Task<OrderDTO> ConfirmOrderCompletion(int id, CancellationToken token) =>
-            await SetOrderStatusAsync(id, OrderStatus.Done, token);
+        public async Task<OrderDTO> ConfirmOrderCompletion(int id) =>
+            await SetOrderStatusAsync(id, OrderStatus.Done);
 
-        public async Task<OrderDTO> DeleteAsync(int id, CancellationToken token)
+        public async Task<OrderDTO> DeleteAsync(int id)
         {
-            var order = await GetOrderByIdOrThrow(id, token);
+            var order = await GetOrderByIdOrThrow(id);
 
-            await _saveProvider.SaveAsync(token);
+            await _saveProvider.SaveAsync();
 
             return _mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<IPagedResult<OrderDTO>> GetPagedEmployeeOrdersAsync(Guid employeeId, int pageSize,
-            int pageNumber, CancellationToken token)
+        public async Task<IPagedResult<OrderDTO>> GetPagedOrdersByEmployeeAsync(Guid employeeId, int pageSize,
+            int pageNumber)
         {
             var query = _serviceOrders.GetAll()
                 .Where(x => x.EmployeeId == employeeId);
@@ -73,13 +72,14 @@ namespace OrderingService.Domain.Logic.Services
             int total = query.Count();
             query = query.Paged(pageSize, pageNumber).OrderBy(x => x.Date);
 
+            // TODO: Remove EF Core dependency
             return new PagedResult<OrderDTO>(
-                await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
+                await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(), total, pageSize,
                 pageNumber);
         }
 
         public async Task<IPagedResult<OrderDTO>> GetPagedOrdersByUserAsync(Guid userId, int pageSize,
-            int pageNumber, CancellationToken token)
+            int pageNumber)
         {
             var query = _serviceOrders.GetAll()
                 .Where(x => x.ClientId == userId);
@@ -87,22 +87,24 @@ namespace OrderingService.Domain.Logic.Services
             int total = query.Count();
             query = query.Paged(pageSize, pageNumber).OrderBy(x => x.Status);
 
+            // TODO: Remove EF Core dependency
             return new PagedResult<OrderDTO>(
-                await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(token), total, pageSize,
+                await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(), total, pageSize,
                 pageNumber);
         }
 
-        private async Task<ServiceOrder> GetOrderByIdOrThrow(int id, CancellationToken token)
+        private async Task<ServiceOrder> GetOrderByIdOrThrow(int id)
         {
-            var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id, token);
+            // TODO: Remove EF Core dependency
+            var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id);
             if (order == null)
                 throw new LogicNotFoundException($"Order with id {id} not found");
             return order;
         }
 
-        private async Task<OrderDTO> SetOrderStatusAsync(int id, OrderStatus status, CancellationToken token)
+        private async Task<OrderDTO> SetOrderStatusAsync(int id, OrderStatus status)
         {
-            var order = await GetOrderByIdOrThrow(id, token);
+            var order = await GetOrderByIdOrThrow(id);
             switch(status){
                 case OrderStatus.Declined when order.Status == OrderStatus.WaitingForEmplpoyee:
                     break;
@@ -115,7 +117,7 @@ namespace OrderingService.Domain.Logic.Services
             }
 
             order.Status = status;
-            await _saveProvider.SaveAsync(token);
+            await _saveProvider.SaveAsync();
 
             return _mapper.Map<OrderDTO>(order);
         }
