@@ -15,7 +15,7 @@ namespace OrderingService.Logic.Tests
 
             // Action
             var service = Initializers.FakeUserService(context);
-            var createdUser = service.CreateAsync(user, default).Result;
+            var createdUser = service.CreateAsync(user).Result;
 
             // Assert
             Assert.Equal(user.Email, createdUser.Email);
@@ -31,8 +31,8 @@ namespace OrderingService.Logic.Tests
 
             // Action
             var service = Initializers.FakeUserService(context);
-            service.CreateAsync(user, default).Wait();
-            var createdUser = service.AuthenticateAsync(user, default).Result;
+            service.CreateAsync(user).Wait();
+            var createdUser = service.AuthenticateAsync(user).Result;
 
             // Assert
             Assert.NotNull(createdUser.Token);
@@ -57,8 +57,8 @@ namespace OrderingService.Logic.Tests
             // Assert
             await Assert.ThrowsAsync<LogicException>(async () => {
                 var service = Initializers.FakeUserService(context);
-                await service.CreateAsync(user, default);
-                await service.CreateAsync(sameEmailUser, default);
+                await service.CreateAsync(user);
+                await service.CreateAsync(sameEmailUser);
             });
         }
 
@@ -70,7 +70,7 @@ namespace OrderingService.Logic.Tests
             var user = Initializers.DefaultUser;
             using(var context = Initializers.FakeContext(dbName)){
                 var service = Initializers.FakeUserService(context);
-                user = service.CreateAsync(user, default).Result;
+                user = service.CreateAsync(user).Result;
             }
 
             // Action
@@ -81,7 +81,7 @@ namespace OrderingService.Logic.Tests
             UserDTO updatedUser;
             using(var context = Initializers.FakeContext(dbName)){
                 var service = Initializers.FakeUserService(context);
-                updatedUser = service.UpdateProfileAsync(user, default).Result;
+                updatedUser = service.UpdateProfileAsync(user).Result;
             }
 
             // Assert

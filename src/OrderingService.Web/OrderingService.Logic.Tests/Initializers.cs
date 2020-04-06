@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Threading;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Moq;
+using Microsoft.AspNetCore.Http;
 using OrderingService.Data.Repositories;
 using OrderingService.Data.EF;
 using OrderingService.Data.Models;
@@ -57,25 +59,39 @@ namespace OrderingService.Logic.Tests
             return new ApplicationContext(options);
         }
 
+        private static IHttpContextAccessor FakeHttpContextAccessor(){
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var mockHttpContext = new Mock<HttpContext>();
+            mockHttpContext.Setup(x => x.RequestAborted).Returns(CancellationToken.None);
+            mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(mockHttpContext.Object);
+            return mockHttpContextAccessor.Object;
+        }
+
         public static UserService FakeUserService(ApplicationContext db)
         {
             var mockOptions = new Mock<IOptions<AppSettings>>();
             var appSettings = new AppSettings { Secret = "db_test1111111111111111111111111111111111111111111111" };
             mockOptions.Setup(x => x.Value).Returns(appSettings);
+            var hca = FakeHttpContextAccessor();
 
-            return new UserService(new UserRepository(db), new SaveProvider(db), Mapper, 
-                new RoleRepository(db), new PasswordHasher<User>(), new JwtTokenGenerator(mockOptions.Object));
+            return new UserService(new UserRepository(db, hca), new SaveProvider(db, hca), Mapper, 
+                new RoleRepository(db, hca), new PasswordHasher<User>(), new JwtTokenGenerator(mockOptions.Object));
         }
 
-        public static EmployeeService FakeEmployeeService(ApplicationContext db) => new EmployeeService(
-            new EmployeeProfileRepository(db), new UserRepository(db), new ServiceTypeRepository(db), new SaveProvider(db), Mapper);
-
-        public static OrderService FakeOrderService(ApplicationContext db) => new OrderService(
-            new ServiceOrderRepository(db), new EmployeeProfileRepository(db), new UserRepository(db), Mapper,
-            new SaveProvider(db));
-
-        public static ReviewService FakeReviewService(ApplicationContext db) => new ReviewService(
-            new ReviewRepository(db), new EmployeeProfileRepository(db), new UserRepository(db), Mapper,
-            new SaveProvider(db));
+        public static EmployeeService FakeEmployeeService(ApplicationContext db){ 
+            var hca = FakeHttpContextAccessor();
+            return new EmployeeService(new EmployeeProfileRepository(db, hca), new ServiceTypeRepository(db, hca),
+                new SaveProvider(db, hca), Mapper);
+        }
+        public static OrderService FakeOrderService(ApplicationContext db) { 
+            var hca = FakeHttpContextAccessor();
+            return new OrderService(new ServiceOrderRepository(db, hca), new EmployeeProfileRepository(db, hca),
+                new UserRepository(db, hca), Mapper, new SaveProvider(db, hca));
+        }
+        public static ReviewService FakeReviewService(ApplicationContext db) { 
+            var hca = FakeHttpContextAccessor();
+            return new ReviewService(new ReviewRepository(db, hca), new EmployeeProfileRepository(db, hca), 
+                new UserRepository(db, hca), Mapper,new SaveProvider(db, hca));
+        }
     }
 }

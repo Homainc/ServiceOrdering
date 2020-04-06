@@ -18,10 +18,10 @@ namespace OrderingService.Logic.Tests
             var employee = Initializers.DefaultEmployeeProfile;
             var client = Initializers.DefaultUser;
             client.Email = "tesfd55@gmail.com";
-            client = await userService.CreateAsync(client, default);
-            employee.User = await userService.CreateAsync(employee.User, default);
+            client = await userService.CreateAsync(client);
+            employee.User = await userService.CreateAsync(employee.User);
             employee.UserId = employee.User.Id;
-            employee = await employeeService.CreateEmployeeAsync(employee, default);
+            employee = await employeeService.CreateEmployeeAsync(employee);
 
             // Action
             var order = new OrderDTO
@@ -35,7 +35,7 @@ namespace OrderingService.Logic.Tests
                 Price = 12m,
                 ServiceDetails = "d"
             };
-            var createdOrder = await orderService.CreateAsync(order, default);
+            var createdOrder = await orderService.CreateAsync(order);
 
             // Assert
             Assert.Equal(OrderStatus.WaitingForEmplpoyee, createdOrder.Status);

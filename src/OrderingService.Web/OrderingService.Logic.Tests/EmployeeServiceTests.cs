@@ -15,10 +15,10 @@ namespace OrderingService.Logic.Tests
             using var context = Initializers.FakeContext(dbName);
             var userService = Initializers.FakeUserService(context);
             var employeeService = Initializers.FakeEmployeeService(context);
-            employeeDto.User.Id = userService.SignUpAsync(employeeDto.User, default).Result.Id;
+            employeeDto.User.Id = userService.SignUpAsync(employeeDto.User).Result.Id;
             
             // Action
-            var result = employeeService.CreateEmployeeAsync(employeeDto, default).Result;
+            var result = employeeService.CreateEmployeeAsync(employeeDto).Result;
 
             // Assert
             Assert.Equal(employeeDto.Description, result.Description);
@@ -36,9 +36,9 @@ namespace OrderingService.Logic.Tests
             using (var context = Initializers.FakeContext(dbName))
             {
                 var userService = Initializers.FakeUserService(context);
-                userService.CreateAsync(employeeProfile.User, default).Wait();
+                userService.CreateAsync(employeeProfile.User).Wait();
                 var employeeService = Initializers.FakeEmployeeService(context);
-                employeeProfile.Id = employeeService.CreateEmployeeAsync(employeeProfile, default).Result.Id;
+                employeeProfile.Id = employeeService.CreateEmployeeAsync(employeeProfile).Result.Id;
             }
 
             // Action
@@ -48,7 +48,7 @@ namespace OrderingService.Logic.Tests
             EmployeeProfileDTO result;
             using(var context = Initializers.FakeContext(dbName)){
                 var employeeService = Initializers.FakeEmployeeService(context);
-                result = employeeService.UpdateEmployeeAsync(employeeProfile, default).Result;
+                result = employeeService.UpdateEmployeeAsync(employeeProfile).Result;
             }
 
             // Assert
@@ -65,12 +65,12 @@ namespace OrderingService.Logic.Tests
             var employeeProfile = Initializers.DefaultEmployeeProfile;
             using var context = Initializers.FakeContext(dbName);
             var userService = Initializers.FakeUserService(context);
-            userService.CreateAsync(employeeProfile.User, default).Wait();
+            userService.CreateAsync(employeeProfile.User).Wait();
             var employeeService = Initializers.FakeEmployeeService(context);
-            employeeProfile.Id = employeeService.CreateEmployeeAsync(employeeProfile, default).Result.Id;
+            employeeProfile.Id = employeeService.CreateEmployeeAsync(employeeProfile).Result.Id;
 
             // Action
-            var result = employeeService.DeleteEmployeeAsync(employeeProfile.Id, default).Result;
+            var result = employeeService.DeleteEmployeeAsync(employeeProfile.Id).Result;
 
             // Assert
             // No exceptions
@@ -90,16 +90,16 @@ namespace OrderingService.Logic.Tests
             {
                 var current = Initializers.DefaultEmployeeProfile;
                 current.User.Email = $"test{i}@gmail.com";
-                current.UserId = userService.CreateAsync(current.User, default).Result.Id;
+                current.UserId = userService.CreateAsync(current.User).Result.Id;
                 current.ServiceCost = i;
                 current.ServiceType = serviceTypes[i-1];
-                employeeService.CreateEmployeeAsync(current, default).Wait();
+                employeeService.CreateEmployeeAsync(current).Wait();
             }
 
             // Action
-            var result1 = employeeService.GetPagedEmployeesAsync("nurse", 10, 1, 1, default).Result;
-            var result2 = employeeService.GetPagedEmployeesAsync(null, null, 3, 1, default).Result;
-            var result3 = employeeService.GetPagedEmployeesAsync(null, null, 5, 2, default).Result;
+            var result1 = employeeService.GetPagedEmployeesAsync("nurse", 10, 1, 1).Result;
+            var result2 = employeeService.GetPagedEmployeesAsync(null, null, 3, 1).Result;
+            var result3 = employeeService.GetPagedEmployeesAsync(null, null, 5, 2).Result;
 
             // Assert
             Assert.Equal(1, result1.PagesCount);
