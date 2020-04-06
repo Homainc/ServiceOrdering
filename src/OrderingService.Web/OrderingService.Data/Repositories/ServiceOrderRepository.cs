@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Data.EF;
 using OrderingService.Data.Interfaces;
@@ -8,8 +9,11 @@ namespace OrderingService.Data.Repositories
 {
     public class ServiceOrderRepository : AbstractRepository<ServiceOrder>
     {
-        public ServiceOrderRepository(ApplicationContext db) : base(db) { }
+        public ServiceOrderRepository(ApplicationContext db, IHttpContextAccessor httpContextAccessor) : base(db,
+            httpContextAccessor)
+        {
+        }
 
-        public override IQueryable<ServiceOrder> GetAll() => _db.ServiceOrders.AsQueryable();
+        public override IQueryable<ServiceOrder> GetAll() => Db.ServiceOrders.AsQueryable();
     }
 }

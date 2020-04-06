@@ -64,8 +64,7 @@ namespace OrderingService.Logic.Tests
             mockOptions.Setup(x => x.Value).Returns(appSettings);
 
             return new UserService(new UserRepository(db), new SaveProvider(db), Mapper, 
-                new RoleRepository(db), new PasswordHasher<User>(), new JwtTokenGenerator(mockOptions.Object), 
-                new EmployeeProfileRepository(db), new ServiceTypeRepository(db));
+                new RoleRepository(db), new PasswordHasher<User>(), new JwtTokenGenerator(mockOptions.Object));
         }
 
         public static EmployeeService FakeEmployeeService(ApplicationContext db) => new EmployeeService(

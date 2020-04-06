@@ -24,7 +24,7 @@ namespace OrderingService.Data
             services.AddScoped<IRepository<Role>, RoleRepository>();
             services.AddScoped<IRepository<ServiceOrder>, ServiceOrderRepository>();
             services.AddScoped<IRepository<ServiceType>, ServiceTypeRepository>();
-            services.AddScoped<IRepository<User>, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<ISaveProvider, SaveProvider>();
             return services;

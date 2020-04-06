@@ -5,6 +5,6 @@ namespace OrderingService.Data.Interfaces
 {
     public interface ISaveProvider
     {
-        Task SaveAsync(CancellationToken token);
+        Task SaveAsync();
     }
 }

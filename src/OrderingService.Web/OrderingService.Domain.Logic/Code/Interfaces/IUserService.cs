@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OrderingService.Domain.Logic.Code.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDTO> SignUpAsync(UserDTO userDto, CancellationToken token);
-        Task<UserDTO> CreateAsync(UserDTO userDto, CancellationToken token);
-        Task<UserDTO> AuthenticateAsync(UserDTO userDto, CancellationToken token);
-        Task<UserDTO> GetUserByIdAsync(Guid id, CancellationToken token);
-        Task<UserDTO> UpdateProfileAsync(UserDTO userDto, CancellationToken token);
+        Task<UserDTO> SignUpAsync(UserDTO userDto);
+        Task<UserDTO> CreateAsync(UserDTO userDto);
+        Task<UserDTO> AuthenticateAsync(UserDTO userDto);
+        Task<UserDTO> GetUserByIdAsync(Guid id);
+        Task<UserDTO> UpdateProfileAsync(UserDTO userDto);
     }
 }
