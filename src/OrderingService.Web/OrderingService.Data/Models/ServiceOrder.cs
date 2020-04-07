@@ -10,7 +10,7 @@ namespace OrderingService.Data.Models
         public int Id { get; set; }
         public Guid ClientId { get; set; }
         public User Client { get; set; }
-        public Guid EmployeeId { get; set; }
+        public Guid? EmployeeId { get; set; }
         public EmployeeProfile Employee { get; set; }
         public string ServiceDetails { get; set; }
         public string BriefTask { get; set; }
@@ -34,11 +34,12 @@ namespace OrderingService.Data.Models
             builder.HasOne(x => x.Client)
                 .WithMany()
                 .HasForeignKey(x => x.ClientId)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Employee)
                 .WithMany()
                 .HasForeignKey(x => x.EmployeeId)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
             builder.Property(x => x.Price)
                 .HasColumnType("decimal(18,4)");
         }

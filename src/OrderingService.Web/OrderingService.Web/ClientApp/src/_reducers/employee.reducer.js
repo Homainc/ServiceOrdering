@@ -32,7 +32,7 @@ export function employee(state = {}, action) {
         case employeeConstants.EMPLOYEE_PROFILE_DELETE_REQUEST:
             return {
                 employeeDeleting: true,
-                employeeProfile: action.employeeProfile
+                employeeProfile: null
             };
         case employeeConstants.EMPLOYEE_PROFILE_DELETE_SUCCESS:
             return {};
@@ -64,6 +64,12 @@ export function employee(state = {}, action) {
             };
         case employeeConstants.EMPLOYEE_PROFILE_LOAD_FAILURE:
             return {};
+
+        // SET EMPLOYEE PROFILE
+        case employeeConstants.EMPLOYEE_PROFILE_SET:
+            return {
+                employeeProfile: action.employeeProfile
+            };
 
         default:
             return state;

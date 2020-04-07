@@ -17,5 +17,7 @@ export const employeeConstants = {
 
     EMPLOYEE_PROFILE_LOAD_REQUEST: 'employee_profile/load [request]',
     EMPLOYEE_PROFILE_LOAD_SUCCESS: 'employee_profile/load [success]',
-    EMPLOYEE_PROFILE_LOAD_FAILURE: 'employee_profile/load [failure]'
+    EMPLOYEE_PROFILE_LOAD_FAILURE: 'employee_profile/load [failure]',
+
+    EMPLOYEE_PROFILE_SET: 'employee_profile/set'
 };

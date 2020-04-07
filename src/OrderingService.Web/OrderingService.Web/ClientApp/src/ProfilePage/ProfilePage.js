@@ -24,7 +24,7 @@ const ProfilePage = props => {
                 <ListGroupItemHeading>Password</ListGroupItemHeading>
                 <ListGroupItemText className="text-secondary">*************</ListGroupItemText>
                 <hr/>
-                <UserEmployeeBlock profile={profile}/>
+                <UserEmployeeBlock/>
                 <hr/>
                 <h5>My orders</h5>
                 <UserOrdersTable userId={profile && profile.id}/>

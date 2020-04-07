@@ -7,8 +7,16 @@ export const employeeActions = {
     createEmployeeProfile,
     deleteEmployeeProfile,
     loadEmployees,
-    loadEmployeeProfile
+    loadEmployeeProfile,
+    setEmployeeProfile
 };
+
+function setEmployeeProfile(employeeProfile){
+    return {
+        type: employeeConstants.EMPLOYEE_PROFILE_SET,
+        employeeProfile
+    };
+}
 
 function createEmployeeProfile(employeeProfile){
     return dispatch => {

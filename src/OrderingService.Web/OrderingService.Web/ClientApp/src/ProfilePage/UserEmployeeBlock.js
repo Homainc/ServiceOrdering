@@ -10,8 +10,7 @@ const UserEmployeeBlock = props => {
 
     const [state, setState] = useState({ editMode: false });
 
-    const employeeProfile = props.employeeProfile ? props.employeeProfile : 
-        props.profile && props.profile.employeeProfile;
+    const employeeProfile = props.employeeProfile;
 
     const handleProfileProcessed = () => {
         setState({ editMode: false });
@@ -22,7 +21,7 @@ const UserEmployeeBlock = props => {
             serviceType: values.serviceType,
             serviceCost: values.serviceCost,
             description: values.description,
-            userId: props.userId
+            userId: props.user.id
         };
         if(!employeeProfile)
             props.createEmployeeProfile(profile)
@@ -111,12 +110,12 @@ const UserEmployeeBlock = props => {
 
 const mapStateToProps = state => {
     const { employeeProfile, employeeProcessing, employeeDeleting } = state.employee;
-    const { id } = state.authentication.user;
+    const { user } = state.authentication;
     return {
         employeeProcessing,
         employeeDeleting,
         employeeProfile,
-        userId: id
+        user
     };
 };
 

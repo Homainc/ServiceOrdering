@@ -2,6 +2,7 @@ import { profileConstants } from "../_constants";
 import { profileService } from "../_services";
 import { history } from "../_helpers";
 import { userActions } from "./user.actions";
+import { employeeActions } from "./employee.actions";
 
 export const profileActions = {
     loadProfile,
@@ -15,6 +16,7 @@ function loadProfile(){
         profileService.loadProfile()
             .then(profile => {
                 dispatch(success(profile));
+                dispatch(employeeActions.setEmployeeProfile(profile.employeeProfile));
             },
             () => {
                 dispatch(failure());
@@ -23,7 +25,7 @@ function loadProfile(){
     };
 
     function request() { return { type: profileConstants.PROFILE_REQUEST }; }
-    function success(profile) { return { type: profileConstants.PROFILE_SUCCESS, profile, employeeProfile: profile.employeeProfile }; }
+    function success(profile) { return { type: profileConstants.PROFILE_SUCCESS, profile }; }
     function failure() { return { type: profileConstants.PROFILE_FAILURE }; } 
 }
 
