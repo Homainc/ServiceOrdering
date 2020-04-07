@@ -11,7 +11,7 @@ namespace OrderingService.Domain.Logic.MapperProfiles
                 .ForMember(dest => dest.ServiceType, opt => opt.MapFrom(src => src.ServiceType.Name));
 
             CreateMap<EmployeeProfileDTO, EmployeeProfile>()
-                .ForPath(dest => dest.ServiceType.Name, opt => opt.MapFrom(src => src.ServiceType));
+                .ForMember(dest => dest.ServiceType, opt => opt.Ignore());
         }
     }
 }

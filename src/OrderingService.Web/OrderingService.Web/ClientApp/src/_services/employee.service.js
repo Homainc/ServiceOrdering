@@ -10,6 +10,7 @@ export const employeeService = {
 };
 
 function createEmployeeProfile(profile){
+    console.log(profile);
     const requestOptions = {
         method: 'POST',
         headers: {
@@ -31,7 +32,7 @@ function updateEmployeeProfile(profile){
         },
         body: JSON.stringify(profile)
     };
-    return fetch(`${config.apiUrl}/employeeProfile`, requestOptions)
+    return fetch(`${config.apiUrl}/employeeProfile/${profile.id}`, requestOptions)
         .then(handleResponse);
 }
 
@@ -40,7 +41,7 @@ function deleteEmployeeProfile(id){
         method: 'DELETE',
         headers: authHeader()
     };
-    return fetch(`${config.apiUrl}/employeeProfile/?id=${id}`, requestOptions)
+    return fetch(`${config.apiUrl}/employeeProfile/${id}`, requestOptions)
         .then(handleResponse);
 }
 

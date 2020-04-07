@@ -26,6 +26,10 @@ namespace OrderingService.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDomainServices(Configuration);
+
+            services.AddScoped<EmployeeExistFilter>();
+            services.AddScoped<EmployeeNonExistFilter>();
+
             services.AddOpenApiDocument();
 
             services.AddControllersWithViews(opt => {

@@ -23,7 +23,7 @@ namespace OrderingService.Data
             services.AddScoped<IRepository<Review>, ReviewRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRepository<ServiceOrder>, ServiceOrderRepository>();
-            services.AddScoped<IRepository<ServiceType>, ServiceTypeRepository>();
+            services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<ISaveProvider, SaveProvider>();

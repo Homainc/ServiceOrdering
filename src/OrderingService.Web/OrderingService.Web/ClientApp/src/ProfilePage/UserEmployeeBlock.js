@@ -21,7 +21,8 @@ const UserEmployeeBlock = props => {
         const profile = {
             serviceType: values.serviceType,
             serviceCost: values.serviceCost,
-            description: values.description
+            description: values.description,
+            userId: props.userId
         };
         if(!employeeProfile)
             props.createEmployeeProfile(profile)
@@ -110,10 +111,12 @@ const UserEmployeeBlock = props => {
 
 const mapStateToProps = state => {
     const { employeeProfile, employeeProcessing, employeeDeleting } = state.employee;
+    const { id } = state.authentication.user;
     return {
         employeeProcessing,
         employeeDeleting,
-        employeeProfile
+        employeeProfile,
+        userId: id
     };
 };
 

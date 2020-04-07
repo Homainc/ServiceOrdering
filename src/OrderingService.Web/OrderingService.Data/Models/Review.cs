@@ -25,11 +25,13 @@ namespace OrderingService.Data.Models
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Text).HasMaxLength(255);
             builder.HasOne(x => x.Client)
-                .WithMany().HasForeignKey(x => x.ClientId)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .WithMany()
+                .HasForeignKey(x => x.ClientId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
             builder.HasOne(x => x.Employee)
-                .WithMany().HasForeignKey(x => x.EmployeeId)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .WithMany()
+                .HasForeignKey(x => x.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
             builder.Property(x => x.Rate)
                 .IsRequired();
         }

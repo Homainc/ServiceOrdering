@@ -8,6 +8,6 @@ namespace OrderingService.Data.Interfaces
     public interface IEmployeeRepository : IRepository<EmployeeProfile>
     {
         Task<bool> AnyEmployeeAsync(Expression<Func<EmployeeProfile, bool>> filter);
-        Task<EmployeeProfile> EagerSingleOrDefaultAsync(Expression<Func<EmployeeProfile, bool>> filter);
+        Task<EmployeeProfile> EagerSingleAsync(Expression<Func<EmployeeProfile, bool>> filter);
     }
 }

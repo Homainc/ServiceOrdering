@@ -34,7 +34,8 @@ namespace OrderingService.Data.Models
             builder.HasOne(x => x.EmployeeProfile)
                 .WithOne(x => x.User)
                 .HasForeignKey<EmployeeProfile>(x => x.UserId)
-                .OnDelete(DeleteBehavior.Cascade).IsRequired(false);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
             builder.HasOne(x => x.Role)
                 .WithMany()
                 .HasForeignKey(x => x.RoleId);

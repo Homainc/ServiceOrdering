@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
+using OrderingService.Web.Code.Filters;
 
 namespace OrderingService.Web.Controllers
 {
@@ -19,6 +20,7 @@ namespace OrderingService.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet("{id}")]
+        [ServiceFilter(typeof(EmployeeExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEmployeeByIdAsync([FromRoute] string id) => 
@@ -36,6 +38,7 @@ namespace OrderingService.Web.Controllers
             Ok(await _employeeService.GetPagedEmployeesAsync(serviceName, serviceMaxCost, pageSize, pageNumber));
 
         [HttpPost]
+        [ServiceFilter(typeof(EmployeeNonExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -45,29 +48,33 @@ namespace OrderingService.Web.Controllers
             EmployeeProfileDTO employeeProfileDto)
         {
             employeeProfileDto.UserId = new Guid(User.Identity.Name);
-            return Ok(await _employeeService.CreateEmployeeAsync(employeeProfileDto));
+            return Ok(await _employeeService.CreateEmployeeAsync(employeeProfileDto));  
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
+        [ServiceFilter(typeof(EmployeeExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync(
+            [FromRoute]
+            string id,
             [FromBody]
             [CustomizeValidator(RuleSet = "Id,Create")]
             EmployeeProfileDTO employeeProfileDto)
         {
-            employeeProfileDto.UserId = new Guid(User.Identity.Name);
+            employeeProfileDto.Id = new Guid(id);
             return Ok(await _employeeService.UpdateEmployeeAsync(employeeProfileDto));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
+        [ServiceFilter(typeof(EmployeeExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteAsync([FromQuery] string id) => 
+        public async Task<IActionResult> DeleteAsync([FromRoute] string id) => 
             Ok(await _employeeService.DeleteEmployeeAsync(new Guid(id)));
     }
 }

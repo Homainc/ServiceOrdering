@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Diagnostics;
 using Serilog;
 using System.Threading.Tasks;
@@ -8,7 +7,7 @@ namespace OrderingService.Web.Code.Filters
 {
     public class LoggingAttribute : ActionFilterAttribute
     {
-        public async override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next){
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next){
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Log.Debug("{0} has been invoked", context.ActionDescriptor.DisplayName); 

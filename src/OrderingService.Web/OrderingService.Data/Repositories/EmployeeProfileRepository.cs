@@ -22,7 +22,7 @@ namespace OrderingService.Data.Repositories
         public async Task<bool> AnyEmployeeAsync(Expression<Func<EmployeeProfile, bool>> filter) =>
             await Db.EmployeeProfiles.AnyAsync(filter, Token);
 
-        public async Task<EmployeeProfile> EagerSingleOrDefaultAsync(Expression<Func<EmployeeProfile, bool>> filter) =>
+        public async Task<EmployeeProfile> EagerSingleAsync(Expression<Func<EmployeeProfile, bool>> filter) =>
             await (
                 from e in Db.EmployeeProfiles
                 join u in Db.Users on e.UserId equals u.Id
@@ -36,6 +36,6 @@ namespace OrderingService.Data.Repositories
                     UserId = u.Id,
                     User = u,
                     Description = e.Description
-                }).SingleOrDefaultAsync(filter, Token);
+                }).SingleAsync(filter, Token);
     }
 }

@@ -10,8 +10,8 @@ using OrderingService.Data.EF;
 namespace OrderingService.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200329140555_OrderAndReviewExpanded")]
-    partial class OrderAndReviewExpanded
+    [Migration("20200406170136_InitialState")]
+    partial class InitialState
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,7 +34,7 @@ namespace OrderingService.Data.Migrations
                     b.Property<decimal>("ServiceCost")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<int?>("ServiceTypeId")
+                    b.Property<int>("ServiceTypeId")
                         .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
@@ -52,67 +52,67 @@ namespace OrderingService.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("54fbd4e7-8d93-4d34-9cb1-c5abaa8559fe"),
+                            Id = new Guid("da9ebbcb-3c28-4987-835c-b01efec1074f"),
                             Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                             ServiceCost = 55.65m,
                             ServiceTypeId = 1,
-                            UserId = new Guid("56d5d4c0-f660-45dc-80c9-ac7560c68444")
+                            UserId = new Guid("2df5ff10-e72c-4d47-9cac-2d79672c251b")
                         },
                         new
                         {
-                            Id = new Guid("4220f113-22a8-46ab-828e-900be3e2356d"),
+                            Id = new Guid("fcf62858-c12a-4314-943c-836cb02fc9d8"),
                             Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                             ServiceCost = 100.12m,
                             ServiceTypeId = 2,
-                            UserId = new Guid("5c9d8a55-75a7-456d-9587-18fe1f03e8e1")
+                            UserId = new Guid("ba9b4810-8d1d-4937-a93c-c925d0befa36")
                         },
                         new
                         {
-                            Id = new Guid("f046f928-cb81-4c82-8bdd-a79ed18a4b7e"),
+                            Id = new Guid("3df8716a-a273-4eb3-b64c-1e86de008a8b"),
                             Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                             ServiceCost = 5.93m,
                             ServiceTypeId = 3,
-                            UserId = new Guid("5facbc29-a063-4662-9a53-9b7c54483792")
+                            UserId = new Guid("c8b1f1fc-c5b7-49bf-a665-305586a74e8c")
                         },
                         new
                         {
-                            Id = new Guid("856acf14-008c-4fb0-8c55-e022161e7442"),
+                            Id = new Guid("3cccea88-569c-41ba-a3e4-274fc5d2161a"),
                             Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                             ServiceCost = 25.65m,
                             ServiceTypeId = 4,
-                            UserId = new Guid("d7a1b12a-aa05-4c0e-b11b-a17ea8141d75")
+                            UserId = new Guid("9c59057b-08cc-48e2-bea7-0a54531397c7")
                         },
                         new
                         {
-                            Id = new Guid("2e444113-02ae-4067-9f96-2d1030d6109c"),
+                            Id = new Guid("900f98a4-b7a6-4519-8edc-e41bf944b235"),
                             Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                             ServiceCost = 75.3m,
                             ServiceTypeId = 5,
-                            UserId = new Guid("88aecc17-f381-403c-99dc-311a56725a63")
+                            UserId = new Guid("5c4fdb8b-42f8-4ab5-965f-bdcf33c5b5ad")
                         },
                         new
                         {
-                            Id = new Guid("84a05df2-8559-4fb8-bb3b-1a98c9bf9197"),
+                            Id = new Guid("67b979b4-cf83-4fa7-bd7e-0b1b0daa49ba"),
                             Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                             ServiceCost = 143.4m,
                             ServiceTypeId = 6,
-                            UserId = new Guid("594679c1-241d-4dbe-b1a6-307a2c477531")
+                            UserId = new Guid("91033d7c-405b-4825-994f-9011d9654a54")
                         },
                         new
                         {
-                            Id = new Guid("262bc294-d8fc-49cb-9968-65bbd045effa"),
+                            Id = new Guid("b7b18a01-0a39-41d6-88ee-0ed9e6d0190f"),
                             Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                             ServiceCost = 45.3m,
                             ServiceTypeId = 6,
-                            UserId = new Guid("7f0fac7a-2490-4c8e-804e-b4942f2b90ea")
+                            UserId = new Guid("64da0334-5b43-4381-a8a2-626380acfffa")
                         },
                         new
                         {
-                            Id = new Guid("d088406d-0ce4-4073-8af2-4745dfc8a44e"),
+                            Id = new Guid("dca49388-e1cc-4197-8c39-694141a124c8"),
                             Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                             ServiceCost = 84.94m,
                             ServiceTypeId = 6,
-                            UserId = new Guid("d0d1b0b8-0033-42b9-a800-daecc05277ae")
+                            UserId = new Guid("09f53697-1334-4cbe-8c58-b95847dd7c2d")
                         });
                 });
 
@@ -321,10 +321,10 @@ namespace OrderingService.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("56d5d4c0-f660-45dc-80c9-ac7560c68444"),
+                            Id = new Guid("2df5ff10-e72c-4d47-9cac-2d79672c251b"),
                             Email = "spritefok1@gmail.com",
                             FirstName = "Shawn",
-                            HashedPassword = "AQAAAAEAACcQAAAAEGN8b881h55AuyRSl6A5lA9H+JC5uOzEBgST5ONL38zFFzkmFDrAhe1GMzHqusGlCg==",
+                            HashedPassword = "AQAAAAEAACcQAAAAECaRVV+7RrOaAjf+C7VhhjbONhmlu/5mNO74/97Ogc6oU4yZjacn3hNAprRwy55lzA==",
                             ImageUrl = "https://wildermuth.com/img/shawn-head.gif",
                             LastName = "Wildermuth",
                             PhoneNumber = "+37533655993",
@@ -332,10 +332,10 @@ namespace OrderingService.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5c9d8a55-75a7-456d-9587-18fe1f03e8e1"),
+                            Id = new Guid("ba9b4810-8d1d-4937-a93c-c925d0befa36"),
                             Email = "spritefok2@gmail.com",
                             FirstName = "Mike",
-                            HashedPassword = "AQAAAAEAACcQAAAAEK5lYUJ0fJ4qSiPFPRECzRpAaLECB5+byp4ZxK1+dXyhIr/X+tDH9CAM7liRYLLjTA==",
+                            HashedPassword = "AQAAAAEAACcQAAAAEDLWqaS67YmFUit3LCQ56KKX6P9Bs0oVoDXYkwV5rmQxOVRj1t/Vq6jtclyTwimcHA==",
                             ImageUrl = "https://res.cloudinary.com/dofujaj9p/image/upload/v1585154354/egirl_ge9khz.jpg",
                             LastName = "Shinoda",
                             PhoneNumber = "+37533636993",
@@ -343,10 +343,10 @@ namespace OrderingService.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5facbc29-a063-4662-9a53-9b7c54483792"),
+                            Id = new Guid("c8b1f1fc-c5b7-49bf-a665-305586a74e8c"),
                             Email = "spritefok3@gmail.com",
                             FirstName = "Chester",
-                            HashedPassword = "AQAAAAEAACcQAAAAENrPmJAKuHZ/PNjdVKUSyz/jolJO17mGq6AkKm93H3vhdOppcIvYbJcO/ZoO5vi04g==",
+                            HashedPassword = "AQAAAAEAACcQAAAAEBSJKzNV3FvSFZO4SgQPU+mB4sXOOEPG5nioDVZ4Cs2d/gf/GvlAWsoKETTFVtipOg==",
                             ImageUrl = "https://wildermuth.com/img/shawn-head.gif",
                             LastName = "Bennington",
                             PhoneNumber = "+37533636993",
@@ -354,10 +354,10 @@ namespace OrderingService.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d7a1b12a-aa05-4c0e-b11b-a17ea8141d75"),
+                            Id = new Guid("9c59057b-08cc-48e2-bea7-0a54531397c7"),
                             Email = "spritefok4@gmail.com",
                             FirstName = "Philip",
-                            HashedPassword = "AQAAAAEAACcQAAAAECEebrhangJxcMDt8Bo/dw9cyDOZO2mCuJbbuBBIamXJpYTQ+zUfDBhcXZSEOlLohA==",
+                            HashedPassword = "AQAAAAEAACcQAAAAEKAQcrtOnTWL8X8FsNf/XJ/5AsTkxMz1cWsSjCnPVhbNxSn1IhkP+w1Rep/AAIj7TQ==",
                             ImageUrl = "https://res.cloudinary.com/dofujaj9p/image/upload/v1585154354/egirl_ge9khz.jpg",
                             LastName = "Khamitsevich",
                             PhoneNumber = "+37533636993",
@@ -365,10 +365,10 @@ namespace OrderingService.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("88aecc17-f381-403c-99dc-311a56725a63"),
+                            Id = new Guid("5c4fdb8b-42f8-4ab5-965f-bdcf33c5b5ad"),
                             Email = "spritefok5@gmail.com",
                             FirstName = "Sam",
-                            HashedPassword = "AQAAAAEAACcQAAAAEOTIDwbop7wFQr/JSj6+PEv7CRQiYkSqq7HpyHgfr7gWh+BLv1vQ30v2nYQtRnOiaQ==",
+                            HashedPassword = "AQAAAAEAACcQAAAAEBndt/d8ShJi0QNRFWAYpiCoREyMuecNtP0VAEk7DCmRdPaqTjetFvhUZjoTeSRDGA==",
                             ImageUrl = "https://wildermuth.com/img/shawn-head.gif",
                             LastName = "Robinson",
                             PhoneNumber = "+37533636993",
@@ -376,10 +376,10 @@ namespace OrderingService.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("594679c1-241d-4dbe-b1a6-307a2c477531"),
+                            Id = new Guid("91033d7c-405b-4825-994f-9011d9654a54"),
                             Email = "spritefok6@gmail.com",
                             FirstName = "Kio",
-                            HashedPassword = "AQAAAAEAACcQAAAAECC6p5sWB11gG2FfkOCrSZp59vvuc2iH2L1GN1MmM1xwtKZ4RVe+n7B3EGPAz8gHOQ==",
+                            HashedPassword = "AQAAAAEAACcQAAAAEN0jwRSzZ/B0RMER+/BbZ3beVhrl7yAZQHmz7ABspiKBVLKsS+zLe1fJpqqJOhY5PQ==",
                             ImageUrl = "https://res.cloudinary.com/dofujaj9p/image/upload/v1585154354/egirl_ge9khz.jpg",
                             LastName = "Shima",
                             PhoneNumber = "+37533636993",
@@ -387,7 +387,7 @@ namespace OrderingService.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7f0fac7a-2490-4c8e-804e-b4942f2b90ea"),
+                            Id = new Guid("64da0334-5b43-4381-a8a2-626380acfffa"),
                             Email = "spritefok7@gmail.com",
                             FirstName = "Yura",
                             ImageUrl = "https://wildermuth.com/img/shawn-head.gif",
@@ -397,7 +397,7 @@ namespace OrderingService.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d0d1b0b8-0033-42b9-a800-daecc05277ae"),
+                            Id = new Guid("09f53697-1334-4cbe-8c58-b95847dd7c2d"),
                             Email = "spritefok8@gmail.com",
                             FirstName = "Petya",
                             ImageUrl = "https://res.cloudinary.com/dofujaj9p/image/upload/v1585154354/egirl_ge9khz.jpg",
@@ -411,7 +411,9 @@ namespace OrderingService.Data.Migrations
                 {
                     b.HasOne("OrderingService.Data.Models.ServiceType", "ServiceType")
                         .WithMany()
-                        .HasForeignKey("ServiceTypeId");
+                        .HasForeignKey("ServiceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("OrderingService.Data.Models.User", "User")
                         .WithOne("EmployeeProfile")
@@ -424,13 +426,12 @@ namespace OrderingService.Data.Migrations
                     b.HasOne("OrderingService.Data.Models.User", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("OrderingService.Data.Models.EmployeeProfile", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
