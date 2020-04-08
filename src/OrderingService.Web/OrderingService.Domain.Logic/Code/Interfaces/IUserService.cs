@@ -10,5 +10,6 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
         Task<UserDTO> AuthenticateAsync(UserDTO userDto);
         Task<UserDTO> GetUserByIdAsync(Guid id);
         Task<UserDTO> UpdateProfileAsync(UserDTO userDto);
+        Task<bool> AnyUserByIdAsync(Guid id);
     }
 }

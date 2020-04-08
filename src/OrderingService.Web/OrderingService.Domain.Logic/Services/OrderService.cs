@@ -16,28 +16,16 @@ namespace OrderingService.Domain.Logic.Services
 {
     public class OrderService : AbstractService, IOrderService
     {
-        private readonly IRepository<ServiceOrder> _serviceOrders;
-        private readonly IEmployeeRepository _employees;
-        private readonly IUserRepository _users;
-
-        public OrderService(IRepository<ServiceOrder> serviceOrders, IEmployeeRepository employees, 
-            IUserRepository users, IMapper mapper, ISaveProvider saveProvider)
+        private readonly IServiceOrderRepository _serviceOrders;
+        
+        public OrderService(IServiceOrderRepository serviceOrders, IMapper mapper, ISaveProvider saveProvider)
             :base(mapper, saveProvider)
         {
             _serviceOrders = serviceOrders;
-            _employees = employees;
-            _users = users;
         }
         public async Task<OrderDTO> CreateAsync(OrderDTO orderDto)
         {
             var order = _mapper.Map<ServiceOrder>(orderDto);
-
-            // TODO: Move these checks to action filter
-            if (!(await _employees.AnyEmployeeAsync(x => x.Id == order.EmployeeId)))
-                throw new LogicException($"Employee with id {orderDto.EmployeeId} not found");
-
-            if (!(await _users.AnyUserAsync(x => x.Id == order.ClientId)))
-                throw new LogicException($"Client with id {orderDto.ClientId} not found");
 
             _serviceOrders.Create(order);
             await _saveProvider.SaveAsync();
@@ -56,8 +44,9 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<OrderDTO> DeleteAsync(int id)
         {
-            var order = await GetOrderByIdOrThrow(id);
+            var order = await _serviceOrders.SingleByIdAsync(id);
 
+            _serviceOrders.Delete(order);
             await _saveProvider.SaveAsync();
 
             return _mapper.Map<OrderDTO>(order);
@@ -93,18 +82,9 @@ namespace OrderingService.Domain.Logic.Services
                 pageNumber);
         }
 
-        private async Task<ServiceOrder> GetOrderByIdOrThrow(int id)
-        {
-            // TODO: Remove EF Core dependency
-            var order = await _serviceOrders.GetAll().SingleOrDefaultAsync(x => x.Id == id);
-            if (order == null)
-                throw new LogicNotFoundException($"Order with id {id} not found");
-            return order;
-        }
-
         private async Task<OrderDTO> SetOrderStatusAsync(int id, OrderStatus status)
         {
-            var order = await GetOrderByIdOrThrow(id);
+            var order = await _serviceOrders.SingleByIdAsync(id);
             switch(status){
                 case OrderStatus.Declined when order.Status == OrderStatus.WaitingForEmplpoyee:
                     break;
@@ -121,5 +101,8 @@ namespace OrderingService.Domain.Logic.Services
 
             return _mapper.Map<OrderDTO>(order);
         }
+
+        public async Task<bool> AnyOrderByIdAsync(int id) =>
+            await _serviceOrders.AnyOrderById(id);
     }
 }

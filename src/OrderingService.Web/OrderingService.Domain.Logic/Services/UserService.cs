@@ -82,5 +82,8 @@ namespace OrderingService.Domain.Logic.Services
                 throw new LogicNotFoundException(customExceptionMessage ?? $"User not found");
             return user;
         }
+
+        public async Task<bool> AnyUserByIdAsync(Guid id) =>
+            await _users.AnyUserAsync(x => x.Id == id);
     }
 }

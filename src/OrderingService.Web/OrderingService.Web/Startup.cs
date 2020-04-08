@@ -29,6 +29,8 @@ namespace OrderingService.Web
 
             services.AddScoped<EmployeeExistFilter>();
             services.AddScoped<EmployeeNonExistFilter>();
+            services.AddScoped<OrderExistFilter>();
+            services.AddScoped<OrderClientAndEmployeeExistFilter>();
 
             services.AddOpenApiDocument();
 
