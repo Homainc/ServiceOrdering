@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -29,22 +28,19 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserDTO> CreateAsync(UserDTO userDto)
         {
-            // TODO: Implement this check in a filter
-            if (await _users.AnyUserAsync(x => x.Email == userDto.Email))
-                throw new LogicException("User with this email already exists");
-
             var user = _mapper.Map<User>(userDto);
             user.HashedPassword = _passwordHasher.HashPassword(user, userDto.Password);
             user.RoleId = await _roles.GetRoleIdByNameAsync(userDto.Role);
+            
             _users.Create(user);
-
             await _saveProvider.SaveAsync();
+
             return _mapper.Map<UserDTO>(user);
         }
 
         public async Task<UserDTO> AuthenticateAsync(UserDTO userDto)
         {
-            var user = await FindUserOrThrowAsync(x => x.Email == userDto.Email, "Incorrect email or password");
+            var user = await _users.EagerSingleAsync(x => x.Email == userDto.Email);
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
             if (result == PasswordVerificationResult.Failed)
@@ -63,27 +59,22 @@ namespace OrderingService.Domain.Logic.Services
         }
 
         public async Task<UserDTO> GetUserByIdAsync(Guid id) => 
-            _mapper.Map<UserDTO>(await FindUserOrThrowAsync(x => x.Id == id));
+            _mapper.Map<UserDTO>(await _users.EagerSingleAsync(x => x.Id == id));
 
         public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto)
         {
-            var user = await FindUserOrThrowAsync(x => x.Id == userDto.Id);
+            var user = await _users.EagerSingleAsync(x => x.Id == userDto.Id);
 
             _mapper.Map(userDto, user);
-            
             await _saveProvider.SaveAsync();
-            return userDto;
-        }
 
-        private async Task<User> FindUserOrThrowAsync(Expression<Func<User, bool>> filter, string customExceptionMessage = null)
-        {
-            var user = await _users.EagerSingleOrDefaultAsync(filter);
-            if (user == null)
-                throw new LogicNotFoundException(customExceptionMessage ?? $"User not found");
-            return user;
+            return userDto;
         }
 
         public async Task<bool> AnyUserByIdAsync(Guid id) =>
             await _users.AnyUserAsync(x => x.Id == id);
+
+        public async Task<bool> AnyUserByEmailAsync(string email) =>
+            await _users.AnyUserAsync(x => x.Email == email);
     }
 }

@@ -20,7 +20,7 @@ namespace OrderingService.Data
 
             // Repositories
             services.AddScoped<IEmployeeRepository, EmployeeProfileRepository>();
-            services.AddScoped<IRepository<Review>, ReviewRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRepository<ServiceOrder>, ServiceOrderRepository>();
             services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();

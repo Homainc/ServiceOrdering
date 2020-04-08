@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
+using OrderingService.Web.Code.Filters;
 
 namespace OrderingService.Web.Controllers
 {
@@ -25,6 +26,7 @@ namespace OrderingService.Web.Controllers
 
         [HttpPost]
         [Authorize]
+        [ServiceFilter(typeof(ReviewClientAndEmployeeExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -37,6 +39,7 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [ServiceFilter(typeof(ReviewExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id) =>

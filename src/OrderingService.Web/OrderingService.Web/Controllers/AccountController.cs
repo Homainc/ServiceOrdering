@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
+using OrderingService.Web.Code.Filters;
 
 namespace OrderingService.Web.Controllers
 {
@@ -19,6 +18,7 @@ namespace OrderingService.Web.Controllers
         public AccountController(IUserService userService) => _userService = userService;
 
         [HttpPost("auth")]
+        [ServiceFilter(typeof(UserExistsByEmailFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AuthAsync(
@@ -26,6 +26,7 @@ namespace OrderingService.Web.Controllers
             UserDTO userDto) => Ok(await _userService.AuthenticateAsync(userDto));
 
         [HttpPost("sign-up")]
+        [ServiceFilter(typeof(UserlNonExistsByEmailFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SignUpAsync(
@@ -41,12 +42,18 @@ namespace OrderingService.Web.Controllers
             Ok(await _userService.GetUserByIdAsync(new Guid(User.Identity.Name)));
 
         [Authorize]
-        [HttpPut]
+        [HttpPut("{id}")]
+        [ServiceFilter(typeof(UserExistsFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateProfileAsync(
+            [FromRoute] Guid id,
             [FromBody] [CustomizeValidator(RuleSet = "Update")]
-            UserDTO userDto) => Ok(await _userService.UpdateProfileAsync(userDto));
+            UserDTO userDto)
+        {
+            userDto.Id = id;
+            return Ok(await _userService.UpdateProfileAsync(userDto));
+        }
     }
 }

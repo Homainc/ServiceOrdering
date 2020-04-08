@@ -17,7 +17,7 @@ namespace OrderingService.Data.Repositories {
         }
 
         public override IQueryable<User> GetAll() => Db.Users.AsQueryable();
-        public async Task<User> EagerSingleOrDefaultAsync(Expression<Func<User, bool>> filter){
+        public async Task<User> EagerSingleAsync(Expression<Func<User, bool>> filter){
             var user = await (
                 from u in Db.Users
                 join r in Db.Roles on u.RoleId equals r.Id

@@ -27,14 +27,20 @@ namespace OrderingService.Web
         {
             services.AddDomainServices(Configuration);
 
+            // Filters
             services.AddScoped<EmployeeExistFilter>();
             services.AddScoped<EmployeeNonExistFilter>();
             services.AddScoped<OrderExistFilter>();
             services.AddScoped<OrderClientAndEmployeeExistFilter>();
+            services.AddScoped<ReviewClientAndEmployeeExistFilter>();
+            services.AddScoped<ReviewExistFilter>();
+            services.AddScoped<UserlNonExistsByEmailFilter>();
+            services.AddScoped<UserExistsByEmailFilter>();
+            services.AddScoped<UserExistsFilter>();
 
             services.AddOpenApiDocument();
 
-            services.AddControllersWithViews(opt => {
+            services.AddControllersWithViews(opt => { 
                 opt.Filters.Add(typeof(LoggingAttribute));
                 opt.Filters.Add(typeof(LogicExceptionAttribute));
             })
