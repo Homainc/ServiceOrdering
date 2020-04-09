@@ -1,5 +1,4 @@
 ﻿using OrderingService.Domain;
-using OrderingService.Domain.Logic.Code.Interfaces;
 using Xunit;
 
 namespace OrderingService.Logic.Tests
@@ -75,35 +74,6 @@ namespace OrderingService.Logic.Tests
             // Assert
             // No exceptions
             Assert.Equal(employeeProfile.Id, result.Id);
-        }
-
-        [Fact]
-        public void Can_employee_paging_and_filtering()
-        {
-            // Assign
-            const string dbName = "Can_employee_paging_filtering";
-            string[] serviceTypes = {"IT-specialist", "plumber", "doctor", "sales rep", "nurse", "guitarist", "teacher", "engineer", "architect"};
-            using var context = Initializers.FakeContext(dbName);
-            var userService = Initializers.FakeUserService(context);
-            var employeeService = Initializers.FakeEmployeeService(context);
-            for (int i = 1; i < 10; i++)
-            {
-                var current = Initializers.DefaultEmployeeProfile;
-                current.User.Email = $"test{i}@gmail.com";
-                current.UserId = userService.CreateAsync(current.User).Result.Id;
-                current.ServiceCost = i;
-                current.ServiceType = serviceTypes[i-1];
-                employeeService.CreateEmployeeAsync(current).Wait();
-            }
-
-            // Action
-            var result1 = employeeService.GetPagedEmployeesAsync("nurse", 10, 1, 1).Result;
-            var result2 = employeeService.GetPagedEmployeesAsync(null, null, 3, 1).Result;
-            var result3 = employeeService.GetPagedEmployeesAsync(null, null, 5, 2).Result;
-
-            // Assert
-            Assert.Equal(1, result1.PagesCount);
-            Assert.Equal(6, result2.PagesCount);
         }
     }
 }

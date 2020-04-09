@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OrderingService.Domain.Logic.Code.Interfaces
+namespace OrderingService.Common.Interfaces
 {
     public interface IPagedResult<out T>
     {
@@ -8,5 +8,6 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
         int PagesCount { get; }
         int PageSize { get; }
         int PageNumber { get; }
+        int Total { get; }
     }
 }

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+using OrderingService.Common.Interfaces;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
 using OrderingService.Domain.Logic.Code;
 using OrderingService.Domain.Logic.Code.Interfaces;
-using OrderingService.Domain.Logic.Helpers;
 
 namespace OrderingService.Domain.Logic.Services
 {
@@ -40,18 +37,9 @@ namespace OrderingService.Domain.Logic.Services
             return _mapper.Map<ReviewDTO>(review);
         }
 
-        public async Task<IPagedResult<ReviewDTO>> GetPagedReviewsAsync(Guid userId, int pageSize, int pageNumber)
-        {
-            var query = _reviews.GetAll().Where(x => x.EmployeeId == userId);
-
-            var total = query.Count();
-            query = query.Paged(pageSize, pageNumber);
-
-            // TODO: Remove EF Core dependency
-            return new PagedResult<ReviewDTO>(
-                await query.ProjectTo<ReviewDTO>(_mapper.ConfigurationProvider).ToListAsync(), total, pageSize,
-                pageNumber);
-        }
+        public async Task<IPagedResult<ReviewDTO>> GetPagedReviewsAsync(Guid employeeId, int pageSize, int pageNumber) =>
+            (await _reviews.GetPagedEmployeeReviewsAsync(employeeId, pageSize, pageNumber))
+                .ToPagedDto<ReviewDTO, Review>(_mapper);
 
         public async Task<bool> AnyReviewByIdAsync(int id) =>
             await _reviews.AnyReviewByIdAsync(id);

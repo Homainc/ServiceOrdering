@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
+using OrderingService.Common.Interfaces;
 
 namespace OrderingService.Domain.Logic.Code.Interfaces
 {

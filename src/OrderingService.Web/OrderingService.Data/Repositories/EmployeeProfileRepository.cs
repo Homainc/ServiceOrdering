@@ -2,8 +2,11 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Binbin.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using OrderingService.Common;
+using OrderingService.Common.Interfaces;
 using OrderingService.Data.EF;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
@@ -37,5 +40,39 @@ namespace OrderingService.Data.Repositories
                     User = u,
                     Description = e.Description
                 }).SingleAsync(filter, Token);
+
+        public async Task<IPagedResult<EmployeeProfile>> GetPagedEmployeesAsync(int pageSize, int pageNumber,
+            string serviceName = null, decimal? maxServiceCost = null, int? minAverageRate = null)
+        {
+            var employeeFilter = PredicateBuilder.True<EmployeeProfile>();
+            if (maxServiceCost.HasValue)
+                employeeFilter.And(x => x.ServiceCost <= maxServiceCost.Value);
+
+            var serviceTypeFilter = PredicateBuilder.True<ServiceType>();
+            if (!string.IsNullOrEmpty(serviceName))
+                serviceTypeFilter.And(x => x.Name.Contains(serviceName));
+
+            var query =
+                from e in Db.EmployeeProfiles.Where(employeeFilter)
+                join u in Db.Users on e.UserId equals u.Id into uGrouping
+                from u in uGrouping.DefaultIfEmpty()
+                join st in Db.ServiceTypes.Where(serviceTypeFilter) on e.ServiceTypeId equals st.Id into stGrouping
+                from st in stGrouping.DefaultIfEmpty()
+                select new EmployeeProfile
+                {
+                    Id = e.Id,
+                    ServiceTypeId = e.ServiceTypeId,
+                    ServiceType = st,
+                    ServiceCost = e.ServiceCost,
+                    UserId = e.UserId,
+                    User = u,
+                    Description = e.Description
+                };
+
+            var total = query.Count();
+
+            return new PagedResult<EmployeeProfile>(await query.Paged(pageSize, pageNumber).ToListAsync(Token), total,
+                pageSize, pageNumber);
+        }
     }
 }

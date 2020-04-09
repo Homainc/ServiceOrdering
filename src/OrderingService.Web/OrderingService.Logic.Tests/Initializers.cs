@@ -85,13 +85,11 @@ namespace OrderingService.Logic.Tests
         }
         public static OrderService FakeOrderService(ApplicationContext db) { 
             var hca = FakeHttpContextAccessor();
-            return new OrderService(new ServiceOrderRepository(db, hca), new EmployeeProfileRepository(db, hca),
-                new UserRepository(db, hca), Mapper, new SaveProvider(db, hca));
+            return new OrderService(new ServiceOrderRepository(db, hca), Mapper, new SaveProvider(db, hca));
         }
         public static ReviewService FakeReviewService(ApplicationContext db) { 
             var hca = FakeHttpContextAccessor();
-            return new ReviewService(new ReviewRepository(db, hca), new EmployeeProfileRepository(db, hca), 
-                new UserRepository(db, hca), Mapper,new SaveProvider(db, hca));
+            return new ReviewService(new ReviewRepository(db, hca), Mapper, new SaveProvider(db, hca));
         }
     }
 }

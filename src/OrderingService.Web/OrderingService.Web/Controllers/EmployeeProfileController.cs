@@ -32,10 +32,11 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetEmployeesAsync(
             [FromQuery] string serviceName = null,
-            [FromQuery] decimal? serviceMaxCost = null,
+            [FromQuery] decimal? maxServiceCost = null,
+            [FromQuery] int? minAverageRate = null,
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1) =>
-            Ok(await _employeeService.GetPagedEmployeesAsync(serviceName, serviceMaxCost, pageSize, pageNumber));
+            Ok(await _employeeService.GetPagedEmployeesAsync(pageSize, pageNumber, serviceName, maxServiceCost, minAverageRate));
 
         [HttpPost]
         [ServiceFilter(typeof(EmployeeNonExistFilter))]

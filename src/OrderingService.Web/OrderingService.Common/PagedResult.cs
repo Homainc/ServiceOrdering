@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using OrderingService.Domain.Logic.Code.Interfaces;
+using OrderingService.Common.Interfaces;
 
-namespace OrderingService.Domain.Logic.Code
+namespace OrderingService.Common
 {
     public class PagedResult<T> : IPagedResult<T>
     {

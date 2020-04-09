@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using OrderingService.Common.Interfaces;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Interfaces
@@ -7,5 +9,6 @@ namespace OrderingService.Data.Interfaces
     {
         Task<Review> GetByIdAsync(int id);
         Task<bool> AnyReviewByIdAsync(int id);
+        Task<IPagedResult<Review>> GetPagedEmployeeReviewsAsync(Guid employeeId, int pageSize, int pageNumber);
     }
 }

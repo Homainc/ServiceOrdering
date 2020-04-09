@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+using OrderingService.Common.Interfaces;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
 using OrderingService.Domain.Logic.Code;
 using OrderingService.Domain.Logic.Code.Interfaces;
-using OrderingService.Domain.Logic.Helpers;
 
 namespace OrderingService.Domain.Logic.Services
 {
@@ -25,23 +22,10 @@ namespace OrderingService.Domain.Logic.Services
             _employees = employees;
         }
 
-        public async Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(string serviceName,
-            decimal? maxServiceCost, int pageSize, int pageNumber)
-        {
-            // TODO: Move this to repository
-            var employee = _employees.GetAll();
-            if (serviceName != null)
-                employee = employee.Where(e => e.ServiceType.Name.Contains(serviceName));
-            if (maxServiceCost.HasValue)
-                employee = employee.Where(e => e.ServiceCost <= maxServiceCost.Value);
-
-            var total = employee.Count();
-            employee = employee.Paged(pageSize, pageNumber);
-
-            return new PagedResult<EmployeeProfileDTO>(
-                await employee.ProjectTo<EmployeeProfileDTO>(_mapper.ConfigurationProvider).ToListAsync(), total,
-                pageSize, pageNumber);
-        }
+        public async Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(int pageSize, int pageNumber,
+            string serviceName, decimal? maxServiceCost, int? minAverageRate) =>
+            (await _employees.GetPagedEmployeesAsync(pageSize, pageNumber, serviceName, maxServiceCost, minAverageRate))
+            .ToPagedDto<EmployeeProfileDTO, EmployeeProfile>(_mapper);
 
         public async Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto)
         {

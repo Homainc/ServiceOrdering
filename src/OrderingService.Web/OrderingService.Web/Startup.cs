@@ -32,7 +32,7 @@ namespace OrderingService.Web
             services.AddScoped<EmployeeNonExistFilter>();
             services.AddScoped<OrderExistFilter>();
             services.AddScoped<OrderClientAndEmployeeExistFilter>();
-            services.AddScoped<ReviewClientAndEmployeeExistFilter>();
+            services.AddScoped<ReviewEmployeeExistsFilter>();
             services.AddScoped<ReviewExistFilter>();
             services.AddScoped<UserlNonExistsByEmailFilter>();
             services.AddScoped<UserExistsByEmailFilter>();

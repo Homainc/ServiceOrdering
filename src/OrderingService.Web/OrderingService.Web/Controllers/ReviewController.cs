@@ -26,7 +26,7 @@ namespace OrderingService.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        [ServiceFilter(typeof(ReviewClientAndEmployeeExistFilter))]
+        [ServiceFilter(typeof(ReviewEmployeeExistsFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

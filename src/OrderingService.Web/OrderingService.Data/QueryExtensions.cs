@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace OrderingService.Domain.Logic.Helpers
+namespace OrderingService.Data
 {
     public static class QueryExtensions
     {

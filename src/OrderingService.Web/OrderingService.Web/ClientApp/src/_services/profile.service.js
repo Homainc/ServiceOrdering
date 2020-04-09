@@ -24,6 +24,6 @@ function updateProfile(profile){
         },
         body: JSON.stringify(profile)
     };
-    return fetch(`${config.apiUrl}/account`, requestOptions)
+    return fetch(`${config.apiUrl}/account/${profile.id}`, requestOptions)
         .then(handleResponse);
 }

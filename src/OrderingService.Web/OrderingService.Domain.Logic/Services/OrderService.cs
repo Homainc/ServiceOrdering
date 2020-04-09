@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using OrderingService.Common;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+using OrderingService.Common.Interfaces;
 using OrderingService.Data.Interfaces;
 using OrderingService.Data.Models;
 using OrderingService.Domain.Logic.Code;
 using OrderingService.Domain.Logic.Code.Exceptions;
 using OrderingService.Domain.Logic.Code.Interfaces;
-using OrderingService.Domain.Logic.Helpers;
 
 namespace OrderingService.Domain.Logic.Services
 {
@@ -53,34 +50,14 @@ namespace OrderingService.Domain.Logic.Services
         }
 
         public async Task<IPagedResult<OrderDTO>> GetPagedOrdersByEmployeeAsync(Guid employeeId, int pageSize,
-            int pageNumber)
-        {
-            var query = _serviceOrders.GetAll()
-                .Where(x => x.EmployeeId == employeeId);
-
-            int total = query.Count();
-            query = query.Paged(pageSize, pageNumber).OrderBy(x => x.Date);
-
-            // TODO: Remove EF Core dependency
-            return new PagedResult<OrderDTO>(
-                await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(), total, pageSize,
-                pageNumber);
-        }
+            int pageNumber) =>
+            (await _serviceOrders.GetPagedFilteredOrdersAsync(x => x.EmployeeId == employeeId, pageSize, pageNumber))
+            .ToPagedDto<OrderDTO, ServiceOrder>(_mapper);
 
         public async Task<IPagedResult<OrderDTO>> GetPagedOrdersByUserAsync(Guid userId, int pageSize,
-            int pageNumber)
-        {
-            var query = _serviceOrders.GetAll()
-                .Where(x => x.ClientId == userId);
-
-            int total = query.Count();
-            query = query.Paged(pageSize, pageNumber).OrderBy(x => x.Status);
-
-            // TODO: Remove EF Core dependency
-            return new PagedResult<OrderDTO>(
-                await query.ProjectTo<OrderDTO>(_mapper.ConfigurationProvider).ToListAsync(), total, pageSize,
-                pageNumber);
-        }
+            int pageNumber) =>
+            (await _serviceOrders.GetPagedFilteredOrdersAsync(x => x.ClientId == userId, pageSize, pageNumber))
+            .ToPagedDto<OrderDTO, ServiceOrder>(_mapper);
 
         private async Task<OrderDTO> SetOrderStatusAsync(int id, OrderStatus status)
         {
