@@ -30,13 +30,13 @@ function createOrder(order){
     function failure() { return { type: orderConstants.ORDER_CREATE_FAILURE }; }
 }
 
-function loadOrdersByUser(user_id) {
+function loadOrdersByUser(userId, pageNumber) {
     return dispatch => {
         dispatch(request());
 
-        orderService.loadOrdersByUser(user_id)
+        orderService.loadOrdersByUser(userId, pageNumber)
             .then(data => {
-                dispatch(success(data.value));
+                dispatch(success(data.value, data.pagesCount, data.total));
             },
             error => {
                 dispatch(failure());
@@ -44,17 +44,16 @@ function loadOrdersByUser(user_id) {
     };
 
     function request() { return { type: orderConstants.ORDER_LOAD_BY_USER_REQUEST }; }
-    function success(orders) { return { type: orderConstants.ORDER_LOAD_BY_USER_SUCCESS, orders }; }
+    function success(orders, pagesCount, totalOrders) { return { type: orderConstants.ORDER_LOAD_BY_USER_SUCCESS, orders, pagesCount, totalOrders }; }
     function failure() { return { type: orderConstants.ORDER_LOAD_BY_USER_FAILURE }; }
 }
 
-function loadOrdersByEmployee(employeeId) {
+function loadOrdersByEmployee(employeeId, pageNumber) {
     return dispatch => {
         dispatch(request());
-        console.log(employeeId);
-        orderService.loadOrdersByEmployee(employeeId)
+        orderService.loadOrdersByEmployee(employeeId, pageNumber)
             .then(data => {
-                dispatch(success(data.value));
+                dispatch(success(data.value, data.pagesCount, data.total));
             },
             error => {
                 dispatch(failure());
@@ -62,7 +61,7 @@ function loadOrdersByEmployee(employeeId) {
     };
 
     function request() { return { type: orderConstants.ORDER_LOAD_BY_EMPLOYEE_REQUEST }; }
-    function success(orders) { return { type: orderConstants.ORDER_LOAD_BY_EMPLOYEE_SUCCESS, orders }; }
+    function success(orders, pagesCount, totalOrders) { return { type: orderConstants.ORDER_LOAD_BY_EMPLOYEE_SUCCESS, orders, pagesCount, totalOrders }; }
     function failure() { return { type: orderConstants.ORDER_LOAD_BY_EMPLOYEE_FAILURE }; }
 }
 

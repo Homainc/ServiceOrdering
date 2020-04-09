@@ -5,7 +5,6 @@ import { profileActions } from '../_actions';
 import { LoadingContainer } from '../_components';
 import { UserEmployeeBlock } from './UserEmployeeBlock';
 import { UserPersonalBlock } from './UserPersonalBlock';
-import { UserOrdersTable } from './UserOrdersTable';
 
 const ProfilePage = props => { 
     const { profile, profileLoading, loadProfile } = props;
@@ -25,9 +24,6 @@ const ProfilePage = props => {
                 <ListGroupItemText className="text-secondary">*************</ListGroupItemText>
                 <hr/>
                 <UserEmployeeBlock/>
-                <hr/>
-                <h5>My orders</h5>
-                <UserOrdersTable userId={profile && profile.id}/>
             </Card>    
         </LoadingContainer>
     );   

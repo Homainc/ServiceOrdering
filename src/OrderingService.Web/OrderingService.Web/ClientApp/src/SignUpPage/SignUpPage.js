@@ -21,7 +21,7 @@ const SignUpPage = props => {
                             firstName: '',
                             lastName: '',
                             phoneNumber: '',
-                            imageUrl: null
+                            imageUrl: ''
                         }}
                         validationSchema={Yup.object({
                              email: Yup.string()

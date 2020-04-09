@@ -23,7 +23,7 @@ const HomePage = props => {
         <LoadingContainer isLoading={props.listLoading}>
             {list}
             {!!pagesCount && (
-                <PaginationBlock pageNumber={pageNumber} pagesCount={pagesCount}/>
+                <PaginationBlock pageNumber={pageNumber} pagesCount={pagesCount} pathPrefix={''}/>
             )}
         </LoadingContainer>
     );

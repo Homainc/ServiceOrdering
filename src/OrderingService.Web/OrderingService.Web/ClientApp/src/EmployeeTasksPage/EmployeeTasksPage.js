@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react';
 import { Card, Table } from 'reactstrap';
-import { LoadingContainer } from '../_components';
+import { LoadingContainer, PaginationBlock } from '../_components';
 import { EmployeeOrderRow } from './EmployeeOrderRow';
 import { connect } from 'react-redux';
 import { orderActions } from '../_actions';
+import { useParams } from 'react-router-dom';
 
 const EmployeeOrdersPage = props => {
     const id = props.user.employeeProfile.id;
+    const { page } = useParams();
+    const pageNumber = parseInt(page) || 1;
     const { loadOrdersByEmployee } = props;
 
     useEffect(() => {
-        loadOrdersByEmployee(id);
-    }, [ id, loadOrdersByEmployee ]);
+        loadOrdersByEmployee(id, pageNumber);
+    }, [ id, loadOrdersByEmployee, pageNumber ]);
     
     const orderRows = props.orders && props.orders.map(order =>
         <EmployeeOrderRow key={order.id} {...order}/>        
@@ -19,7 +22,7 @@ const EmployeeOrdersPage = props => {
     return (
         <LoadingContainer isLoading={props.isOrdersLoading}>
             <Card body>
-                <h5>Emloyee orders</h5>
+                <h5>Tasks ({props.totalOrders || 0})</h5>
                 <Table className="mt-3 table-bordered">
                     <thead>
                         <tr>
@@ -35,23 +38,28 @@ const EmployeeOrdersPage = props => {
                         ) : orderRows}
                     </tbody>
                 </Table>
+                {!!props.pagesCount && (
+                    <PaginationBlock pageNumber={pageNumber} pagesCount={props.pagesCount} pathPrefix={'/tasks'}/>
+                )}
             </Card>
         </LoadingContainer>
     );
 };
 
 const mapStateToProps = state => {
-    const { orders, isOrdersLoading } = state.order;
+    const { orders, isOrdersLoading, pagesCount, totalOrders } = state.order;
     const { user } = state.authentication;
     return {
         orders,
         isOrdersLoading,
-        user
+        user,
+        pagesCount,
+        totalOrders
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    loadOrdersByEmployee: employeeId => dispatch(orderActions.loadOrdersByEmployee(employeeId))
+    loadOrdersByEmployee: (employeeId, pageNumber) => dispatch(orderActions.loadOrdersByEmployee(employeeId, pageNumber))
 });
 
 const connectedEmployeeOrdersPage = connect(mapStateToProps, mapDispatchToProps)(EmployeeOrdersPage);

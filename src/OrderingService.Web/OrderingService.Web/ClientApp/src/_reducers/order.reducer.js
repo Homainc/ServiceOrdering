@@ -22,7 +22,9 @@ export function order(state = {}, action){
         case orderConstants.ORDER_LOAD_BY_USER_SUCCESS:
             return {
                 orders: action.orders,
-                isOrdersLoading: false
+                isOrdersLoading: false,
+                pagesCount: action.pagesCount,
+                totalOrders: action.totalOrders
             };
         case orderConstants.ORDER_LOAD_BY_USER_FAILURE:
             return {};
@@ -35,7 +37,9 @@ export function order(state = {}, action){
         case orderConstants.ORDER_LOAD_BY_EMPLOYEE_SUCCESS:
             return {
                 isOrdersLoading: false,
-                orders: action.orders
+                orders: action.orders,
+                pagesCount: action.pagesCount,
+                totalOrders: action.totalOrders
             };
         case orderConstants.ORDER_LOAD_BY_EMPLOYEE_FAILURE:
             return {};
@@ -43,13 +47,14 @@ export function order(state = {}, action){
         // ORDER ACCEPT
         case orderConstants.ORDER_ACCEPT_REQUEST:
             return {
+                ...state,
                 isOrderAccepting: true,
-                orders: state.orders,
             };
         case orderConstants.ORDER_ACCEPT_SUCCESS:
             return {
+                ...state,
                 isOrderAccepting: false,
-                orders: state.orders.map(order => order.id === action.id? {...order, status: 1 } : order )
+                orders: state.orders.map(order => order.id === action.id? {...order, status: 1 } : order ),
             };
         case orderConstants.ORDER_ACCEPT_FAILURE:
             return {};
@@ -57,11 +62,12 @@ export function order(state = {}, action){
         // ORDER DECLINE
         case orderConstants.ORDER_DECLINE_REQUEST:
             return {
+                ...state,
                 isOrderDeclining: true,
-                orders: state.orders
             };
         case orderConstants.ORDER_DECLINE_SUCCESS:
             return {
+                ...state,
                 isOrderDeclining: false,
                 orders: state.orders.map(order => order.id === action.id? {...order, status: 2 } : order)
             };
@@ -71,11 +77,12 @@ export function order(state = {}, action){
         // ORDER CONFIRM
         case orderConstants.ORDER_CONFIRM_REQUEST:
             return {
-                isOrderConfirming: true,
-                orders: state.orders
+                ...state,
+                isOrderConfirming: true
             };
         case orderConstants.ORDER_CONFIRM_SUCCESS:
             return {
+                ...state,
                 isOrderConfirming: false,
                 orders: state.orders.map(order => order.id === action.id? {...order, status: 3 } : order )
             };

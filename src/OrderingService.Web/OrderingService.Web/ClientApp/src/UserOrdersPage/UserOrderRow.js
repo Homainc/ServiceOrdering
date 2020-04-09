@@ -3,6 +3,7 @@ import { Button, UncontrolledCollapse } from 'reactstrap';
 import { orderConstants } from '../_constants';
 import { reviewModalActions, orderActions } from '../_actions';
 import { connect } from 'react-redux';
+import './UserOrdersRow.css';
 
 const UserOrderRow = props => {
     const statusText = orderConstants.STATUS[props.status];

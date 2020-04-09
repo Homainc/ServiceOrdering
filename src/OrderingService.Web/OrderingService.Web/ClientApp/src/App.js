@@ -14,7 +14,8 @@ import { connect } from 'react-redux';
 import { ProfilePage } from './ProfilePage';
 import { EmployeePage } from './EmployeePage';
 import { MakeOrderPage } from './MakeOrderPage';
-import { EmployeeOrdersPage } from './EmployeeOrdersPage';
+import { EmployeeOrdersPage } from './EmployeeTasksPage';
+import { UserOrdersPage } from './UserOrdersPage';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 
@@ -34,7 +35,8 @@ class App extends React.Component {
   render () {
     return (
       <Layout basename={baseUrl} history={history}>
-        <PrivateRoute path='/orders' component={EmployeeOrdersPage}/>
+        <PrivateRoute path='/orders/page/:page' component={UserOrdersPage}/>
+        <PrivateRoute path='/tasks/page/:page' component={EmployeeOrdersPage}/>
         <PrivateRoute path='/order/:employeeId' component={MakeOrderPage}/>
         <Route path='/employee/:id' component={EmployeePage}/>
         <Route path='/page/:page' component={HomePage}/>

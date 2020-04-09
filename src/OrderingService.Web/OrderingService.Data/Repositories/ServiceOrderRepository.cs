@@ -31,6 +31,7 @@ namespace OrderingService.Data.Repositories
         {
             var query =
                 from o in Db.ServiceOrders.Where(filter)
+                orderby o.Status
                 select new ServiceOrder
                 {
                     Id = o.Id,

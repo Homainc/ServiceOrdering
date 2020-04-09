@@ -24,21 +24,21 @@ function createOrder(order) {
         .then(handleResponse);
 }
 
-function loadOrdersByUser(userId){
+function loadOrdersByUser(userId, pageNumber){
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${config.apiUrl}/order/user/${userId}`, requestOptions)
+    return fetch(`${config.apiUrl}/order/user/${userId}?pageNumber=${pageNumber}`, requestOptions)
        .then(handleResponse);
 }
 
-function loadOrdersByEmployee(employeeId) {
+function loadOrdersByEmployee(employeeId, pageNumber) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
-    return fetch(`${config.apiUrl}/order/employee/${employeeId}`, requestOptions)
+    return fetch(`${config.apiUrl}/order/employee/${employeeId}?pageNumber=${pageNumber}`, requestOptions)
         .then(handleResponse);
 }
 
