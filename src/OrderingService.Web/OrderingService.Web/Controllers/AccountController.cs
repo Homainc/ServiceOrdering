@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
-using OrderingService.Web.Code.Filters;
 
 namespace OrderingService.Web.Controllers
 {
@@ -18,7 +17,6 @@ namespace OrderingService.Web.Controllers
         public AccountController(IUserService userService) => _userService = userService;
 
         [HttpPost("auth")]
-        [ServiceFilter(typeof(UserExistsByEmailFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AuthAsync(
@@ -26,7 +24,6 @@ namespace OrderingService.Web.Controllers
             UserDTO userDto) => Ok(await _userService.AuthenticateAsync(userDto));
 
         [HttpPost("sign-up")]
-        [ServiceFilter(typeof(UserlNonExistsByEmailFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SignUpAsync(
@@ -43,7 +40,6 @@ namespace OrderingService.Web.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        [ServiceFilter(typeof(UserExistsFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

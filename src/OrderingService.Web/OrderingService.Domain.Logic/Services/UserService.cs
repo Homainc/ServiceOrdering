@@ -69,6 +69,7 @@ namespace OrderingService.Domain.Logic.Services
             var user = await GetUserByIdOrThrowAsync(userDto.Id);
 
             _mapper.Map(userDto, user);
+            _userRepository.Update(user);
             await _saveProvider.SaveAsync();
 
             return userDto;

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
-using OrderingService.Web.Code.Filters;
 
 namespace OrderingService.Web.Controllers
 {
@@ -20,7 +19,6 @@ namespace OrderingService.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        [ServiceFilter(typeof(EmployeeExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEmployeeByIdAsync([FromRoute] string id) => 
@@ -39,7 +37,6 @@ namespace OrderingService.Web.Controllers
             Ok(await _employeeService.GetPagedEmployeesAsync(pageSize, pageNumber, serviceName, maxServiceCost, minAverageRate));
 
         [HttpPost]
-        [ServiceFilter(typeof(EmployeeNonExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -53,7 +50,6 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpPut("{id}")]
-        [ServiceFilter(typeof(EmployeeExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -70,7 +66,6 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ServiceFilter(typeof(EmployeeExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

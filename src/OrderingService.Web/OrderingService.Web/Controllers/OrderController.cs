@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
-using OrderingService.Web.Code.Filters;
 
 namespace OrderingService.Web.Controllers
 {
@@ -33,7 +32,6 @@ namespace OrderingService.Web.Controllers
             Ok(await _orderService.GetPagedOrdersByEmployeeAsync(new Guid(id), pageSize, pageNumber));
 
         [HttpPost]
-        [ServiceFilter(typeof(OrderClientAndEmployeeExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateAsync(
@@ -41,7 +39,6 @@ namespace OrderingService.Web.Controllers
             OrderDTO orderDto) => Ok(await _orderService.CreateAsync(orderDto));
 
         [HttpPut("take/{id:int}")]
-        [ServiceFilter(typeof(OrderExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -49,7 +46,6 @@ namespace OrderingService.Web.Controllers
             Ok(await _orderService.TakeOrderAsync(id));
 
         [HttpPut("decline/{id:int}")]
-        [ServiceFilter(typeof(OrderExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -57,7 +53,6 @@ namespace OrderingService.Web.Controllers
             Ok(await _orderService.DeclineOrderAsync(id));
 
         [HttpPut("confirm/{id:int}")]
-        [ServiceFilter(typeof(OrderExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -65,7 +60,6 @@ namespace OrderingService.Web.Controllers
             Ok(await _orderService.ConfirmOrderCompletion(id));
 
         [HttpDelete("{id:int}")]
-        [ServiceFilter(typeof(OrderExistFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id) =>

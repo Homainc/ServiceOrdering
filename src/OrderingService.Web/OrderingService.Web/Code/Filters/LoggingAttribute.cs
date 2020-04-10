@@ -8,7 +8,7 @@ namespace OrderingService.Web.Code.Filters
     public class LoggingAttribute : ActionFilterAttribute
     {
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next){
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
             Log.Debug("{0} has been invoked", context.ActionDescriptor.DisplayName); 
             await next();

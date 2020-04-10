@@ -9,21 +9,22 @@ namespace OrderingService.Web.Code.Filters
     {
         public override void OnException(ExceptionContext context)
         {
-            if (context.Exception is LogicNotFoundException notFoundEx)
+            switch (context.Exception)
             {
-                Log.Debug("Logic error: {0}", notFoundEx.Message);
-                context.Result = new NotFoundObjectResult(new
-                {
-                    ErrorMessage = notFoundEx.Message
-                });
-            }
-            else if (context.Exception is LogicException ex)
-            {
-                Log.Debug("Logic error: {0}", ex.Message);
-                context.Result = new BadRequestObjectResult(new
-                {
-                    ErrorMessage = ex.Message
-                });
+                case LogicNotFoundException notFoundEx:
+                    Log.Debug("Logic error: {0}", notFoundEx.Message);
+                    context.Result = new NotFoundObjectResult(new
+                    {
+                        ErrorMessage = notFoundEx.Message
+                    });
+                    break;
+                case LogicException ex:
+                    Log.Debug("Logic error: {0}", ex.Message);
+                    context.Result = new BadRequestObjectResult(new
+                    {
+                        ErrorMessage = ex.Message
+                    });
+                    break;
             }
         }
     }
