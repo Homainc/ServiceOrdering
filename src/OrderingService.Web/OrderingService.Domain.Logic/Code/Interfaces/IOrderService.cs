@@ -13,6 +13,5 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
         Task<OrderDTO> DeleteAsync(int orderDto);
         Task<IPagedResult<OrderDTO>> GetPagedOrdersByEmployeeAsync(Guid employeeId, int pageSize, int pageNumber);
         Task<IPagedResult<OrderDTO>> GetPagedOrdersByUserAsync(Guid userId, int pageSize, int pageNumber);
-        Task<bool> AnyOrderByIdAsync(int id);
     }
 }

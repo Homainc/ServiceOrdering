@@ -8,8 +8,7 @@ namespace OrderingService.Data.Interfaces
 {
     public interface IServiceOrderRepository : IRepository<ServiceOrder>
     {
-        Task<ServiceOrder> SingleByIdAsync(int id);
-        Task<bool> AnyOrderById(int id);
+        Task<ServiceOrder> GetByIdOrDefaultAsync(int id);
         Task<IPagedResult<ServiceOrder>> GetPagedFilteredOrdersAsync(Expression<Func<ServiceOrder, bool>> filter, int pageSize, int pageNumber);
     }
 }
