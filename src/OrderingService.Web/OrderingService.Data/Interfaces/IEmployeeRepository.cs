@@ -9,7 +9,7 @@ namespace OrderingService.Data.Interfaces
     public interface IEmployeeRepository : IRepository<EmployeeProfile>
     {
         Task<bool> AnyEmployeeAsync(Expression<Func<EmployeeProfile, bool>> filter);
-        Task<EmployeeProfile> EagerSingleAsync(Expression<Func<EmployeeProfile, bool>> filter);
+        Task<EmployeeProfile> GetEagerByIdOrDefaultAsync(Guid id);
         Task<IPagedResult<EmployeeProfile>> GetPagedEmployeesAsync(int pageSize, int pageNumber, string serviceName,
             decimal? maxServiceCost, int? minAverageRate);
     }
