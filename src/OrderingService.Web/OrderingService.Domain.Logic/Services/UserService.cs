@@ -13,26 +13,29 @@ namespace OrderingService.Domain.Logic.Services
     {
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly ITokenGenerator _tokenGenerator;
-        private readonly IUserRepository _users;
-        private readonly IRoleRepository _roles;
+        private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
 
-        public UserService(IUserRepository users, ISaveProvider saveProvider, IMapper mapper,
-            IRoleRepository roles, IPasswordHasher<User> passwordHasher, ITokenGenerator tokenGenerator)
+        public UserService(IUserRepository userRepository, ISaveProvider saveProvider, IMapper mapper,
+            IRoleRepository roleRepository, IPasswordHasher<User> passwordHasher, ITokenGenerator tokenGenerator)
             : base(mapper, saveProvider)
         {
             _passwordHasher = passwordHasher;
             _tokenGenerator = tokenGenerator;
-            _users = users;
-            _roles = roles;
+            _userRepository = userRepository;
+            _roleRepository = roleRepository;
         }
 
         public async Task<UserDTO> CreateAsync(UserDTO userDto)
         {
+            if (await _userRepository.AnyUserAsync(x => x.Email == userDto.Email))
+                throw new LogicException($"User with email {userDto.Email} already exists!");
+
             var user = _mapper.Map<User>(userDto);
             user.HashedPassword = _passwordHasher.HashPassword(user, userDto.Password);
-            user.RoleId = await _roles.GetRoleIdByNameAsync(userDto.Role);
+            user.RoleId = await _roleRepository.GetRoleIdByNameAsync(userDto.Role);
             
-            _users.Create(user);
+            _userRepository.Create(user);
             await _saveProvider.SaveAsync();
 
             return _mapper.Map<UserDTO>(user);
@@ -40,7 +43,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserDTO> AuthenticateAsync(UserDTO userDto)
         {
-            var user = await _users.EagerSingleAsync(x => x.Email == userDto.Email);
+            var user = await GetUserByEmailOrThrow(userDto.Email);
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
             if (result == PasswordVerificationResult.Failed)
@@ -59,11 +62,11 @@ namespace OrderingService.Domain.Logic.Services
         }
 
         public async Task<UserDTO> GetUserByIdAsync(Guid id) => 
-            _mapper.Map<UserDTO>(await _users.EagerSingleAsync(x => x.Id == id));
+            _mapper.Map<UserDTO>(await GetUserByIdOrThrow(id));
 
         public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto)
         {
-            var user = await _users.EagerSingleAsync(x => x.Id == userDto.Id);
+            var user = await GetUserByIdOrThrow(userDto.Id);
 
             _mapper.Map(userDto, user);
             await _saveProvider.SaveAsync();
@@ -71,10 +74,12 @@ namespace OrderingService.Domain.Logic.Services
             return userDto;
         }
 
-        public async Task<bool> AnyUserByIdAsync(Guid id) =>
-            await _users.AnyUserAsync(x => x.Id == id);
+        private async Task<User> GetUserByIdOrThrow(Guid id) =>
+            await _userRepository.EagerSingleOrDefaultAsync(x => x.Id == id) ??
+            throw new LogicNotFoundException($"User with id {id} not found!");
 
-        public async Task<bool> AnyUserByEmailAsync(string email) =>
-            await _users.AnyUserAsync(x => x.Email == email);
+        private async Task<User> GetUserByEmailOrThrow(string email) =>
+            await _userRepository.EagerSingleOrDefaultAsync(x => x.Email == email) ??
+            throw new LogicNotFoundException($"User with email {email} not found!");
     }
 }
