@@ -1,6 +1,9 @@
-﻿using System;
+﻿using System.Security.Cryptography.X509Certificates;
+using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OrderingService.Data.EF;
 
 namespace OrderingService.Data.Models
 {
@@ -13,8 +16,27 @@ namespace OrderingService.Data.Models
         public string Description { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
+        public double? AverageRate { get; private set; }
+        public int ReviewsCount { get; private set; }
 
-        public EmployeeProfile() => User = new User();
+        internal EmployeeProfile() => User = new User();
+
+        internal EmployeeProfile(double? averageRate, int reviewsCount)
+        {
+            AverageRate = averageRate;
+            ReviewsCount = reviewsCount;
+            User = new User();
+        }
+
+        public void AddReview(ApplicationContext context, Review review)
+        {
+            var reviews = context.Reviews.Where(x => x.EmployeeId == Id).ToList();
+            if(reviews.Count > 0)
+                AverageRate = (reviews.Sum(x => x.Rate) + review.Rate) / (reviews.Count + 1);
+            else
+                AverageRate = review.Rate;
+            ReviewsCount++;
+        }
     }
 
     public class EmployeeProfileConfiguration : IEntityTypeConfiguration<EmployeeProfile>

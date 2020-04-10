@@ -24,7 +24,7 @@ const EmployeePage = props => {
             <Card body className="bg-light">
                 <Row>
                     <Col xs='4' sm='4' md='3' lg='3' xl='2'>
-                        <img src={employeeProfile && employeeProfile.user.imageUrl} className="rounded" height="150" width="150" alt="employee"/>
+                        <img src={(employeeProfile && employeeProfile.user.imageUrl) || 'images/default-user.jpg'} className="rounded" height="150" width="150" alt="employee"/>
                     </Col>
                     <Col xm='4' sm='4'>
                         <h5>{employeeProfile && employeeProfile.user.firstName} {employeeProfile && employeeProfile.user.lastName}</h5>
@@ -34,7 +34,11 @@ const EmployeePage = props => {
                     </Col>
                     <Col className="text-center">
                         Average rate<br/>
-                        <Rating rate={3.4} reviews={10}/><br/>
+                        {employeeProfile && employeeProfile.reviewsCount > 0? (
+                            <Rating rate={employeeProfile && employeeProfile.averageRate} reviews={employeeProfile && employeeProfile.reviewsCount}/>
+                        ):(
+                            <span className="text-secondary">No reviews</span>
+                        )}<br/>
                         <Button tag={Link} to={`/order/${employeeProfile && employeeProfile.id}`} className="my-2" color="success" outline>Hire for $ {employeeProfile && employeeProfile.serviceCost.toFixed(2)}</Button>
                     </Col>
                 </Row>

@@ -14,7 +14,7 @@ export const EmployeeItem = props => {
             <ListGroupItem>
                 <Row>
                     <Col lg="3" md="3" sm="4" xs="5">
-                    <img src={props.employee.user.imageUrl} className="rounded" height="130" width="130" alt="employee"/>
+                    <img src={props.employee.user.imageUrl || 'images/default-user.jpg'} className="rounded" height="130" width="130" alt="employee"/>
                     </Col>
                     <Col><p className="text-bold">Description:</p>
                 <p className="text-secondary">{props.employee.description}</p></Col>

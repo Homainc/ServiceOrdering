@@ -141,7 +141,8 @@ namespace OrderingService.Data.EF
                     Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                     ServiceCost = 55.65m,
                     ServiceTypeId = serviceTypes[0].Id,
-                    UserId = users[0].Id
+                    UserId = users[0].Id,
+                    ReviewsCount = 0
                 },
                 new
                 {
@@ -149,7 +150,9 @@ namespace OrderingService.Data.EF
                     Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                     ServiceCost = 100.12m,
                     ServiceTypeId = serviceTypes[1].Id,
-                    UserId = users[1].Id
+                    UserId = users[1].Id,
+                    ReviewsCount = 0
+                     
                 },
                 new
                 {
@@ -157,7 +160,8 @@ namespace OrderingService.Data.EF
                     Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                     ServiceCost = 5.93m,
                     ServiceTypeId = serviceTypes[2].Id,
-                    UserId = users[2].Id
+                    UserId = users[2].Id,
+                    ReviewsCount = 0
                 },
                 new
                 {
@@ -165,7 +169,8 @@ namespace OrderingService.Data.EF
                     Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                     ServiceCost = 25.65m,
                     ServiceTypeId = serviceTypes[3].Id,
-                    UserId = users[3].Id
+                    UserId = users[3].Id,
+                    ReviewsCount = 0
                 },
                 new
                 {
@@ -173,7 +178,8 @@ namespace OrderingService.Data.EF
                     Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                     ServiceCost = 75.3m,
                     ServiceTypeId = serviceTypes[4].Id,
-                    UserId = users[4].Id
+                    UserId = users[4].Id,
+                    ReviewsCount = 0
                 },
                 new
                 {
@@ -181,7 +187,8 @@ namespace OrderingService.Data.EF
                     Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                     ServiceCost = 143.4m,
                     ServiceTypeId = serviceTypes[5].Id,
-                    UserId = users[5].Id
+                    UserId = users[5].Id,
+                    ReviewsCount = 0
                 },
                 new
                 {
@@ -189,7 +196,8 @@ namespace OrderingService.Data.EF
                     Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                     ServiceCost = 45.3m,
                     ServiceTypeId = serviceTypes[5].Id,
-                    UserId = users[6].Id
+                    UserId = users[6].Id,
+                    ReviewsCount = 0
                 },
                 new
                 {
@@ -197,7 +205,8 @@ namespace OrderingService.Data.EF
                     Description = "In Entity Framework before .NET Core, entity framework had a way to create seed data but that method had a number of issues so they decided not to bring it over to Entity Framework Core. Now that we're into version 2.1 of Entity Framework Core, they wanted to allow for a way to seed the data with certain types of data.",
                     ServiceCost = 84.94m,
                     ServiceTypeId = serviceTypes[5].Id,
-                    UserId = users[7].Id
+                    UserId = users[7].Id,
+                    ReviewsCount = 0
                 });
         }
     }

@@ -30,7 +30,7 @@ namespace OrderingService.Data.Repositories
                 from e in Db.EmployeeProfiles
                 join u in Db.Users on e.UserId equals u.Id
                 join st in Db.ServiceTypes on e.ServiceTypeId equals st.Id
-                select new EmployeeProfile
+                select new EmployeeProfile(e.AverageRate, e.ReviewsCount)
                 {
                     Id = e.Id,
                     ServiceTypeId = st.Id,
@@ -58,7 +58,7 @@ namespace OrderingService.Data.Repositories
                 from u in uGrouping.DefaultIfEmpty()
                 join st in Db.ServiceTypes.Where(serviceTypeFilter) on e.ServiceTypeId equals st.Id into stGrouping
                 from st in stGrouping.DefaultIfEmpty()
-                select new EmployeeProfile
+                select new EmployeeProfile(e.AverageRate, e.ReviewsCount)
                 {
                     Id = e.Id,
                     ServiceTypeId = e.ServiceTypeId,

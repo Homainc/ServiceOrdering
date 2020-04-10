@@ -10,5 +10,7 @@ namespace OrderingService.Domain
         public string Description { get; set; }
         public Guid UserId { get; set; }
         public UserDTO User { get; set; }
+        public double? AverageRate { get; set; }
+        public int ReviewsCount { get; set; }
     }
 }

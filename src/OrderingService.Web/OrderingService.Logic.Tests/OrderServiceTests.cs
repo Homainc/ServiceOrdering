@@ -28,8 +28,8 @@ namespace OrderingService.Logic.Tests
             {
                 Address = "ffd",
                 BriefTask = "l",
-                ClientId = client.Id.ToString(),
-                EmployeeId = employee.Id.ToString(),
+                ClientId = client.Id,
+                EmployeeId = employee.Id,
                 ContactPhone = "124",
                 Date = DateTime.Now,
                 Price = 12m,

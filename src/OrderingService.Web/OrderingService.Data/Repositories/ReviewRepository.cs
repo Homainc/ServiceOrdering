@@ -42,7 +42,16 @@ namespace OrderingService.Data.Repositories
             var total = query.Count();
 
             return new PagedResult<Review>(
-                await query.Paged(pageSize, pageNumber).ToListAsync(Token), pageSize, pageNumber);
+                await query.Paged(pageSize, pageNumber).ToListAsync(Token), total, pageSize, pageNumber);
+        }
+
+        public override void Create(Review entity)
+        {
+            base.Create(entity);
+
+            var employee = Db.EmployeeProfiles.Single(x => x.Id == entity.EmployeeId);
+            employee.AddReview(Db, entity);
+            Db.Entry(employee).State = EntityState.Modified;
         }
     }
 }

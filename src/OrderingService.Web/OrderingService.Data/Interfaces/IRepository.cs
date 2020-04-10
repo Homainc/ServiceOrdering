@@ -18,7 +18,6 @@ namespace OrderingService.Data.Interfaces
     {
         protected readonly ApplicationContext Db;
         protected readonly CancellationToken Token;
-
         protected AbstractRepository(ApplicationContext db, IHttpContextAccessor httpContextAccessor)
         {
             Db = db;
@@ -26,7 +25,7 @@ namespace OrderingService.Data.Interfaces
         }
 
         public abstract IQueryable<T> GetAll();
-        public void Create(T entity) => Db.Entry(entity).State = EntityState.Added;
+        public virtual void Create(T entity) => Db.Entry(entity).State = EntityState.Added;
         public void Update(T entity) => Db.Entry(entity).State = EntityState.Modified;
         public void Delete(T entity) => Db.Entry(entity).State = EntityState.Deleted;
     }

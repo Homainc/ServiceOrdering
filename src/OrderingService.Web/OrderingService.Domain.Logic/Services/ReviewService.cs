@@ -30,7 +30,7 @@ namespace OrderingService.Domain.Logic.Services
             if(!await _userRepository.AnyUserAsync(x => x.Id == reviewDto.ClientId))
                 throw new LogicNotFoundException($"Client with id {reviewDto.ClientId} not found!");
             if(!await _employeeRepository.AnyEmployeeAsync(x => x.Id == reviewDto.EmployeeId))
-                throw new LogicNotFoundException($"Employee with id {reviewDto.EmployeeId}");
+                throw new LogicNotFoundException($"Employee with id {reviewDto.EmployeeId} not found!");
 
             reviewDto.Date = DateTime.Now;
             var review = _mapper.Map<Review>(reviewDto);

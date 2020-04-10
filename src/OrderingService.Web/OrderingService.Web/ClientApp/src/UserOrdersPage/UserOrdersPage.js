@@ -38,7 +38,9 @@ const UserOrdersPage = props => {
                         ) : ordersRows}
                     </tbody>
                 </Table>
-                <PaginationBlock pageNumber={pageNumber} pagesCount={props.pagesCount} pathPrefix={'/orders'}/>
+                {!!props.pagesCount && (
+                    <PaginationBlock pageNumber={pageNumber} pagesCount={props.pagesCount} pathPrefix={'/orders'}/>
+                )}
                 <ReviewModal /> 
             </Card>
         </LoadingContainer>
