@@ -13,18 +13,13 @@ namespace OrderingService.Data.Repositories
 {
     public class ReviewRepository : AbstractRepository<Review>, IReviewRepository
     {
-        public ReviewRepository(ApplicationContext db, IHttpContextAccessor httpContextAccessor) : base(db,
-            httpContextAccessor)
-        {
-        }
+        public ReviewRepository(ApplicationContext db, IHttpContextAccessor httpContextAccessor) : 
+            base(db, httpContextAccessor) { }
 
         public override IQueryable<Review> GetAll() => Db.Reviews.AsQueryable();
 
-        public async Task<Review> GetByIdAsync(int id) =>
-            await Db.Reviews.SingleAsync(x => x.Id == id, Token);
-
-        public async Task<bool> AnyReviewByIdAsync(int id) =>
-            await Db.Reviews.AnyAsync(x => x.Id == id, Token);
+        public async Task<Review> GetByIdOrDefaultAsync(int id) =>
+            await Db.Reviews.SingleOrDefaultAsync(x => x.Id == id, Token);
 
         public async Task<IPagedResult<Review>> GetPagedEmployeeReviewsAsync(Guid employeeId, int pageSize, int pageNumber)
         {

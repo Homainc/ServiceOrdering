@@ -43,7 +43,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserDTO> AuthenticateAsync(UserDTO userDto)
         {
-            var user = await GetUserByEmailOrThrow(userDto.Email);
+            var user = await GetUserByEmailOrThrowAsync(userDto.Email);
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
             if (result == PasswordVerificationResult.Failed)
@@ -62,11 +62,11 @@ namespace OrderingService.Domain.Logic.Services
         }
 
         public async Task<UserDTO> GetUserByIdAsync(Guid id) => 
-            _mapper.Map<UserDTO>(await GetUserByIdOrThrow(id));
+            _mapper.Map<UserDTO>(await GetUserByIdOrThrowAsync(id));
 
         public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto)
         {
-            var user = await GetUserByIdOrThrow(userDto.Id);
+            var user = await GetUserByIdOrThrowAsync(userDto.Id);
 
             _mapper.Map(userDto, user);
             await _saveProvider.SaveAsync();
@@ -74,11 +74,11 @@ namespace OrderingService.Domain.Logic.Services
             return userDto;
         }
 
-        private async Task<User> GetUserByIdOrThrow(Guid id) =>
+        private async Task<User> GetUserByIdOrThrowAsync(Guid id) =>
             await _userRepository.EagerSingleOrDefaultAsync(x => x.Id == id) ??
             throw new LogicNotFoundException($"User with id {id} not found!");
 
-        private async Task<User> GetUserByEmailOrThrow(string email) =>
+        private async Task<User> GetUserByEmailOrThrowAsync(string email) =>
             await _userRepository.EagerSingleOrDefaultAsync(x => x.Email == email) ??
             throw new LogicNotFoundException($"User with email {email} not found!");
     }
