@@ -11,12 +11,15 @@ export const userService = {
 
 async function login(email: string, password: string): Promise<UserDTO> {
     const resp = await api.Account_Auth({ userDto: { email, password }});
-    localStorage.setItem('user', JSON.stringify(resp.body));
-    return resp.body as UserDTO;
+    const user = resp.body as UserDTO;
+    localStorage.setItem('user', JSON.stringify(user));
+    api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
+    return user;
 }
 
 function logout(): void {
     localStorage.removeItem('user');
+    api.setRequestHeadersHandler(h => h);
 }
 
 function updateAuthUser(user : UserDTO): void {
@@ -33,6 +36,8 @@ function updateAuthEmployeeProfile(employeeProfile : EmployeeProfileDTO): void {
 
 async function signUp(user : UserDTO): Promise<UserDTO> {
     const resp = await api.Account_SignUp({ userDto: user });
+    user = resp.body as UserDTO;
     localStorage.setItem('user', JSON.stringify(user));
-    return resp.body as UserDTO;
+    api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
+    return user;
 }
