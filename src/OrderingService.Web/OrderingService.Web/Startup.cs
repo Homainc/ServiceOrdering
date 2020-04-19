@@ -27,7 +27,7 @@ namespace OrderingService.Web
         {
             services.AddDomainServices(Configuration);
 
-            services.AddOpenApiDocument();
+            services.AddSwaggerDocument();
 
             services.AddControllersWithViews(opt => { 
                 opt.Filters.Add(typeof(LoggingAttribute));

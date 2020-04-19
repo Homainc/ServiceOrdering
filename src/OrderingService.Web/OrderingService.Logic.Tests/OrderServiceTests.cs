@@ -20,7 +20,7 @@ namespace OrderingService.Logic.Tests
             client.Email = "tesfd55@gmail.com";
             client = await userService.CreateAsync(client);
             employee.User = await userService.CreateAsync(employee.User);
-            employee.UserId = employee.User.Id;
+            employee.UserId = employee.User.Id.Value;
             employee = await employeeService.CreateEmployeeAsync(employee);
 
             // Action
@@ -28,7 +28,7 @@ namespace OrderingService.Logic.Tests
             {
                 Address = "ffd",
                 BriefTask = "l",
-                ClientId = client.Id,
+                ClientId = client.Id.Value,
                 EmployeeId = employee.Id,
                 ContactPhone = "124",
                 Date = DateTime.Now,

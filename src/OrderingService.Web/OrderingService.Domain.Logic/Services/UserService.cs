@@ -66,7 +66,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto)
         {
-            var user = await GetUserByIdOrThrowAsync(userDto.Id);
+            var user = await GetUserByIdOrThrowAsync(userDto.Id.Value);
 
             _mapper.Map(userDto, user);
             _userRepository.Update(user);
