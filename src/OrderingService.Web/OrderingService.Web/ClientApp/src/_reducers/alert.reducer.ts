@@ -1,6 +1,16 @@
 import { alertConstants } from '../_constants';
 
-export function alert(state = {}, action) {
+type AlertState = {
+    type: 'success' | 'danger' | undefined;
+    message: string | undefined;
+};
+
+type AlertAction = { 
+    type: string; 
+    message: string | undefined;  
+};
+
+export function alert(state: AlertState = { type: undefined, message: undefined }, action: AlertAction): AlertState {
     switch (action.type) {
         case alertConstants.SUCCESS:
             return {
@@ -13,7 +23,10 @@ export function alert(state = {}, action) {
                 message: action.message
             };
         case alertConstants.CLEAR:
-            return {};
+            return { 
+                type: undefined, 
+                message: undefined 
+            };
         default:
             return state;
     }

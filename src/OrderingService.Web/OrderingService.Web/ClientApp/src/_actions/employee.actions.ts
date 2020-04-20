@@ -1,6 +1,7 @@
 import { employeeService } from '../_services';
 import { employeeConstants } from '../_constants';
 import { userActions } from './user.actions';
+import { EmployeeProfileDTO } from '../WebApiModels';
 
 export const employeeActions = {
     updateEmployeeProfile,
@@ -11,15 +12,15 @@ export const employeeActions = {
     setEmployeeProfile
 };
 
-function setEmployeeProfile(employeeProfile){
+function setEmployeeProfile(employeeProfile: EmployeeProfileDTO) {
     return {
         type: employeeConstants.EMPLOYEE_PROFILE_SET,
         employeeProfile
     };
 }
 
-function createEmployeeProfile(employeeProfile){
-    return dispatch => {
+function createEmployeeProfile(employeeProfile: EmployeeProfileDTO) {
+    return (dispatch: Function) => {
         dispatch(request(employeeProfile));
 
         return employeeService.createEmployeeProfile(employeeProfile)
@@ -32,13 +33,13 @@ function createEmployeeProfile(employeeProfile){
             });
     };
 
-    function request(employeeProfile) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_REQUEST, employeeProfile }; }
-    function success(employeeProfile) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_SUCCESS, employeeProfile }; }
-    function failure(error) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_FAILURE, error }; } 
+    function request(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_REQUEST, employeeProfile }; }
+    function success(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_SUCCESS, employeeProfile }; }
+    function failure(error: string) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_FAILURE, error }; } 
 }
 
-function updateEmployeeProfile(employeeProfile){
-    return dispatch => {
+function updateEmployeeProfile(employeeProfile: EmployeeProfileDTO){
+    return (dispatch: Function) => {
         dispatch(request(employeeProfile));
 
         return employeeService.updateEmployeeProfile(employeeProfile)
@@ -51,13 +52,13 @@ function updateEmployeeProfile(employeeProfile){
             });
     };
 
-    function request(employeeProfile) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_REQUEST, employeeProfile }; }
-    function success(employeeProfile) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_SUCCESS, employeeProfile }; }
-    function failure(error) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_FAILURE, error }; } 
+    function request(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_REQUEST, employeeProfile }; }
+    function success(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_SUCCESS, employeeProfile }; }
+    function failure(error: string) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_FAILURE, error }; } 
 }
 
-function deleteEmployeeProfile(employeeProfile){
-    return dispatch => {
+function deleteEmployeeProfile(employeeProfile: EmployeeProfileDTO){
+    return (dispatch: Function) => {
         dispatch(request(employeeProfile));
 
         return employeeService.deleteEmployeeProfile(employeeProfile.id)
@@ -70,13 +71,13 @@ function deleteEmployeeProfile(employeeProfile){
             });
     };
 
-    function request(employeeProfile) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_REQUEST, employeeProfile }; }
+    function request(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_REQUEST, employeeProfile }; }
     function success() { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_SUCCESS }; }
-    function failure(error) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_FAILURE, error }; } 
+    function failure(error: string) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_FAILURE, error }; } 
 }
 
-function loadEmployees(pageNumber){
-    return dispatch => {
+function loadEmployees(pageNumber: number){
+    return (dispatch: Function) => {
         dispatch(request());
 
         return employeeService.loadEmployees(pageNumber)
@@ -89,12 +90,12 @@ function loadEmployees(pageNumber){
     };
 
     function request() { return { type: employeeConstants.EMPLOYEES_LOAD_REQUEST }; }
-    function success(employeeList, pagesCount) { return { type: employeeConstants.EMPLOYEES_LOAD_SUCCESS, employeeList, pagesCount }; }
-    function failure(error) { return { type: employeeConstants.EMPLOYEES_LOAD_FAILURE, error }; } 
+    function success(employeeList: Array<EmployeeProfileDTO>, pagesCount: number) { return { type: employeeConstants.EMPLOYEES_LOAD_SUCCESS, employeeList, pagesCount }; }
+    function failure(error: string) { return { type: employeeConstants.EMPLOYEES_LOAD_FAILURE, error }; } 
 }
 
-function loadEmployeeProfile(id){
-    return dispatch => {
+function loadEmployeeProfile(id: string){
+    return (dispatch: Function) => {
         dispatch(request());
 
         return employeeService.loadEmployeeProfile(id)
@@ -107,6 +108,6 @@ function loadEmployeeProfile(id){
     };
 
     function request() { return { type: employeeConstants.EMPLOYEE_PROFILE_LOAD_REQUEST }; }
-    function success(employeeProfile) { return { type: employeeConstants.EMPLOYEE_PROFILE_LOAD_SUCCESS, employeeProfile }; }
-    function failure(error) { return { type: employeeConstants.EMPLOYEE_PROFILE_LOAD_FAILURE, error }; } 
+    function success(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_LOAD_SUCCESS, employeeProfile }; }
+    function failure(error: string) { return { type: employeeConstants.EMPLOYEE_PROFILE_LOAD_FAILURE, error }; } 
 }
