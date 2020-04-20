@@ -1,17 +1,18 @@
 import { userConstants, authenticationConstants } from '../_constants';
 import { UserDTO, EmployeeProfileDTO } from '../WebApiModels';
 
-type AuthenticationState = {
+export type AuthenticationState = {
     loggingIn: boolean;
     signingUp: boolean;
     loggedIn: boolean;
     user: UserDTO | undefined;
 };
 
-type AuthenticationAction = {
+export type AuthenticationAction = {
     type: string;
     user: UserDTO | undefined;
     employeeProfile: EmployeeProfileDTO | undefined;
+    error: string | undefined;
 };
 
 let user = JSON.parse(localStorage.getItem('user') as string);

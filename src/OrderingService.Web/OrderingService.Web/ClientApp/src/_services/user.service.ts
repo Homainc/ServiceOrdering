@@ -28,7 +28,7 @@ function updateAuthUser(user : UserDTO): void {
     localStorage.setItem('user', JSON.stringify(user));
 }
 
-function updateAuthEmployeeProfile(employeeProfile : EmployeeProfileDTO): void {
+function updateAuthEmployeeProfile(employeeProfile : EmployeeProfileDTO | undefined): void {
     let user = JSON.parse(localStorage.getItem('user') as string);
     user.employeeProfile = employeeProfile;
     localStorage.setItem('user', JSON.stringify(user));

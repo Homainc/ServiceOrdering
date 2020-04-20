@@ -1,15 +1,17 @@
 import { profileConstants } from '../_constants';
-import { UserDTO } from '../WebApiModels';
+import { UserDTO, EmployeeProfileDTO } from '../WebApiModels';
 
-type ProfileState = {
+export type ProfileState = {
     profileUpdating: boolean;
     profileLoading: boolean;
     profile: UserDTO | undefined;
 };
 
-type ProfileAction = {
+export type ProfileAction = {
     type: string;
     profile: UserDTO | undefined;
+    error: string | undefined;
+    employeeProfile: EmployeeProfileDTO | undefined;
 };
 
 const initialState: ProfileState = {

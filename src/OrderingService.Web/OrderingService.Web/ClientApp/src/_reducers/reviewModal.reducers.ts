@@ -1,12 +1,12 @@
 import { reviewModalConstants } from "../_constants";
 import { OrderDTO } from "../WebApiModels";
 
-type ReviewModalState = {
+export type ReviewModalState = {
     isModalOpened: boolean;
     order: OrderDTO | undefined;
 };
 
-type ReviewModalAction = {
+export type ReviewModalAction = {
     type: string;
     order: OrderDTO | undefined;
 };

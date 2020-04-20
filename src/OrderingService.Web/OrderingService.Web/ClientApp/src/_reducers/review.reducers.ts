@@ -1,13 +1,13 @@
 import { reviewConstants } from "../_constants";
 import { ReviewDTO } from "../WebApiModels";
 
-type ReviewState = {
+export type ReviewState = {
     isReviewCreating: boolean;
     isReviewsLoading: boolean;
     reviews: Array<ReviewDTO> | undefined;
 };
 
-type ReviewAction = {
+export type ReviewAction = {
     type: string;
     reviews: Array<ReviewDTO> | undefined;
 };

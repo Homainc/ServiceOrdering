@@ -1,7 +1,7 @@
 import { orderConstants } from '../_constants';
 import { OrderDTO } from '../WebApiModels';
 
-type OrderState = {
+export type OrderState = {
     isOrderConfirming: boolean;
     isOrderDeclining: boolean;
     isOrdersLoading: boolean;
@@ -25,7 +25,7 @@ const initialState: OrderState = {
     totalOrders: undefined
 };
 
-type OrderAction = {
+export type OrderAction = {
     id: number | undefined;
     type: string;
     order: OrderDTO | undefined;

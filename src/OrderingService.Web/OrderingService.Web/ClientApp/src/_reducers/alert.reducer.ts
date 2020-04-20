@@ -5,7 +5,7 @@ type AlertState = {
     message: string | undefined;
 };
 
-type AlertAction = { 
+export type AlertAction = { 
     type: string; 
     message: string | undefined;  
 };

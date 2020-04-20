@@ -1,7 +1,20 @@
 import { employeeService } from '../_services';
 import { employeeConstants } from '../_constants';
-import { userActions } from './user.actions';
 import { EmployeeProfileDTO } from '../WebApiModels';
+import { ThunkAction } from 'redux-thunk';
+import { EmployeeState, EmployeeAction } from '../_reducers/employee.reducer';
+import { AuthenticationAction } from '../_reducers/authentication.reducer';
+import { userActions } from './user.actions';
+
+type EmployeeThunkResult<R> = ThunkAction<R, EmployeeState, undefined, EmployeeAction | AuthenticationAction>;
+
+const defaultAction: EmployeeAction = {
+    type: '',
+    employeeProfile: undefined,
+    employeeList: undefined,
+    pagesCount: undefined,
+    error: undefined
+};
 
 export const employeeActions = {
     updateEmployeeProfile,
@@ -12,17 +25,17 @@ export const employeeActions = {
     setEmployeeProfile
 };
 
-function setEmployeeProfile(employeeProfile: EmployeeProfileDTO) {
+function setEmployeeProfile(employeeProfile: EmployeeProfileDTO | undefined): EmployeeAction {
     return {
+        ...defaultAction,
         type: employeeConstants.EMPLOYEE_PROFILE_SET,
         employeeProfile
     };
 }
 
-function createEmployeeProfile(employeeProfile: EmployeeProfileDTO) {
-    return (dispatch: Function) => {
+function createEmployeeProfile(employeeProfile: EmployeeProfileDTO): EmployeeThunkResult<void> {
+    return dispatch => {
         dispatch(request(employeeProfile));
-
         return employeeService.createEmployeeProfile(employeeProfile)
             .then(employeeProfile => {
                 dispatch(userActions.updateAuthEmployeeProfile(employeeProfile));
@@ -33,13 +46,31 @@ function createEmployeeProfile(employeeProfile: EmployeeProfileDTO) {
             });
     };
 
-    function request(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_REQUEST, employeeProfile }; }
-    function success(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_SUCCESS, employeeProfile }; }
-    function failure(error: string) { return { type: employeeConstants.EMPLOYEE_PROFILE_CREATE_FAILURE, error }; } 
+    function request(employeeProfile: EmployeeProfileDTO): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_CREATE_REQUEST,
+            employeeProfile
+    }; 
+    }
+    function success(employeeProfile: EmployeeProfileDTO): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_CREATE_SUCCESS,
+            employeeProfile
+        }; 
+    }
+    function failure(error: string): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_CREATE_FAILURE,
+            error
+        }; 
+    } 
 }
 
-function updateEmployeeProfile(employeeProfile: EmployeeProfileDTO){
-    return (dispatch: Function) => {
+function updateEmployeeProfile(employeeProfile: EmployeeProfileDTO): EmployeeThunkResult<void> {
+    return dispatch => {
         dispatch(request(employeeProfile));
 
         return employeeService.updateEmployeeProfile(employeeProfile)
@@ -52,18 +83,36 @@ function updateEmployeeProfile(employeeProfile: EmployeeProfileDTO){
             });
     };
 
-    function request(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_REQUEST, employeeProfile }; }
-    function success(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_SUCCESS, employeeProfile }; }
-    function failure(error: string) { return { type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_FAILURE, error }; } 
+    function request(employeeProfile: EmployeeProfileDTO): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_REQUEST, 
+            employeeProfile 
+        }; 
+    }
+    function success(employeeProfile: EmployeeProfileDTO): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_SUCCESS, 
+            employeeProfile 
+        }; 
+    }
+    function failure(error: string): EmployeeAction { 
+        return {
+            ...defaultAction, 
+            type: employeeConstants.EMPLOYEE_PROFILE_UPDATE_FAILURE, 
+            error 
+        }; 
+    } 
 }
 
-function deleteEmployeeProfile(employeeProfile: EmployeeProfileDTO){
-    return (dispatch: Function) => {
+function deleteEmployeeProfile(employeeProfile: EmployeeProfileDTO): EmployeeThunkResult<void> {
+    return dispatch => {
         dispatch(request(employeeProfile));
 
         return employeeService.deleteEmployeeProfile(employeeProfile.id)
             .then(() => {
-                dispatch(userActions.updateAuthEmployeeProfile(null));
+                dispatch(userActions.updateAuthEmployeeProfile(undefined));
                 dispatch(success());
             },
             error => {
@@ -71,13 +120,29 @@ function deleteEmployeeProfile(employeeProfile: EmployeeProfileDTO){
             });
     };
 
-    function request(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_REQUEST, employeeProfile }; }
-    function success() { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_SUCCESS }; }
-    function failure(error: string) { return { type: employeeConstants.EMPLOYEE_PROFILE_DELETE_FAILURE, error }; } 
+    function request(employeeProfile: EmployeeProfileDTO): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_DELETE_REQUEST, 
+            employeeProfile 
+        }; 
+    }
+    function success(): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_DELETE_SUCCESS 
+        }; 
+    }
+    function failure(error: string): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_DELETE_FAILURE, error 
+        }; 
+    } 
 }
 
-function loadEmployees(pageNumber: number){
-    return (dispatch: Function) => {
+function loadEmployees(pageNumber: number): EmployeeThunkResult<void> {
+    return dispatch => {
         dispatch(request());
 
         return employeeService.loadEmployees(pageNumber)
@@ -89,13 +154,28 @@ function loadEmployees(pageNumber: number){
             });
     };
 
-    function request() { return { type: employeeConstants.EMPLOYEES_LOAD_REQUEST }; }
-    function success(employeeList: Array<EmployeeProfileDTO>, pagesCount: number) { return { type: employeeConstants.EMPLOYEES_LOAD_SUCCESS, employeeList, pagesCount }; }
-    function failure(error: string) { return { type: employeeConstants.EMPLOYEES_LOAD_FAILURE, error }; } 
+    function request(): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEES_LOAD_REQUEST 
+        }; 
+    }
+    function success(employeeList: Array<EmployeeProfileDTO>, pagesCount: number): EmployeeAction { 
+        return {
+            ...defaultAction, 
+            type: employeeConstants.EMPLOYEES_LOAD_SUCCESS, employeeList, pagesCount 
+        }; 
+    }
+    function failure(error: string): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEES_LOAD_FAILURE, error
+         }; 
+    } 
 }
 
-function loadEmployeeProfile(id: string){
-    return (dispatch: Function) => {
+function loadEmployeeProfile(id: string): EmployeeThunkResult<void> {
+    return dispatch => {
         dispatch(request());
 
         return employeeService.loadEmployeeProfile(id)
@@ -107,7 +187,23 @@ function loadEmployeeProfile(id: string){
             });
     };
 
-    function request() { return { type: employeeConstants.EMPLOYEE_PROFILE_LOAD_REQUEST }; }
-    function success(employeeProfile: EmployeeProfileDTO) { return { type: employeeConstants.EMPLOYEE_PROFILE_LOAD_SUCCESS, employeeProfile }; }
-    function failure(error: string) { return { type: employeeConstants.EMPLOYEE_PROFILE_LOAD_FAILURE, error }; } 
+    function request(): EmployeeAction { 
+        return {
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_LOAD_REQUEST 
+        }; 
+    }
+    function success(employeeProfile: EmployeeProfileDTO): EmployeeAction { 
+        return { 
+            ...defaultAction,
+            type: employeeConstants.EMPLOYEE_PROFILE_LOAD_SUCCESS, employeeProfile 
+        }; 
+    }
+    function failure(error: string): EmployeeAction { 
+        return {
+            ...defaultAction, 
+            type: employeeConstants.EMPLOYEE_PROFILE_LOAD_FAILURE, 
+            error 
+        }; 
+    } 
 }

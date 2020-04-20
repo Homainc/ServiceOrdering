@@ -1,7 +1,7 @@
 import { employeeConstants } from '../_constants';
 import { EmployeeProfileDTO } from '../WebApiModels';
 
-type EmployeeState = {
+export type EmployeeState = {
     listLoading: boolean;
     employeeProcessing: boolean;
     employeeDeleting: boolean;
@@ -11,11 +11,12 @@ type EmployeeState = {
     pagesCount: number | undefined;
 };
 
-type EmployeeAction = {
+export type EmployeeAction = {
     type: string;
     employeeProfile: EmployeeProfileDTO | undefined;
     employeeList: Array<EmployeeProfileDTO> | undefined;
     pagesCount: number | undefined;
+    error: string | undefined;
 };
 
 const initialState: EmployeeState = {
