@@ -1,10 +1,29 @@
 import React, { useEffect } from 'react';
 import { Card, CardText, CardTitle, Row, Col } from 'reactstrap';
 import { UserWithAvatar, Rating } from '../_components';
-import { reviewActions } from '../_actions';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
+import { RootState } from '../_store';
+import { ThunkDispatch } from 'redux-thunk';
+import * as reviewActions from '../_store/review/actions'; 
+import { ReviewActionTypes, ReviewState } from '../_store/review/types';
 
-const ReviewsBlock = props => {
+const mapState = (state: RootState) => ({
+    reviews: state.review.reviews
+});
+
+const mapDispatch = (
+    dispatch: ThunkDispatch<ReviewState, undefined, ReviewActionTypes>
+) => ({
+    loadReviewsByEmployee: (employeeId: string) => dispatch(reviewActions.loadListByEmployee(employeeId))
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ReviewBlockProps = PropsFromRedux & {
+    employeeId: string;
+};
+
+const ReviewsBlock = (props: ReviewBlockProps) => {
     const { employeeId, loadReviewsByEmployee } = props;
     useEffect(() => {
         if(!!employeeId)
@@ -41,17 +60,5 @@ const ReviewsBlock = props => {
     );
 };
 
-const mapStateToProps = state => {
-    const { reviews, isReviewsLoading } = state.review;
-    return {
-        reviews,
-        isReviewsLoading
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    loadReviewsByEmployee: employeeId => dispatch(reviewActions.getReviewsByEmployee(employeeId))
-});
-
-const connectedReviewsBlock = connect(mapStateToProps, mapDispatchToProps)(ReviewsBlock);
+const connectedReviewsBlock = connector(ReviewsBlock);
 export { connectedReviewsBlock as ReviewsBlock };

@@ -1,18 +1,33 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, ReactNode } from 'react';
 import { Container, Toast, ToastBody, ToastHeader } from 'reactstrap';
-import { NavMenu } from './NavMenu.js';
+import { NavMenu } from './NavMenu';
 import { Router } from 'react-router-dom';
 import './Layout.css';
-import { alertActions } from '../_actions';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
+import { RootState } from '../_store';
+import { History } from 'history';
+import * as alert from '../_store/alert/actions';
 
-class Layout extends Component {
+const mapState =  (state: RootState) => ({
+  alert: state.alert
+});
+const mapDispatch = {
+  clearAlerts: () => alert.clear() 
+};
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type LayoutProps = PropsFromRedux & Readonly<{ 
+  children?: ReactNode;
+  history: History<History.PoorMansUnknown>; 
+}>;
+
+class Layout extends Component<LayoutProps> {
   static displayName = Layout.name;
 
   render () {
     return (
       <div>
-        <Router basename={this.props.basename} history={this.props.history}>
+        <Router history={this.props.history}>
           <Fragment>
             <NavMenu />
 
@@ -34,15 +49,5 @@ class Layout extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    alert: state.alert
-  };
-};
-
-const mapDispatchToProps = dispatch => ({
-  clearAlerts: () => dispatch(alertActions.clear())
-});
-
-const connectedLayout = connect(mapStateToProps, mapDispatchToProps)(Layout);
+const connectedLayout = connector(Layout);
 export { connectedLayout as Layout };

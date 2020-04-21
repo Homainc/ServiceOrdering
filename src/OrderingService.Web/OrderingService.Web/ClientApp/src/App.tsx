@@ -10,19 +10,27 @@ import { HomePage } from './HomePage';
 
 import './custom.css'
 import { SignUpPage } from './SignUpPage';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { ProfilePage } from './ProfilePage';
 import { EmployeePage } from './EmployeePage';
 import { MakeOrderPage } from './MakeOrderPage';
 import { EmployeeOrdersPage } from './EmployeeTasksPage';
 import { UserOrdersPage } from './UserOrdersPage';
+import { RootState } from './_store';
+
+const mapState =  (state: RootState) => ({
+  alert: state.alert
+});
+const connector = connect(mapState);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type AppProps = PropsFromRedux & {};
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 
-class App extends React.Component {
+class App extends React.Component<AppProps> {
   static displayName = App.name;
 
-  constructor(props) {
+  constructor(props: AppProps) {
     super(props);
 
     const { dispatch } = this.props;
@@ -34,7 +42,7 @@ class App extends React.Component {
 
   render () {
     return (
-      <Layout basename={baseUrl} history={history}>
+      <Layout history={history}>
         <PrivateRoute path='/orders/page/:page' component={UserOrdersPage}/>
         <PrivateRoute path='/tasks/page/:page' component={EmployeeOrdersPage}/>
         <PrivateRoute path='/order/:employeeId' component={MakeOrderPage}/>
@@ -49,12 +57,5 @@ class App extends React.Component {
   }
 }
 
-function mapStateToProps(state){
-  const { alert } = state;
-  return {
-    alert
-  };
-}
-
-const connectedApp = connect(mapStateToProps)(App);
+const connectedApp = connector(App);
 export { connectedApp as App };

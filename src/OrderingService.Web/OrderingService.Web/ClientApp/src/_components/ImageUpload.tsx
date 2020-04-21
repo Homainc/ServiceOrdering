@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import config from '../config';
 import { useField } from 'formik';
 import { FormGroup, Label } from 'reactstrap';
 import './ImageUpload.css';
 
-export const ImageUpload = ({label, ...props}) => {
+type ImageUploadProps = {
+    id: string;
+    name: string;
+    disabled: boolean;
+};
+
+export const ImageUpload = (props: ImageUploadProps) => {
     const [, setState] = useState({ isUploading: false});
     const [, meta, helpers] = useField(props);
     const { setValue } = helpers;
 
-    const handleFileChange = ({ target }) => {
+    const handleFileChange = ({ target }: SyntheticEvent) => {
         setState({ isUploading: true });
+        
         const data = new FormData();
         data.append('upload_preset', config.cloudinaryUploadPreset);
-        data.append('file', target.files[0]);
+        const input = target as HTMLInputElement;
+        if(input.files)
+            data.append('file', input.files[0]);
 
         fetch(config.cloudinaryApiUrl, {
             method: "POST",

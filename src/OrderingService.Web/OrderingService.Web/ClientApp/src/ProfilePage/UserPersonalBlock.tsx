@@ -3,10 +3,30 @@ import React, { useState } from 'react';
 import { Col, Row, ListGroupItemHeading, ListGroupItemText, Button, Alert } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import { LoadingButton, ImageUpload, ValidationTextField } from '../_components';
-import { profileActions } from '../_actions/profile.actions';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
+import { RootState } from '../_store';
+import { ThunkDispatch } from 'redux-thunk';
+import { ProfileActionTypes, ProfileState } from '../_store/profile/types';
+import * as profileActions from '../_store/profile/actions'; 
+import { UserDTO } from '../WebApiModels';
 
-const UserPersonalBlock = props => {
+const mapState = (state: RootState) => ({
+    profileUpdating: state.profile.updating,
+    profile: state.profile.profile,
+    alert: state.alert
+});
+
+const mapDispatch = (
+    dispatch: ThunkDispatch<ProfileState, undefined, ProfileActionTypes>
+) => ({
+    updateProfile: async (profile: UserDTO) => dispatch(profileActions.update(profile))
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type UserPersonalBlockProps = PropsFromRedux & Readonly<{}>;
+
+const UserPersonalBlock = (props: UserPersonalBlockProps) => {
     const [state, setState] = useState({ editMode: false });
     const { profileUpdating } = props;
 
@@ -103,18 +123,5 @@ const UserPersonalBlock = props => {
     );
 };
 
-const mapStateToProps = state => {
-    const { alert } = state;
-    const { profileUpdating } = state.profile;
-    return {
-        alert,
-        profileUpdating
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    updateProfile: profile => dispatch(profileActions.updateProfile(profile))
-});
-
-const connectedUserPersonalBlock = connect(mapStateToProps, mapDispatchToProps)(UserPersonalBlock);
+const connectedUserPersonalBlock = connector(UserPersonalBlock);
 export { connectedUserPersonalBlock as UserPersonalBlock };

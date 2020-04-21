@@ -2,13 +2,24 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { UserWithAvatar } from './UserWithAvatar';
+import { RootState } from '../_store';
 
-class NavMenu extends Component {
+const mapState =  (state: RootState) => ({
+  auth: state.auth
+});
+const connector = connect(mapState);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type NavMenuProps = PropsFromRedux & {};
+type NavMenuState = {
+  collapsed: boolean;
+};
+
+class NavMenu extends Component<NavMenuProps, NavMenuState> {
   static displayName = NavMenu.name;
 
-  constructor (props) {
+  constructor(props: NavMenuProps) {
     super(props);
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
@@ -24,7 +35,7 @@ class NavMenu extends Component {
   }
 
   render () {
-    const { loggedIn, user } = this.props.authentication;
+    const { loggedIn, user } = this.props.auth;
     return (
       <header>
         <Navbar color="dark" className="navbar-expand-sm navbar-toggleable-sm ng-dark border-bottom box-shadow mb-3" dark>
@@ -44,7 +55,7 @@ class NavMenu extends Component {
                   <NavItem>
                     <NavLink tag={Link} className="text-light" to="/orders/page/1">My orders</NavLink>
                   </NavItem>
-                  {user.employeeProfile && (
+                  {user && user.employeeProfile && (
                     <NavItem>
                       <NavLink tag={Link} className="text-light" to="/tasks/page/1">Tasks</NavLink>
                     </NavItem>
@@ -67,12 +78,5 @@ class NavMenu extends Component {
   }
 }
 
-function mapStateToProps(state){
-  const { authentication } = state;
-  return {
-    authentication
-  };
-}
-
-const connectedNavMenu = connect(mapStateToProps)(NavMenu);
+const connectedNavMenu = connector(NavMenu);
 export { connectedNavMenu as NavMenu };

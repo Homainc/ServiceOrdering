@@ -3,10 +3,33 @@ import React, { useState } from 'react';
 import { Col, Row, ListGroupItemHeading, Button, ListGroupItemText, Spinner } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import { LoadingButton, ValidationTextField } from '../_components';
-import { employeeActions, profileActions } from '../_actions';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
+import { RootState } from '../_store';
+import { ThunkDispatch } from 'redux-thunk';
+import { EmployeeState, EmployeeActionTypes } from '../_store/employee/types';
+import { EmployeeProfileDTO } from '../WebApiModels';
+import * as employeeActions from '../_store/employee/actions';
 
-const UserEmployeeBlock = props => {
+const mapState = (state: RootState) => ({
+    employeeProcessing: state.employee.creating || state.employee.updating,
+    employeeDeleting: state.employee.deleting,
+    employeeProfile: state.employee.employee,
+    user: state.profile.profile
+});
+
+const mapDispatch = (
+    dispatch: ThunkDispatch<EmployeeState, undefined, EmployeeActionTypes>
+) => ({
+    createEmployeeProfile: async (employee: EmployeeProfileDTO) => dispatch(employeeActions.create(employee)),
+    updateEmployeeProfile: async (employee: EmployeeProfileDTO) => dispatch(employeeActions.update(employee)),
+    deleteEmployeeProfile: (id: string) => dispatch(employeeActions.deleteById(id)),
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type UserEmployeeBlockProps = PropsFromRedux & Readonly<{}>;
+
+const UserEmployeeBlock = (props: UserEmployeeBlockProps) => {
 
     const [state, setState] = useState({ editMode: false });
 
@@ -16,12 +39,18 @@ const UserEmployeeBlock = props => {
         setState({ editMode: false });
     };
 
-    const handleSubmit = values =>{
-        const profile = {
+    const handleSubmit = (values: {
+        serviceType: string;
+        serviceCost: React.ReactText;
+        description: string;
+    }) => {
+        const profile: EmployeeProfileDTO = {
+            id: employeeProfile?.id || '',
             serviceType: values.serviceType,
-            serviceCost: values.serviceCost,
+            serviceCost: values.serviceCost as number,
             description: values.description,
-            userId: props.user.id
+            reviewsCount: 0,
+            userId: props.user?.id || ''
         };
         if(!employeeProfile)
             props.createEmployeeProfile(profile)
@@ -46,24 +75,24 @@ const UserEmployeeBlock = props => {
             </>)}
             {!state.editMode && employeeProfile && (<>
             <ListGroupItemHeading>Service type</ListGroupItemHeading>
-            <ListGroupItemText className="text-secondary">{employeeProfile && employeeProfile.serviceType}</ListGroupItemText>
+            <ListGroupItemText className="text-secondary">{employeeProfile.serviceType}</ListGroupItemText>
             <ListGroupItemHeading>Service cost</ListGroupItemHeading>
-            <ListGroupItemText className="text-secondary">{employeeProfile && employeeProfile.serviceCost}</ListGroupItemText>
+            <ListGroupItemText className="text-secondary">{employeeProfile.serviceCost}</ListGroupItemText>
             <ListGroupItemHeading>Description</ListGroupItemHeading>
-            <ListGroupItemText className="text-secondary">{employeeProfile && employeeProfile.description}</ListGroupItemText>
+            <ListGroupItemText className="text-secondary">{employeeProfile.description}</ListGroupItemText>
             {employeeProfile && !state.editMode && (<>
             <Spinner className={props.employeeDeleting?'':'collapse'} size="sm" color="danger"/>
             <Row><Button color="link"
                 className="text-danger" 
-                onClick={() => props.deleteEmployeeProfile(employeeProfile)} 
+                onClick={() => props.deleteEmployeeProfile(employeeProfile.id)} 
                 disabled={props.employeeDeleting}>Delete employee profile</Button></Row></>)}
             </>)}
             {state.editMode && (
                 <Formik
                     initialValues={{
-                        serviceType: (employeeProfile && employeeProfile.serviceType) || '',
-                        serviceCost: (employeeProfile && employeeProfile.serviceCost) || '',
-                        description: (employeeProfile && employeeProfile.description) || ''
+                        serviceType: (employeeProfile?.serviceType) || '',
+                        serviceCost: (employeeProfile?.serviceCost) || '',
+                        description: (employeeProfile?.description) || ''
                     }}
                     validationSchema={Yup.object({
                         serviceType: Yup.string()
@@ -108,23 +137,5 @@ const UserEmployeeBlock = props => {
     );
 };
 
-const mapStateToProps = state => {
-    const { employeeProfile, employeeProcessing, employeeDeleting } = state.employee;
-    const { user } = state.authentication;
-    return {
-        employeeProcessing,
-        employeeDeleting,
-        employeeProfile,
-        user
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    createEmployeeProfile: employeeProfile => dispatch(employeeActions.createEmployeeProfile(employeeProfile)),
-    updateEmployeeProfile: employeeProfile => dispatch(employeeActions.updateEmployeeProfile(employeeProfile)),
-    deleteEmployeeProfile: employeeProfile => dispatch(employeeActions.deleteEmployeeProfile(employeeProfile)),
-    loadProfile: () => dispatch(profileActions.loadProfile())
-});
-
-const connectedUserEmployeeBlock = connect(mapStateToProps, mapDispatchToProps)(UserEmployeeBlock);
+const connectedUserEmployeeBlock = connector(UserEmployeeBlock);
 export { connectedUserEmployeeBlock as UserEmployeeBlock };
