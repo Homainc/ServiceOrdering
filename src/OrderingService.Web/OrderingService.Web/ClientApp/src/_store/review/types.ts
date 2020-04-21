@@ -36,6 +36,7 @@ export type ReviewActionTypes =
     ReviewFailureAction;
 
 export interface ReviewState {
+    creating: boolean;
     reviews: Array<ReviewDTO> | undefined;
 };
     

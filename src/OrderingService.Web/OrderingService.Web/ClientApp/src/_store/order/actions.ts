@@ -158,7 +158,7 @@ export function decline(
 
 export function confirm(
     orderId: number
-): ThunkAction<void, OrderState, undefined, OrderActionTypes> {
+): ThunkAction<void, RootState, undefined, OrderActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {

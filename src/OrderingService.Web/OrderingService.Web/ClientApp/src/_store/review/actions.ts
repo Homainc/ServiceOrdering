@@ -7,10 +7,11 @@ import {
     REVIEW_LOAD_LIST_BY_EMPLOYEE_REQUEST, REVIEW_LOAD_LIST_BY_EMPLOYEE_SUCCESS, REVIEW_LOAD_LIST_BY_EMPLOYEE_FAILURE 
 } from "./types";
 import { PagedResult } from '../types';
+import { RootState } from '..';
 
 export function create(
     review: ReviewDTO
-): ThunkAction<void, ReviewState, undefined, ReviewActionTypes> {
+): ThunkAction<void, RootState, undefined, ReviewActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
