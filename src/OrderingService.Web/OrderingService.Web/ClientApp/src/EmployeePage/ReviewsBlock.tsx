@@ -19,18 +19,18 @@ const mapDispatch = (
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ReviewBlockProps = PropsFromRedux & {
-    employeeId: string;
-};
+type ReviewBlockProps = PropsFromRedux & Readonly<{
+    employeeId: string | undefined;
+}>;
 
 const ReviewsBlock = (props: ReviewBlockProps) => {
     const { employeeId, loadReviewsByEmployee } = props;
     useEffect(() => {
-        if(!!employeeId)
+        if(employeeId)
             loadReviewsByEmployee(employeeId);
     }, [employeeId, loadReviewsByEmployee]);
 
-    const reviews = props.reviews && props.reviews.map(review => 
+    const reviews = props.reviews?.map(review => 
         <Card body key={review.id} className="my-2">
             <CardTitle>
                 <UserWithAvatar user={review.client}/>
@@ -51,7 +51,7 @@ const ReviewsBlock = (props: ReviewBlockProps) => {
         <>
         <hr/>
         <Row>
-            <Col><h5>Reviews ({(reviews && reviews.length) || 0})</h5></Col>
+            <Col><h5>Reviews ({reviews?.length || 0})</h5></Col>
         </Row>
         {reviews && reviews.length === 0 ? (
             <p className="text-secondary">The employee haven't got reviews yet.</p>

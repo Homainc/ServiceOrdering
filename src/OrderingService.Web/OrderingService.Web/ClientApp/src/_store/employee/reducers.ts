@@ -13,10 +13,13 @@ import {
     EMPLOYEE_UPDATE_REQUEST,
     EMPLOYEE_DELETE_FAILURE,
     EMPLOYEE_UPDATE_FAILURE,
-    EMPLOYEE_DELETE_REQUEST
+    EMPLOYEE_DELETE_REQUEST,
+    EMPLOYEE_LOAD_REQUEST,
+    EMPLOYEE_LOAD_FAILURE
 } from './types';
 
 const initialState: EmployeeState  = {
+    loading: false,
     listLoading: false,
     creating: false,
     updating: false,
@@ -56,16 +59,16 @@ export function employeeReducer(state : EmployeeState = initialState, action: Em
         case EMPLOYEE_LOAD_LIST_FAILURE:
             return { ...state, listLoading: false };
 
+        case EMPLOYEE_LOAD_REQUEST:
+            return { ...state, loading: true };
         case EMPLOYEE_LOAD_SUCCESS:
-            return {
-                ...state,
-                employee: action.employee
-            };
+            return { ...state, employee: action.employee, loading: false };
+        case EMPLOYEE_LOAD_FAILURE:
+            return { ...state, loading: false };
+        
         case EMPLOYEE_SET:
-            return {
-                ...state,
-                employee: action.employee
-            };
+            return { ...state, employee: action.employee };
+        
         default:
             return state;
     }

@@ -79,6 +79,7 @@ export type EmployeeActionTypes =
 
 export interface EmployeeState {
     listLoading: boolean;
+    loading: boolean;
     creating: boolean;
     updating: boolean;
     deleting: boolean;
