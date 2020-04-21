@@ -3,10 +3,30 @@ import { Card, Row, Col, CardTitle, Alert } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { ValidationTextField, LoadingButton, ImageUpload } from '../_components';
-import { userActions } from '../_actions';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
+import { RootState } from '../_store';
+import { AuthState, AuthActionTypes } from '../_store/auth/types';
+import { ThunkDispatch } from 'redux-thunk';
+import * as authActions from '../_store/auth/actions'; 
+import { UserDTO } from '../WebApiModels';
 
-const SignUpPage = props => {
+const mapState = (state: RootState) => ({
+    signingUp: state.auth.signingUp,
+    alert: state.alert
+});
+
+const mapDispatch = (
+    dispatch: ThunkDispatch<AuthState, undefined, AuthActionTypes>
+) => ({
+    signUp: (user: UserDTO) => dispatch(authActions.signUp(user))
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type SignUpPageProps = PropsFromRedux & Readonly<{}>;
+
+
+const SignUpPage = (props: SignUpPageProps) => {
     const { signUp, signingUp, alert } = props;
     return(
         <Row className="d-flex justify-content-center">
@@ -62,7 +82,7 @@ const SignUpPage = props => {
                             <ValidationTextField id="confirmPassword" name="confirmPassword" type="password" label="Confirm password" disabled={signingUp}/>
 
                             <CardTitle>Personal data</CardTitle>
-                            <ImageUpload label="Profile image" accepts="image/jpg" id="imageUrl" name="imageUrl" disabled={signingUp}/>
+                            <ImageUpload id="imageUrl" name="imageUrl" disabled={signingUp}/>
                             <ValidationTextField id="firstName" name="firstName" type="text" label="First Name" disabled={signingUp}/>
                             <ValidationTextField id="lastName" name="lastName" type="text" label="Last Name" disabled={signingUp}/>
                             <ValidationTextField id="phoneNumber" name="phoneNumber" type="text" label="Phone Number" disabled={signingUp}/>
@@ -76,19 +96,5 @@ const SignUpPage = props => {
     );
 }
 
-const mapStateToProps = state => {
-    const { signingUp } = state.authentication;
-    const { alert } = state;
-    return {
-        signingUp,
-        alert
-    }
-};
-
-const mapDispatchToProps = dispatch => ({
-    signUp: user => dispatch(userActions.signUp(user))
-});
-
-
-const connectedSignUpPage = connect(mapStateToProps, mapDispatchToProps)(SignUpPage);
+const connectedSignUpPage = connector(SignUpPage);
 export { connectedSignUpPage as SignUpPage };

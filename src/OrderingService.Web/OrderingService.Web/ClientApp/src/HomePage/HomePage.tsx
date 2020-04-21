@@ -31,7 +31,7 @@ const HomePage = (props: HomePageProps) => {
     const { loadEmployees, pagesCount } = props;
 
     useEffect(() => {
-        props.loadEmployees(pageNumber);
+        loadEmployees(pageNumber);
     }, [loadEmployees, pageNumber]);
     
     const list = props.employeeList && props.employeeList.map(employee => 

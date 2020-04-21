@@ -56,9 +56,8 @@ class LoginPage extends React.Component<LoginPageProps> {
                                 password: Yup.string()
                                     .required('Required')
                             })}
-                            onSubmit={(values, { setSubmitting }) => {
+                            onSubmit={values => {
                                 logIn(values.email, values.password);
-                                setSubmitting(true);
                             }}>
                             <Form>
                                 <ValidationTextField

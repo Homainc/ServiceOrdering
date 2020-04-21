@@ -11,13 +11,13 @@ import * as alert from '../alert/actions'
 import { AlertActionTypes } from "../alert/types";
 
 export function logIn(
-    username: string, 
+    email: string, 
     password: string
 ): ThunkAction<void, AuthState, undefined, AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
-            const user = (await api.Account_Auth({ userDto: { username, password }})).body as UserDTO;
+            const user = (await api.Account_Auth({ userDto: { email, password }})).body as UserDTO;
 
             localStorage.setItem('user', JSON.stringify(user));
             api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));

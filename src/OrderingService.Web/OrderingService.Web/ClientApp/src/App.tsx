@@ -25,8 +25,6 @@ const connector = connect(mapState);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type AppProps = PropsFromRedux & {};
 
-const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
-
 class App extends React.Component<AppProps> {
   static displayName = App.name;
 

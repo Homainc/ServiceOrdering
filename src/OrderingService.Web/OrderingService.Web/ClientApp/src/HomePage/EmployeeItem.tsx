@@ -20,7 +20,7 @@ export const EmployeeItem = (props: EmployeeItemProps) => {
             <ListGroupItem>
                 <Row>
                     <Col lg="3" md="3" sm="4" xs="5">
-                    <img src={user && user.imageUrl || 'images/default-user.jpg'} className="rounded" height="130" width="130" alt="employee"/>
+                    <img src={user?.imageUrl || 'images/default-user.jpg'} className="rounded" height="130" width="130" alt="employee"/>
                     </Col>
                     <Col><p className="text-bold">Description:</p>
                 <p className="text-secondary">{props.employee.description}</p></Col>
@@ -28,7 +28,7 @@ export const EmployeeItem = (props: EmployeeItemProps) => {
             </ListGroupItem>
             <ListGroupItem>
                 <Row>
-                    <Col>{user && user.firstName} {user && user.lastName}</Col>
+                    <Col>{user?.firstName} {user?.lastName}</Col>
                     <Col lg="2" md="3" sm="4" xs="6" className="align-self-end text-right">
                         <Button color="link" size="sm" className="mr-2" tag={Link} to={`/employee/${props.employee.id}`}>Profile</Button>
                         <Button size="sm" color="success" outline tag={Link} to={`/order/${props.employee.id}`}>Hire</Button>

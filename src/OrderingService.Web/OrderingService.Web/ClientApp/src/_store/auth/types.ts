@@ -59,4 +59,5 @@ export interface AuthState {
     loggedIn: boolean;
     user: UserDTO | undefined;
     loggingIn: boolean;
+    signingUp: boolean;
 };

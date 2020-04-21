@@ -10,11 +10,13 @@ const user = JSON.parse(localStorage.getItem('user') as string);
 const initialState: AuthState = user ? 
 { 
     loggedIn: true,
-    loggingIn: false, 
+    loggingIn: false,
+    signingUp: false, 
     user 
 } : { 
     loggedIn: false,
     loggingIn: false,
+    signingUp: false,
     user: undefined 
 };
 
@@ -30,25 +32,12 @@ export function authReducer(state: AuthState = initialState, action: AuthActionT
         case AUTH_LOGOUT:
             return { ...state, loggedIn: false, user: undefined };
 
-        // SIGN UP
         case AUTH_SIGN_UP_REQUEST:
-            return {
-                ...state,
-                loggedIn: false,
-                user: undefined
-            };
+            return { ...state, signingUp: true };
         case AUTH_SIGN_UP_SUCCESS:
-            return {
-                ...state,
-                loggedIn: true,
-                user: action.user
-            };
+            return { ...state, loggedIn: true, user: action.user, signingUp: false };
         case AUTH_SIGN_UP_FAILURE:
-            return {
-                ...state,
-                loggedIn: false,
-                user: undefined
-            };
+            return { ...state, loggedIn: false, user: undefined, signingUp: false };
 
         case AUTH_UPDATE_USER:
             return {
