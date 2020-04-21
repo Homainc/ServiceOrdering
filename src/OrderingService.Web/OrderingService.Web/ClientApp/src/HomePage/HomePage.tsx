@@ -13,11 +13,13 @@ const mapState = (state: RootState) => ({
     pagesCount: state.employee.pagesCount,
     listLoading: state.employee.listLoading
 });
+
 const mapDispatch = (
     dispatch: ThunkDispatch<EmployeeState, undefined, EmployeeActionTypes>
 ) => ({
     loadEmployees: (pageNumber: number) => dispatch(employeeActions.loadList(pageNumber))
 });
+
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type HomePageProps = PropsFromRedux & {};

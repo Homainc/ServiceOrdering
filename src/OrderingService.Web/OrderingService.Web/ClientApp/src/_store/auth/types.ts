@@ -58,4 +58,5 @@ export type AuthActionTypes =
 export interface AuthState {
     loggedIn: boolean;
     user: UserDTO | undefined;
+    loggingIn: boolean;
 };

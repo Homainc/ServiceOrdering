@@ -1,14 +1,34 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { ValidationTextField, LoadingButton } from '../_components';
 import { Col, Card, Row, CardTitle, Alert } from 'reactstrap';
-import { userActions } from '../_actions';
+import { RootState } from '../_store';
+import { AuthState, AuthActionTypes } from '../_store/auth/types';
+import { ThunkDispatch } from 'redux-thunk';
+import * as authActions from '../_store/auth/actions';
 
-class LoginPage extends React.Component {
+const mapState = (state: RootState) => ({
+    loggingIn: state.auth.loggingIn,
+    loggedIn: state.auth.loggedIn,
+    alert: state.alert
+});
 
-    constructor(props){
+const mapDispatch = (
+    dispatch: ThunkDispatch<AuthState, undefined, AuthActionTypes>
+) => ({
+    logOut: () => dispatch(authActions.logOut()),
+    logIn: (username: string, password: string) => dispatch(authActions.logIn(username, password))
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type LoginPageProps = PropsFromRedux & Readonly<{}>;
+
+class LoginPage extends React.Component<LoginPageProps> {
+
+    constructor(props: LoginPageProps){
         super(props);
 
         //reset login status
@@ -63,20 +83,5 @@ class LoginPage extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    const { loggingIn, loggedIn } = state.authentication;
-    const { alert } = state;
-    return {
-        loggingIn,
-        loggedIn,
-        alert
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    logOut: () => dispatch(userActions.logout()),
-    logIn: (username, password) => dispatch(userActions.login(username, password))
-});
-
-const connectedLoginPage = connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+const connectedLoginPage = connector(LoginPage);
 export { connectedLoginPage as LoginPage };
