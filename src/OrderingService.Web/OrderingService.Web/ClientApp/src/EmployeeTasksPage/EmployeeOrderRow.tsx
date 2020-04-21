@@ -2,10 +2,21 @@ import React from 'react';
 import { Button, UncontrolledCollapse } from 'reactstrap';
 import { EmployeeOrderStatus } from './EmployeeOrderStatus'; 
 
-export const EmployeeOrderRow = props => {
+type EmployeeOrderRowProps = Readonly<{
+    date: string;
+    briefTask: string | undefined;
+    id: number;
+    serviceDetails: string | undefined;
+    address: string | undefined;
+    contactPhone: string | undefined;
+    status: number;
+    price: number;
+}>;
+
+export const EmployeeOrderRow = (props: EmployeeOrderRowProps) => {
     return (
         <tr>
-            <td>{new Date(props.date).toLocaleDateString()} {new Date(props.date).toLocaleTimeString()}</td>
+            <td>{new Date(props.date || '').toLocaleDateString()} {new Date(props.date || '').toLocaleTimeString()}</td>
             <td className="w-60">
                 <p>{props.briefTask}</p>
                 <Button color="link" className="btn-sm" id={`toggler${props.id}`}>See details</Button>

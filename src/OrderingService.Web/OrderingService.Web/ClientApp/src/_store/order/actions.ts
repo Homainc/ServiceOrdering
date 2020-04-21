@@ -4,8 +4,8 @@ import { OrderDTO } from '../../WebApiModels';
 import { 
     OrderState, OrderActionTypes, 
     ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_CREATE_FAILURE, 
-    ORDER_LOAD_BY_USER_REQUEST, ORDER_LOAD_BY_USER_SUCCESS, ORDER_LOAD_BY_USER_FAILURE, 
-    ORDER_LOAD_BY_EMPLOYEE_REQUEST, ORDER_LOAD_BY_EMPLOYEE_SUCCESS, ORDER_LOAD_BY_EMPLOYEE_FAILURE, 
+    ORDER_LOAD_LIST_BY_USER_REQUEST, ORDER_LOAD_LIST_BY_USER_SUCCESS, ORDER_LOAD_LIST_BY_USER_FAILURE, 
+    ORDER_LOAD_LIST_BY_EMPLOYEE_REQUEST, ORDER_LOAD_LIST_BY_EMPLOYEE_SUCCESS, ORDER_LOAD_LIST_BY_EMPLOYEE_FAILURE, 
     ORDER_ACCEPT_REQUEST, ORDER_ACCEPT_SUCCESS, ORDER_ACCEPT_FAILURE, 
     ORDER_DECLINE_REQUEST, ORDER_DECLINE_SUCCESS, ORDER_DECLINE_FAILURE, 
     ORDER_CONFIRM_REQUEST, ORDER_CONFIRM_SUCCESS, ORDER_CONFIRM_FAILURE 
@@ -56,18 +56,18 @@ export function loadOrdersByUser(
     };
 
     function request(): OrderActionTypes { 
-        return { type: ORDER_LOAD_BY_USER_REQUEST }; 
+        return { type: ORDER_LOAD_LIST_BY_USER_REQUEST }; 
     }
     function success(pagedResult: PagedResult<OrderDTO>): OrderActionTypes { 
         return {
-            type: ORDER_LOAD_BY_USER_SUCCESS, 
+            type: ORDER_LOAD_LIST_BY_USER_SUCCESS, 
             list: pagedResult.value, 
             pagesCount: pagedResult.pagesCount, 
             totalOrders: pagedResult.total 
         }; 
     }
     function failure(error: string): OrderActionTypes { 
-        return { type: ORDER_LOAD_BY_USER_FAILURE, error }; 
+        return { type: ORDER_LOAD_LIST_BY_USER_FAILURE, error }; 
     }
 }
 
@@ -88,18 +88,18 @@ export function loadOrdersByEmployee(
     };
 
     function request(): OrderActionTypes { 
-        return { type: ORDER_LOAD_BY_EMPLOYEE_REQUEST }; 
+        return { type: ORDER_LOAD_LIST_BY_EMPLOYEE_REQUEST }; 
     }
     function success(pagedResult: PagedResult<OrderDTO>): OrderActionTypes { 
         return { 
-            type: ORDER_LOAD_BY_EMPLOYEE_SUCCESS, 
+            type: ORDER_LOAD_LIST_BY_EMPLOYEE_SUCCESS, 
             list: pagedResult.value, 
             pagesCount: pagedResult.pagesCount, 
             totalOrders: pagedResult.total 
         }; 
     }
     function failure(error: string): OrderActionTypes { 
-        return { type: ORDER_LOAD_BY_EMPLOYEE_FAILURE, error }; 
+        return { type: ORDER_LOAD_LIST_BY_EMPLOYEE_FAILURE, error }; 
     }
 }
 
