@@ -41,21 +41,20 @@ const ReviewModal = (props: ReviewModalProps) => {
     }) => {
         if(props.order){
             await props.createReview({
-                id: 0,
-                date: '',
+                date: new Date(Date.now()).toDateString(),
                 text: values.text,
                 rate: values.rate,
                 clientId: props.order.clientId,
                 employeeId: props.order.employeeId
             });
-            await props.confirmOrder(props.order.id);
+            await props.confirmOrder(props.order.id as number);
         }
         props.closeModal();
     };
 
     const confirmOrder = async () => {
         if(props.order)
-            await props.confirmOrder(props.order.id);
+            await props.confirmOrder(props.order.id as number);
         props.closeModal();
     };
 

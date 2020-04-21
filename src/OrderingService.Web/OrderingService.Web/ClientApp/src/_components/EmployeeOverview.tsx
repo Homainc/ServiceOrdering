@@ -29,15 +29,16 @@ export const EmployeeOverview = (props: EmployeeOverviewProps) => {
                 ):(
                     <span className="text-secondary">No reviews</span>
                 )}<br/>
-                <span className="text-success">Service cost: $ {employee?.serviceCost.toFixed(2)}</span>
-                {props.withHireButton && (
-                <Button tag={Link} 
-                    to={`/order/${employee?.id}`} 
-                    className="my-2" 
-                    color="success" 
-                    outline>
-                        Hire for $ {employee?.serviceCost.toFixed(2)}
-                </Button>
+                {props.withHireButton ? (
+                    <Button tag={Link} 
+                        to={`/order/${employee?.id}`} 
+                        className="my-2" 
+                        color="success" 
+                        outline>
+                            Hire for $ {employee?.serviceCost.toFixed(2)}
+                    </Button>
+                ): (
+                    <span className="text-success">Service cost: $ {employee?.serviceCost.toFixed(2)}</span>
                 )}
             </Col>
         </Row>

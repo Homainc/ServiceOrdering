@@ -14,7 +14,7 @@ const mapState = (state: RootState) => ({
     employeeProcessing: state.employee.creating || state.employee.updating,
     employeeDeleting: state.employee.deleting,
     employeeProfile: state.employee.employee,
-    user: state.profile.profile
+    user: state.auth.user
 });
 
 const mapDispatch = (
@@ -45,7 +45,6 @@ const UserEmployeeBlock = (props: UserEmployeeBlockProps) => {
         description: string;
     }) => {
         const profile: EmployeeProfileDTO = {
-            id: employeeProfile?.id || '',
             serviceType: values.serviceType,
             serviceCost: values.serviceCost as number,
             description: values.description,
@@ -84,7 +83,7 @@ const UserEmployeeBlock = (props: UserEmployeeBlockProps) => {
             <Spinner className={props.employeeDeleting?'':'collapse'} size="sm" color="danger"/>
             <Row><Button color="link"
                 className="text-danger" 
-                onClick={() => props.deleteEmployeeProfile(employeeProfile.id)} 
+                onClick={() => props.deleteEmployeeProfile(employeeProfile.id as string)} 
                 disabled={props.employeeDeleting}>Delete employee profile</Button></Row></>)}
             </>)}
             {state.editMode && (

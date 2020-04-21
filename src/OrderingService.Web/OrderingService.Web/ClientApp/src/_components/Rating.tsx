@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 type RatingProps = Readonly<{
     rate: number;
+    className?: string;
 }>;
 
 export const Rating = ({rate, ...props}: RatingProps) => {

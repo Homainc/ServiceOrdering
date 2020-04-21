@@ -40,7 +40,7 @@ const UserOrdersPage = (props: UserOrdersPageProps) => {
     const ordersRows = props.orders && props.orders.map(order => 
         <UserOrderRow 
             key={order.id}
-            id={order.id}
+            id={order.id as number}
             date={order.date}
             status={order.status}
             briefTask={order.briefTask}

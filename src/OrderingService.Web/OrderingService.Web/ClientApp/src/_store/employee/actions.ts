@@ -52,7 +52,7 @@ export function update(
     return async dispatch => {
         dispatch(request());
         try {
-            employee = (await api.EmployeeProfile_Update({ id: employee.id, employeeProfileDto: employee })).body as EmployeeProfileDTO;
+            employee = (await api.EmployeeProfile_Update({ id: employee.id as string, employeeProfileDto: employee })).body as EmployeeProfileDTO;
             
             dispatch(auth.updateEmployee(employee));
             dispatch(success(employee));

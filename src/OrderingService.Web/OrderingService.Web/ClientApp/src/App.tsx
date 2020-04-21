@@ -2,7 +2,6 @@ import React from 'react';
 import { Route } from 'react-router';
 
 import { history } from './_helpers';
-import { alertActions } from './_actions';
 
 import { Layout, PrivateRoute } from './_components';
 import { LoginPage } from './LoginPage';
@@ -17,11 +16,17 @@ import { MakeOrderPage } from './MakeOrderPage';
 import { EmployeeOrdersPage } from './EmployeeTasksPage';
 import { UserOrdersPage } from './UserOrdersPage';
 import { RootState } from './_store';
+import { clear } from './_store/alert/actions';
 
 const mapState =  (state: RootState) => ({
   alert: state.alert
 });
-const connector = connect(mapState);
+
+const mapDispatch = {
+  clearAlerts: () => clear()
+};
+
+const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type AppProps = PropsFromRedux & {};
 
@@ -31,10 +36,9 @@ class App extends React.Component<AppProps> {
   constructor(props: AppProps) {
     super(props);
 
-    const { dispatch } = this.props;
     history.listen((location, action) => {
       if(props.alert.message)
-        dispatch(alertActions.clear());
+        props.clearAlerts();
     });
   }
 

@@ -1,5 +1,5 @@
 // tslint:disable
-import { userService } from './_services';
+import { logOut } from './_store/auth/actions';
 import * as request from "superagent";
 import {
     SuperAgentStatic,
@@ -47,7 +47,7 @@ export type UserDTO = {
 };
 
 export type EmployeeProfileDTO = {
-    'id': string;
+    'id' ? : string;
     'serviceType' ? : string;
     'serviceCost': number;
     'description' ? : string;
@@ -60,7 +60,7 @@ export type EmployeeProfileDTO = {
 };
 
 export type OrderDTO = {
-    'id': number;
+    'id' ? : number;
     'clientId': string;
     'client' ? : UserDTO;
     'employeeId': string;
@@ -79,7 +79,7 @@ export type OrderDTO = {
 export type OrderStatus = 0 | 1 | 2 | 3;
 
 export type ReviewDTO = {
-    'id': number;
+    'id' ? : number;
     'text' ? : string;
     'rate': number;
     'date': string;
@@ -208,7 +208,7 @@ export class SwaggerCodegen {
                 
                 // Custom error handling
                 if (response.status === 401) {
-                    userService.logout();
+                    logOut();
                     window.location.reload(true);
                 }
                 const errorMessage = response.body && (response.body.errorMessage || response.body.errors);

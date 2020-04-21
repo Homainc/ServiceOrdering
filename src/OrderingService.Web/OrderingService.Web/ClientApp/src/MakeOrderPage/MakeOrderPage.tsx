@@ -71,7 +71,6 @@ const MakeOrderPage = (props: MakeOrderPageProps) => {
                     onSubmit={(values) => {
                         props.createOrder({
                             status: 0,
-                            id: 0,
                             clientId: props.user?.id as string,
                             employeeId: employeeProfile?.id as string,
                             date: values.date.toDateString(),

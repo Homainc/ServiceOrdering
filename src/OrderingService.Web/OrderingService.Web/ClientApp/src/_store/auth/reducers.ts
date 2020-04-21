@@ -5,8 +5,14 @@ import {
     AUTH_SIGN_UP_REQUEST, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE, 
     AUTH_UPDATE_USER, AUTH_UPDATE_EMPLOYEE 
 } from "./types";
+import { api } from "../../_helpers";
+import { UserDTO } from "../../WebApiModels";
 
-const user = JSON.parse(localStorage.getItem('user') as string);
+const user = JSON.parse(localStorage.getItem('user') as string) as UserDTO;
+(() => {
+    if(user)
+        api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
+})();
 const initialState: AuthState = user ? 
 { 
     loggedIn: true,
