@@ -1,43 +1,48 @@
 import React, { useEffect } from 'react';
 import * as Yup from 'yup';
-import { LoadingContainer, Rating, ValidationTextField, FormikDatePicker, LoadingButton } from '../_components';
+import { LoadingContainer, ValidationTextField, FormikDatePicker, LoadingButton, EmployeeOverview } from '../_components';
 import { useParams } from 'react-router-dom';
-import { employeeActions, orderActions } from '../_actions';
-import { connect } from 'react-redux';
-import { Card, Col, Row, Badge } from 'reactstrap';
+import { connect, ConnectedProps } from 'react-redux';
+import { Card, Col, Row } from 'reactstrap';
 import { Formik, Form } from 'formik';
+import { RootState } from '../_store';
+import { OrderActionTypes } from '../_store/order/types';
+import { ThunkDispatch } from 'redux-thunk';
+import * as orderActions from '../_store/order/actions';
+import * as employeeActions from '../_store/employee/actions';
+import { OrderDTO } from '../WebApiModels';
+import { EmployeeActionTypes } from '../_store/employee/types';
 
-const MakeOrderPage = props => {
+const mapState = (state: RootState) => ({
+    orderCreating: state.order.creating,
+    employeeProfile: state.employee.employee,
+    employeeLoading: state.employee.loading,
+    user: state.auth.user
+});
+
+const mapDispatch = (
+    dispatch: ThunkDispatch<RootState, undefined, OrderActionTypes | EmployeeActionTypes>
+) => ({
+    createOrder: (order: OrderDTO) => dispatch(orderActions.create(order)),
+    loadEmployeeProfile: (id: string) => dispatch(employeeActions.load(id))
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type MakeOrderPageProps = PropsFromRedux & Readonly<{}>;
+
+const MakeOrderPage = (props: MakeOrderPageProps) => {
     const { employeeId } = useParams();
     const { loadEmployeeProfile, employeeProfile } = props;
 
     useEffect(() => {
-        loadEmployeeProfile(employeeId);
+        loadEmployeeProfile(employeeId as string);
     }, [ employeeId, loadEmployeeProfile ]);
 
     return(
-        <LoadingContainer isLoading={props.employeeProfileLoading}>
+        <LoadingContainer isLoading={props.employeeLoading}>
             <Card className='bg-light' body>
-                <Row>
-                    <Col xs='4' sm='4' md='3' lg='3' xl='2'>
-                        <img src={(employeeProfile && employeeProfile.user.imageUrl) || 'images/default-user.jpg'} className="rounded" height="150" width="150" alt="employee"/>
-                    </Col>
-                    <Col xm='4' sm='4'>
-                        <h5>{employeeProfile && employeeProfile.user.firstName} {employeeProfile && employeeProfile.user.lastName}</h5>
-                        <h5><Badge color="info">{employeeProfile && employeeProfile.serviceType}</Badge></h5>
-                        <p>{(employeeProfile && employeeProfile.user.phoneNumber) || 'Phone number not specified'}</p>
-                        <a href={`mailto:${employeeProfile && employeeProfile.user.email}`}>{employeeProfile && employeeProfile.user.email}</a>
-                    </Col>
-                    <Col className="text-center">
-                        Average rate<br/>
-                        {employeeProfile && employeeProfile.reviewsCount > 0 ? (
-                            <Rating rate={employeeProfile && employeeProfile.averageRate}/>
-                        ):(
-                            <span className="text-secondary">No reviews</span>
-                        )}<br/>
-                        <span className="text-success">Service cost: $ {employeeProfile && employeeProfile.serviceCost.toFixed(2)}</span>
-                    </Col>
-                </Row>
+                <EmployeeOverview withHireButton={false} employee={employeeProfile}/>
                 <hr/>
                 <h5>Order details</h5>
                 <Formik
@@ -65,14 +70,16 @@ const MakeOrderPage = props => {
                     })}
                     onSubmit={(values) => {
                         props.createOrder({
-                            clientId: props.user.id,
-                            employeeId: employeeProfile.id,
-                            date: values.date,
+                            status: 0,
+                            id: 0,
+                            clientId: props.user?.id as string,
+                            employeeId: employeeProfile?.id as string,
+                            date: values.date.toDateString(),
                             briefTask: values.briefTask,
                             serviceDetails: values.serviceDetails,
                             address: values.address,
                             contactPhone: values.contactPhone,
-                            price: employeeProfile.serviceCost
+                            price: employeeProfile?.serviceCost as number
                         });
                     }}>
                     <Form>
@@ -83,14 +90,14 @@ const MakeOrderPage = props => {
                                     name='briefTask'
                                     label='What you want employee to do? (briefly)'
                                     placeholder='e.g, delivery'
-                                    disabled={props.isOrderCreating}/>
+                                    disabled={props.orderCreating}/>
                                 <ValidationTextField
                                     id='serviceDetails'
                                     name='serviceDetails'
                                     label='Service details'
                                     type='textarea' 
                                     placeholder='Specify your wishes to employee'
-                                    disabled={props.isOrderCreating}/>
+                                    disabled={props.orderCreating}/>
                             </Col>
                         </Row>
                         <hr/>
@@ -102,7 +109,7 @@ const MakeOrderPage = props => {
                                     name='address' 
                                     label='Service completion address' 
                                     placeholder='Specify the city, street'
-                                    disabled={props.isOrderCreating}/>
+                                    disabled={props.orderCreating}/>
                             </Col>
                         </Row>
                         <hr/>
@@ -113,7 +120,7 @@ const MakeOrderPage = props => {
                                     id="date" 
                                     name="date" 
                                     label="Specify the date"
-                                    disabled={props.isOrderCreating}/>
+                                    disabled={props.orderCreating}/>
                             </Col>
                         </Row>
                         <hr/>
@@ -125,11 +132,11 @@ const MakeOrderPage = props => {
                                     name="contactPhone"
                                     placeholder="Specify your mobile or home number" 
                                     label="Your contact phone"
-                                    disabled={props.isOrderCreating}/>
+                                    disabled={props.orderCreating}/>
                             </Col>
                         </Row>
                         <Row className='justify-content-center p-3'>
-                            <LoadingButton isLoading={props.isOrderCreating} type='submit' color='primary'>Make an order</LoadingButton>
+                            <LoadingButton isLoading={props.orderCreating} type='submit' color='primary'>Make an order</LoadingButton>
                         </Row>
                     </Form>
                 </Formik>
@@ -138,22 +145,5 @@ const MakeOrderPage = props => {
     );
 };
 
-const mapStateToProps = state => {
-    const { employeeProfile, employeeProfileLoading } = state.employee;
-    const { isOrderCreating } = state.order;
-    const { user } = state.authentication;
-    return {
-        isOrderCreating,
-        employeeProfile,
-        employeeProfileLoading,
-        user
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    loadEmployeeProfile: id => dispatch(employeeActions.loadEmployeeProfile(id)),
-    createOrder: order => dispatch(orderActions.createOrder(order))
-});
-
-const connectedMakeOrderPage = connect(mapStateToProps, mapDispatchToProps) (MakeOrderPage);
+const connectedMakeOrderPage = connector(MakeOrderPage);
 export { connectedMakeOrderPage as MakeOrderPage };

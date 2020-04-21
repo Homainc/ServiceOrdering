@@ -10,3 +10,4 @@ export * from './PaginationBlock';
 export * from './Rating';
 export * from './FormikDatePicker';
 export * from './RatingInput';
+export * from './EmployeeOverview';

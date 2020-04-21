@@ -10,11 +10,12 @@ import {
     ORDER_DECLINE_REQUEST, ORDER_DECLINE_SUCCESS, ORDER_DECLINE_FAILURE, 
     ORDER_CONFIRM_REQUEST, ORDER_CONFIRM_SUCCESS, ORDER_CONFIRM_FAILURE 
 } from './types';
+import { RootState } from '../';
 import { PagedResult } from '../types';
 
 export function create(
     order: OrderDTO
-): ThunkAction<void, OrderState, undefined, OrderActionTypes> {
+): ThunkAction<void, RootState, undefined, OrderActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {

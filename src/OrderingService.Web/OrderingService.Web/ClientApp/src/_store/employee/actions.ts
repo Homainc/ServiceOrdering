@@ -13,6 +13,7 @@ import {
 import * as auth from '../auth/actions';
 import { AuthActionTypes } from '../auth/types';
 import { PagedResult } from '../types';
+import { RootState } from '..';
 
 export function set(employee: EmployeeProfileDTO | undefined): EmployeeActionTypes {
     return { type: EMPLOYEE_SET, employee };
@@ -127,7 +128,7 @@ export function loadList(
 
 export function load(
     id: string
-): ThunkAction<void, EmployeeState, undefined, EmployeeActionTypes> {
+): ThunkAction<void, RootState, undefined, EmployeeActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
