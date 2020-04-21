@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import './LoadingContainer.css';
 import { Fade } from 'reactstrap';
 
-export const LoadingContainer = props =>  {
+type LoadingContanierProps = Readonly<{
+    children?: ReactNode;
+    isLoading: boolean;
+}>;
+
+export const LoadingContainer = (props: LoadingContanierProps) =>  {
     return (
         <div className="d-block">
         <Fade in={props.isLoading} className="position-absolute abs-center ml-n5">

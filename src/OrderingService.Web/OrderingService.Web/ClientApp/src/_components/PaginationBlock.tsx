@@ -2,7 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
-export const PaginationBlock = props => {
+type PaginationBlockProps = Readonly<{
+    pagesCount: number;
+    pageNumber: number;
+    pathPrefix: string;
+}>;
+
+export const PaginationBlock = (props: PaginationBlockProps) => {
 
     const pagesNumbers = [...Array(props.pagesCount).keys()];
     const pagesButtons = pagesNumbers.map(num => 

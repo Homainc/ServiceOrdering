@@ -3,22 +3,28 @@ import './RatingInput.css';
 import { useField } from 'formik';
 import { Label, FormGroup } from 'reactstrap';
 
-export const RatingInput = props => {
+type RatingInputProps = Readonly<{
+    id: string;
+    name: string;
+    label: string;
+}>;
+
+export const RatingInput = (props: RatingInputProps) => {
     const [ ,meta, helpers ] = useField(props);
     const { setValue } = helpers;
     
     const [ state, setState ] = useState({
         starsColor: [false, false, false, false, false]
     });
-    const handleMouseOver = value => {
+    const handleMouseOver = (value: number) => {
         setState({
             starsColor: state.starsColor.map((v, i, arr) => i <= value) 
         });
     };
-    const handleClick = value => setValue(value + 1);
+    const handleClick = (value: number) => setValue(value + 1);
     const handleMouseLeave = () => {
         setState({
-            starsColor: state.starsColor.map((v, i, arr) => i <= meta.value-1) 
+            starsColor: state.starsColor.map((v, i, arr) => i <= meta.value - 1) 
         });
     };
     const stars = [...Array(5).keys()].map(num =>

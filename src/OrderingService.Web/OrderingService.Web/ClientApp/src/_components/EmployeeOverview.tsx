@@ -25,7 +25,7 @@ export const EmployeeOverview = (props: EmployeeOverviewProps) => {
             <Col className="text-center">
                 Average rate<br/>
                 {employee && employee.reviewsCount > 0 ? (
-                <Rating rate={employee.averageRate}/>
+                <Rating rate={employee.averageRate || 0}/>
                 ):(
                     <span className="text-secondary">No reviews</span>
                 )}<br/>

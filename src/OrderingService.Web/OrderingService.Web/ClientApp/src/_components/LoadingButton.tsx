@@ -1,7 +1,12 @@
-import React from 'react';
-import { Button } from 'reactstrap';
+import React, { ReactNode } from 'react';
+import { Button, ButtonProps } from 'reactstrap';
 
-export const LoadingButton = ({ isLoading, ...props}) => {
+type LoadingButtonProps = Readonly<{
+    isLoading: boolean;
+    children?: ReactNode;
+}> & ButtonProps;
+
+export const LoadingButton = ({ isLoading, ...props}: LoadingButtonProps ) => {
     return (
         <Button {...props} disabled={isLoading}>
             {isLoading ? (<>

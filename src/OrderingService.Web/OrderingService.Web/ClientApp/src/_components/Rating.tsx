@@ -1,8 +1,12 @@
 import React from 'react';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-export const Rating = ({rate, ...props}) => {
-    const value = (rate && rate.toFixed() - 1) || -1;
+type RatingProps = Readonly<{
+    rate: number;
+}>;
+
+export const Rating = ({rate, ...props}: RatingProps) => {
+    const value = (parseInt(rate.toFixed()) - 1) || -1;
     const stars = [...Array(5).keys()].map(num =>
         <span key={num} className={`fa fa-star ${num > value? 'text-secondary' : 'text-primary'}`}/>
     );

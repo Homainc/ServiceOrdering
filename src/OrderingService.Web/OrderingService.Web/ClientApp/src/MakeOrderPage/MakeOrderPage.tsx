@@ -119,8 +119,7 @@ const MakeOrderPage = (props: MakeOrderPageProps) => {
                                 <FormikDatePicker 
                                     id="date" 
                                     name="date" 
-                                    label="Specify the date"
-                                    disabled={props.orderCreating}/>
+                                    label="Specify the date"/>
                             </Col>
                         </Row>
                         <hr/>

@@ -4,8 +4,13 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { Label, FormGroup } from 'reactstrap';
 
+type FormikDatePickerProps = Readonly<{
+    label: string;
+    id: string;
+    name: string;
+}>;
 
-export const FormikDatePicker = ({ label, ...props }) => {
+export const FormikDatePicker = ({ label, ...props }: FormikDatePickerProps) => {
     const [, meta, helpers] = useField(props);
     const { setValue } = helpers;
     return (

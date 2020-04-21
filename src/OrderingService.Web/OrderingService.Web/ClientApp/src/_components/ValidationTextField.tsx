@@ -1,9 +1,13 @@
 import React from 'react';
-import { FormGroup, Label, Input, FormFeedback } from 'reactstrap';
+import { FormGroup, Label, Input, FormFeedback, InputProps } from 'reactstrap';
 import { useField } from 'formik';
 
-export const ValidationTextField = ({ label, ...props}) => {
-    const [field, meta] = useField(props);
+type ValidationTextFieldProps = Readonly<{
+    label: string;
+}> & InputProps;
+
+export const ValidationTextField = ({ label, ...props}: ValidationTextFieldProps) => {
+    const [field, meta] = useField(props as { name: string });
     return (
         <FormGroup>
             <Label htmlFor={props.id || props.name}>{label}</Label>
