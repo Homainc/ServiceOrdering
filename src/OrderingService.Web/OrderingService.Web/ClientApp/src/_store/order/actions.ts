@@ -1,4 +1,4 @@
-import { history, api } from '../../_helpers';
+import { history, api, getErrorMessageFromEx } from '../../_helpers';
 import { ThunkAction } from 'redux-thunk';
 import { OrderDTO } from '../../WebApiModels';
 import { 
@@ -25,7 +25,8 @@ export function create(
             history.push('/profile');
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -52,7 +53,8 @@ export function loadOrdersByUser(
             dispatch(success(pagedResult));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -84,7 +86,8 @@ export function loadOrdersByEmployee(
             dispatch(success(pagedResult));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -115,7 +118,8 @@ export function accept(
             dispatch(success(orderId));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -141,7 +145,8 @@ export function decline(
             dispatch(success(orderId));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -167,7 +172,8 @@ export function confirm(
             dispatch(success(orderId));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 

@@ -205,15 +205,8 @@ export class SwaggerCodegen {
             // the error object will then have error.status and error.response fields
             // see superagent error handling: https://github.com/visionmedia/superagent/blob/master/docs/index.md#error-handling
             if (error) {
-                
-                // Custom error handling
-                if (response.status === 401) {
-                    logOut();
-                    window.location.reload(true);
-                }
-                const errorMessage = response.body && (response.body.errorMessage || response.body.errors);
 
-                reject(errorMessage);
+                reject(error);
                 this.errorHandlers.forEach(handler => handler(error));
             } else {
                 resolve(response);

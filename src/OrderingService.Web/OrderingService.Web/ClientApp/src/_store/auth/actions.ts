@@ -1,4 +1,4 @@
-import { history, api } from "../../_helpers";
+import { history, api, getErrorMessageFromEx } from "../../_helpers";
 import { ThunkAction } from "redux-thunk";
 import { UserDTO, EmployeeProfileDTO } from "../../WebApiModels";
 import { AuthActionTypes, AuthState, 
@@ -28,8 +28,9 @@ export function logIn(
             return user;
         }
         catch (err) {
-            dispatch(failure(err));
-            dispatch(alert.error(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
+            dispatch(alert.error(errorMsg));
         }
     };
 
@@ -68,8 +69,9 @@ export function signUp(
             return user;
         }
         catch (err){
-            dispatch(failure(err));
-            dispatch(alert.error(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
+            dispatch(alert.error(errorMsg));
         }
     };
 

@@ -1,4 +1,4 @@
-import { api } from '../../_helpers'; 
+import { api, getErrorMessageFromEx } from '../../_helpers'; 
 import { ThunkAction } from "redux-thunk";
 import { ReviewDTO } from "../../WebApiModels";
 import { 
@@ -20,7 +20,8 @@ export function create(
             dispatch(success(review));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -46,7 +47,8 @@ export function loadListByEmployee(
             dispatch(success(pagedResult));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 

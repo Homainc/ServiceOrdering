@@ -1,4 +1,4 @@
-import { api } from '../../_helpers';
+import { api, getErrorMessageFromEx } from '../../_helpers';
 import { EmployeeProfileDTO } from '../../WebApiModels';
 import { ThunkAction } from 'redux-thunk';
 import { 
@@ -31,7 +31,8 @@ export function create(
             dispatch(success(employee));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -58,7 +59,8 @@ export function update(
             dispatch(success(employee));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -85,7 +87,8 @@ export function deleteById(
             dispatch(success());
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -111,7 +114,8 @@ export function loadList(
             dispatch(success(pagedResult));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
@@ -137,7 +141,8 @@ export function load(
             dispatch(success(employee));
         }
         catch (err) {
-            dispatch(failure(err));
+            const errorMsg = getErrorMessageFromEx(err);
+            dispatch(failure(errorMsg));
         }
     };
 
