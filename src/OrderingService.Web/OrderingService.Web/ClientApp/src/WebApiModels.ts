@@ -1,5 +1,5 @@
 // tslint:disable
-import { logOut } from './_store/auth/actions';
+
 import * as request from "superagent";
 import {
     SuperAgentStatic,
@@ -193,7 +193,7 @@ export class SwaggerCodegen {
             req.retry(opts.$retries);
         }
 
-        if ((opts.$timeout && opts.$timeout > 0) || (opts.$deadline && opts.$deadline > 0)) {
+        if (opts.$timeout && opts.$timeout > 0 || opts.$deadline && opts.$deadline > 0) {
             req.timeout({
                 deadline: opts.$deadline,
                 response: opts.$timeout
@@ -205,7 +205,6 @@ export class SwaggerCodegen {
             // the error object will then have error.status and error.response fields
             // see superagent error handling: https://github.com/visionmedia/superagent/blob/master/docs/index.md#error-handling
             if (error) {
-
                 reject(error);
                 this.errorHandlers.forEach(handler => handler(error));
             } else {
@@ -747,7 +746,8 @@ export class SwaggerCodegen {
     }
 
     EmployeeProfile_GetEmployeesURL(parameters: {
-        'serviceName' ? : string,
+        'searchString' ? : string,
+        'serviceTypeId' ? : number,
         'maxServiceCost' ? : number,
         'minAverageRate' ? : number,
         'pageSize' ? : number,
@@ -760,9 +760,16 @@ export class SwaggerCodegen {
             path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
         }
 
-        if (parameters['serviceName'] !== undefined) {
-            queryParameters['serviceName'] = this.convertParameterCollectionFormat(
-                parameters['serviceName'],
+        if (parameters['searchString'] !== undefined) {
+            queryParameters['searchString'] = this.convertParameterCollectionFormat(
+                parameters['searchString'],
+                ''
+            );
+        }
+
+        if (parameters['serviceTypeId'] !== undefined) {
+            queryParameters['serviceTypeId'] = this.convertParameterCollectionFormat(
+                parameters['serviceTypeId'],
                 ''
             );
         }
@@ -810,14 +817,16 @@ export class SwaggerCodegen {
      * 
      * @method
      * @name SwaggerCodegen#EmployeeProfile_GetEmployees
-     * @param {string} serviceName - 
+     * @param {string} searchString - 
+     * @param {integer} serviceTypeId - 
      * @param {number} maxServiceCost - 
      * @param {integer} minAverageRate - 
      * @param {integer} pageSize - 
      * @param {integer} pageNumber - 
      */
     EmployeeProfile_GetEmployees(parameters: {
-        'serviceName' ? : string,
+        'searchString' ? : string,
+        'serviceTypeId' ? : number,
         'maxServiceCost' ? : number,
         'minAverageRate' ? : number,
         'pageSize' ? : number,
@@ -836,9 +845,16 @@ export class SwaggerCodegen {
         return new Promise((resolve, reject) => {
             headers['Accept'] = 'text/plain, application/json, text/json';
 
-            if (parameters['serviceName'] !== undefined) {
-                queryParameters['serviceName'] = this.convertParameterCollectionFormat(
-                    parameters['serviceName'],
+            if (parameters['searchString'] !== undefined) {
+                queryParameters['searchString'] = this.convertParameterCollectionFormat(
+                    parameters['searchString'],
+                    ''
+                );
+            }
+
+            if (parameters['serviceTypeId'] !== undefined) {
+                queryParameters['serviceTypeId'] = this.convertParameterCollectionFormat(
+                    parameters['serviceTypeId'],
                     ''
                 );
             }
@@ -1785,6 +1801,54 @@ export class SwaggerCodegen {
             queryParameters = {};
 
             this.request('POST', domain + path, body, headers, queryParameters, form, reject, resolve, parameters);
+        });
+    }
+
+    ServiceType_GetAllOrderedByProfilesCountURL(parameters: {} & CommonRequestOptions): string {
+        let queryParameters: QueryParameters = {};
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/ServiceType';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        if (parameters.$queryParameters) {
+            queryParameters = {
+                ...queryParameters,
+                ...parameters.$queryParameters
+            };
+        }
+
+        let keys = Object.keys(queryParameters);
+        return domain + path + (keys.length > 0 ? '?' + (keys.map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&')) : '');
+    }
+
+    /**
+     * 
+     * @method
+     * @name SwaggerCodegen#ServiceType_GetAllOrderedByProfilesCount
+     */
+    ServiceType_GetAllOrderedByProfilesCount(parameters: {} & CommonRequestOptions): Promise < ResponseWithBody < 200, void >> {
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/ServiceType';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        let body: any;
+        let queryParameters: QueryParameters = {};
+        let headers: RequestHeaders = {};
+        let form: any = {};
+        return new Promise((resolve, reject) => {
+
+            if (parameters.$queryParameters) {
+                queryParameters = {
+                    ...queryParameters,
+                    ...parameters.$queryParameters
+                };
+            }
+
+            this.request('GET', domain + path, body, headers, queryParameters, form, reject, resolve, parameters);
         });
     }
 

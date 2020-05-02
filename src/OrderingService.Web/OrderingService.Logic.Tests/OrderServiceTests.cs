@@ -38,7 +38,7 @@ namespace OrderingService.Logic.Tests
             var createdOrder = await orderService.CreateAsync(order);
 
             // Assert
-            Assert.Equal(OrderStatus.WaitingForEmplpoyee, createdOrder.Status);
+            Assert.Equal(OrderStatus.WaitingForEmployee, createdOrder.Status);
             Assert.Equal(order.Address, createdOrder.Address);
             Assert.Equal(order.BriefTask, createdOrder.BriefTask);
             Assert.Equal(order.ServiceDetails, createdOrder.ServiceDetails);

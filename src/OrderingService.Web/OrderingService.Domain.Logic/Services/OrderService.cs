@@ -74,9 +74,9 @@ namespace OrderingService.Domain.Logic.Services
         {
             var order = await GetOrderByIdOrThrowAsync(id);
             switch(status){
-                case OrderStatus.Declined when order.Status == OrderStatus.WaitingForEmplpoyee:
+                case OrderStatus.Declined when order.Status == OrderStatus.WaitingForEmployee:
                     break;
-                case OrderStatus.InProgress when order.Status == OrderStatus.WaitingForEmplpoyee:
+                case OrderStatus.InProgress when order.Status == OrderStatus.WaitingForEmployee:
                     break;
                 case OrderStatus.Done when order.Status == OrderStatus.InProgress:
                     break;

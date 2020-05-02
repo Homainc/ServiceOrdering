@@ -2,7 +2,7 @@ namespace OrderingService.Common
 {
     public enum OrderStatus
     {
-        WaitingForEmplpoyee,
+        WaitingForEmployee,
         InProgress,
         Declined,
         Done

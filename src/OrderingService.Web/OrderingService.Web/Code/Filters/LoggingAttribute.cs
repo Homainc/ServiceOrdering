@@ -11,6 +11,7 @@ namespace OrderingService.Web.Code.Filters
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             Log.Debug("{0} has been invoked", context.ActionDescriptor.DisplayName); 
+            Log.Debug("Arguments: {0}", context.ActionArguments);
             await next();
             stopwatch.Stop();
             Log.Debug("{0} has been executed for {1} ms", context.ActionDescriptor.DisplayName, stopwatch.Elapsed.Milliseconds);

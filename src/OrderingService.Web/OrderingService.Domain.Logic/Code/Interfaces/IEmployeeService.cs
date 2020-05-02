@@ -7,7 +7,9 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
     public interface IEmployeeService
     {
         Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id);
-        Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(int pageSize, int pageNumber, string serviceName, decimal? maxServiceCost, int? minAverageRate);
+
+        Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(int pageSize, int pageNumber, string searchString,
+            decimal? maxServiceCost, int? minAverageRate, int? serviceTypeId);
         Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto);
         Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto);
         Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId);

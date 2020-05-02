@@ -16,9 +16,7 @@ namespace OrderingService.Data.Repositories
     public class EmployeeProfileRepository : AbstractRepository<EmployeeProfile>, IEmployeeRepository
     {
         public EmployeeProfileRepository(ApplicationContext db, IHttpContextAccessor httpContextAccessor) : base(db,
-            httpContextAccessor)
-        {
-        }
+            httpContextAccessor) { }
 
         public override IQueryable<EmployeeProfile> GetAll() => Db.EmployeeProfiles.AsQueryable();
 
@@ -42,15 +40,19 @@ namespace OrderingService.Data.Repositories
                 }).SingleOrDefaultAsync(x => x.Id == id, Token);
 
         public async Task<IPagedResult<EmployeeProfile>> GetPagedEmployeesAsync(int pageSize, int pageNumber,
-            string serviceName = null, decimal? maxServiceCost = null, int? minAverageRate = null)
+            string searchString = null, decimal? maxServiceCost = null, int? minAverageRate = null, int? serviceTypeId = null)
         {
             var employeeFilter = PredicateBuilder.True<EmployeeProfile>();
             if (maxServiceCost.HasValue)
                 employeeFilter.And(x => x.ServiceCost <= maxServiceCost.Value);
+            if (minAverageRate.HasValue)
+                employeeFilter.And(x => x.AverageRate >= minAverageRate.Value);
+            if (!string.IsNullOrEmpty(searchString))
+                employeeFilter.And(x => x.Description.Contains(searchString));
 
             var serviceTypeFilter = PredicateBuilder.True<ServiceType>();
-            if (!string.IsNullOrEmpty(serviceName))
-                serviceTypeFilter.And(x => x.Name.Contains(serviceName));
+            if (serviceTypeId.HasValue)
+                serviceTypeFilter.And(x => x.Id == serviceTypeId.Value);
 
             var query =
                 from e in Db.EmployeeProfiles.Where(employeeFilter)

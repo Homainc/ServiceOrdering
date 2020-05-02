@@ -8,6 +8,7 @@ import { orderReducer } from './order/reducers';
 import { profileReducer } from './profile/reducers';
 import { reviewReducer } from './review/reducers';
 import { reviewModalReducer } from './reviewModal/reducers';
+import { serviceTypeReducer } from './serviceType/reducers';
 
 const rootReducer = combineReducers({
     alert: alertReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     profile: profileReducer,
     review: reviewReducer,
     reviewModal: reviewModalReducer,
+    serviceType: serviceTypeReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

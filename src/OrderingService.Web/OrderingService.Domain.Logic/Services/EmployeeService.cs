@@ -26,8 +26,8 @@ namespace OrderingService.Domain.Logic.Services
         }
 
         public async Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(int pageSize, int pageNumber,
-            string serviceName, decimal? maxServiceCost, int? minAverageRate) =>
-            (await _employeeRepository.GetPagedEmployeesAsync(pageSize, pageNumber, serviceName, maxServiceCost, minAverageRate))
+            string searchString, decimal? maxServiceCost, int? minAverageRate, int? serviceTypeId) =>
+            (await _employeeRepository.GetPagedEmployeesAsync(pageSize, pageNumber, searchString, maxServiceCost, minAverageRate, serviceTypeId))
             .ToPagedDto<EmployeeProfileDTO, EmployeeProfile>(_mapper);
 
         public async Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto)

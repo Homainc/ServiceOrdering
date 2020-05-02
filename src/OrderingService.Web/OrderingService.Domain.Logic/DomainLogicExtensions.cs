@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OrderingService.Data;
+using OrderingService.Data.Models;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Domain.Logic.Helpers;
 using OrderingService.Domain.Logic.MapperProfiles;
@@ -41,12 +42,14 @@ namespace OrderingService.Domain.Logic
                 };
             });
 
-            services.AddAutoMapper(typeof(UserMapperProfile), typeof(EmployeeMapperProfile), typeof(ReviewMapperProfile), typeof(OrderMapperProfile));
+            services.AddAutoMapper(typeof(UserMapperProfile), typeof(EmployeeMapperProfile),
+                typeof(ReviewMapperProfile), typeof(OrderMapperProfile), typeof(ServiceType));
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IServiceTypeService, ServiceTypeService>();
             return services;
         }
     }

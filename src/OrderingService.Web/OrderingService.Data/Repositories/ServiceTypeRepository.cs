@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +30,30 @@ namespace OrderingService.Data.Repositories
             Create(serviceType);
             
             return serviceType;
+        }
+
+        public async Task<IEnumerable<ServiceType>> GetAllOrderedByProfilesCount()
+        {
+            var query =
+                from e in Db.EmployeeProfiles
+                join st in Db.ServiceTypes on e.ServiceType.Id equals st.Id
+                group e by new { st.Id, st.Name } into g
+                select new
+                {
+                    g.Key.Id,
+                    g.Key.Name,
+                    ProfilesCount = g.Count()
+                };
+
+            var serviceTypes = await (
+                from g in query
+                orderby g.ProfilesCount
+                select new ServiceType
+                {
+                    Id = g.Id,
+                    Name = g.Name
+                }).ToListAsync(Token);
+            return serviceTypes;
         }
     }
 }

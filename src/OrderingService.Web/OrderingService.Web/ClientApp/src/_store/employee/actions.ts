@@ -104,12 +104,22 @@ export function deleteById(
 }
 
 export function loadList(
-    pageNumber: number
+    pageNumber: number, 
+    searchString?: string, 
+    serviceTypeId?: number, 
+    maxServiceCost?: number
 ): ThunkAction<void, EmployeeState, undefined, EmployeeActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
-            const pagedResult = (await api.EmployeeProfile_GetEmployees({ pageNumber })).body as PagedResult<EmployeeProfileDTO>;
+            const pagedResult = (
+                await api.EmployeeProfile_GetEmployees({
+                    searchString, 
+                    pageNumber,
+                    maxServiceCost,
+                    serviceTypeId
+                })
+            ).body as PagedResult<EmployeeProfileDTO>;
             
             dispatch(success(pagedResult));
         }

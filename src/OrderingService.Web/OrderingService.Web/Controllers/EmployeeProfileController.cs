@@ -29,12 +29,13 @@ namespace OrderingService.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetEmployeesAsync(
-            [FromQuery] string serviceName = null,
+            [FromQuery] string searchString = null,
+            [FromQuery] int? serviceTypeId = null,
             [FromQuery] decimal? maxServiceCost = null,
             [FromQuery] int? minAverageRate = null,
             [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1) =>
-            Ok(await _employeeService.GetPagedEmployeesAsync(pageSize, pageNumber, serviceName, maxServiceCost, minAverageRate));
+            Ok(await _employeeService.GetPagedEmployeesAsync(pageSize, pageNumber, searchString, maxServiceCost, minAverageRate, serviceTypeId));
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
