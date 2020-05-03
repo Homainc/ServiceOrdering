@@ -3,20 +3,19 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { ValidationTextField, LoadingButton } from '../_components';
-import { Col, Card, Row, CardTitle, Alert } from 'reactstrap';
+import { Col, Card, Row, CardTitle } from 'reactstrap';
 import { RootState } from '../_store';
-import { AuthState, AuthActionTypes } from '../_store/auth/types';
+import { AuthActionTypes } from '../_store/auth/types';
 import { ThunkDispatch } from 'redux-thunk';
 import * as authActions from '../_store/auth/actions';
 
 const mapState = (state: RootState) => ({
     loggingIn: state.auth.loggingIn,
-    loggedIn: state.auth.loggedIn,
-    alert: state.alert
+    loggedIn: state.auth.loggedIn
 });
 
 const mapDispatch = (
-    dispatch: ThunkDispatch<AuthState, undefined, AuthActionTypes>
+    dispatch: ThunkDispatch<RootState, undefined, AuthActionTypes>
 ) => ({
     logOut: () => dispatch(authActions.logOut()),
     logIn: (username: string, password: string) => dispatch(authActions.logIn(username, password))
@@ -37,13 +36,12 @@ class LoginPage extends React.Component<LoginPageProps> {
     }
 
     render() {
-        const { alert, loggingIn, logIn } = this.props; 
+        const { loggingIn, logIn } = this.props; 
         return (
             <Row className="d-flex justify-content-center mt-5">
                 <Col lg={5} md={6} sm={8}>
                     <Card body>
                         <CardTitle>Login</CardTitle>
-                        <Alert isOpen={!!alert.message} color={alert.type}>{alert.message}</Alert>
                         <Formik
                             initialValues={{
                                 email: '',

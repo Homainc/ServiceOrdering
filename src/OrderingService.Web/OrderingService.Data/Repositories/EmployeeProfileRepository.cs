@@ -44,22 +44,21 @@ namespace OrderingService.Data.Repositories
         {
             var employeeFilter = PredicateBuilder.True<EmployeeProfile>();
             if (maxServiceCost.HasValue)
-                employeeFilter.And(x => x.ServiceCost <= maxServiceCost.Value);
+                employeeFilter = employeeFilter.And(x => x.ServiceCost <= maxServiceCost.Value);
             if (minAverageRate.HasValue)
-                employeeFilter.And(x => x.AverageRate >= minAverageRate.Value);
+                employeeFilter = employeeFilter.And(x => x.AverageRate >= minAverageRate.Value);
             if (!string.IsNullOrEmpty(searchString))
-                employeeFilter.And(x => x.Description.Contains(searchString));
+                employeeFilter = employeeFilter.And(x => x.Description.Contains(searchString));
 
             var serviceTypeFilter = PredicateBuilder.True<ServiceType>();
             if (serviceTypeId.HasValue)
-                serviceTypeFilter.And(x => x.Id == serviceTypeId.Value);
+                serviceTypeFilter = serviceTypeFilter.And(x => x.Id == serviceTypeId.Value);
 
             var query =
                 from e in Db.EmployeeProfiles.Where(employeeFilter)
                 join u in Db.Users on e.UserId equals u.Id into uGrouping
                 from u in uGrouping.DefaultIfEmpty()
-                join st in Db.ServiceTypes.Where(serviceTypeFilter) on e.ServiceTypeId equals st.Id into stGrouping
-                from st in stGrouping.DefaultIfEmpty()
+                join st in Db.ServiceTypes.Where(serviceTypeFilter) on e.ServiceTypeId equals st.Id
                 select new EmployeeProfile(e.AverageRate, e.ReviewsCount)
                 {
                     Id = e.Id,

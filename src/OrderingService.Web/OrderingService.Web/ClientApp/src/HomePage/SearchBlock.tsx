@@ -7,6 +7,7 @@ import { ServiceTypeState, ServiceTypeActionTypes } from '../_store/serviceType/
 import * as serviceTypes from '../_store/serviceType/actions';
 import { history } from '../_helpers';
 import _ from 'lodash';
+import { useParams } from 'react-router';
 
 const mapState = (state: RootState) => ({
     servicesLoading: state.serviceType.listLoading,
@@ -26,10 +27,12 @@ type SearchBlockProps = PropsFromRedux & Readonly<{}>;
 type SearchBlockState = {
     searchString: string,
     serviceTypeId: number | undefined,
-    maxServiceCost: number | undefined
+    maxServiceCost: number | undefined,
 };
 
 const SearchBlock = (props: SearchBlockProps) => {
+    const { page } = useParams();
+    
     const [state, setState] = useState<SearchBlockState>({
         searchString: '',
         serviceTypeId: undefined,
@@ -46,7 +49,8 @@ const SearchBlock = (props: SearchBlockProps) => {
     }, [ getAllServices ]);
 
     useEffect(() => {
-        let queryParams: string = state.searchString? `?search=${state.searchString}` : '';
+        let queryParams: string = `/page/1`;
+        queryParams += state.searchString? `?search=${state.searchString}` : '';
         queryParams += state.serviceTypeId? (queryParams? '&': '?') + 
             `service=${state.serviceTypeId}` : ''; 
         queryParams += state.maxServiceCost? (queryParams? '&': '?') +

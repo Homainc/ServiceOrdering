@@ -1,22 +1,21 @@
 import React from 'react';
-import { Card, Row, Col, CardTitle, Alert } from 'reactstrap';
+import { Card, Row, Col, CardTitle } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { ValidationTextField, LoadingButton, ImageUpload } from '../_components';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../_store';
-import { AuthState, AuthActionTypes } from '../_store/auth/types';
+import { AuthActionTypes } from '../_store/auth/types';
 import { ThunkDispatch } from 'redux-thunk';
 import * as authActions from '../_store/auth/actions'; 
 import { UserDTO } from '../WebApiModels';
 
 const mapState = (state: RootState) => ({
-    signingUp: state.auth.signingUp,
-    alert: state.alert
+    signingUp: state.auth.signingUp
 });
 
 const mapDispatch = (
-    dispatch: ThunkDispatch<AuthState, undefined, AuthActionTypes>
+    dispatch: ThunkDispatch<RootState, undefined, AuthActionTypes>
 ) => ({
     signUp: (user: UserDTO) => dispatch(authActions.signUp(user))
 });
@@ -27,12 +26,11 @@ type SignUpPageProps = PropsFromRedux & Readonly<{}>;
 
 
 const SignUpPage = (props: SignUpPageProps) => {
-    const { signUp, signingUp, alert } = props;
+    const { signUp, signingUp } = props;
     return(
         <Row className="d-flex justify-content-center">
             <Col md="8">
                 <Card body>
-                    <Alert isOpen={!!alert.message} color={alert.type}>{alert.message}</Alert>
                     <Formik
                         initialValues={{
                             email: '',

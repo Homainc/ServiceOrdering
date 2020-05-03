@@ -1,19 +1,20 @@
 import { history, api, getErrorMessageFromEx } from "../../_helpers";
 import { ThunkAction } from "redux-thunk";
 import { UserDTO, EmployeeProfileDTO } from "../../WebApiModels";
-import { AuthActionTypes, AuthState, 
+import { AuthActionTypes, 
     AUTH_LOGIN_REQUEST, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE, 
     AUTH_LOGOUT, 
     AUTH_SIGN_UP_REQUEST, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE, 
     AUTH_UPDATE_USER, AUTH_UPDATE_EMPLOYEE 
 } from "./types";
-import * as alert from '../alert/actions'
 import { AlertActionTypes } from "../alert/types";
+import * as alertActions from '../alert/actions';
+import { RootState } from "..";
 
 export function logIn(
     email: string, 
     password: string
-): ThunkAction<void, AuthState, undefined, AuthActionTypes | AlertActionTypes> {
+): ThunkAction<void, RootState, undefined, AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
@@ -23,14 +24,15 @@ export function logIn(
             api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
             
             dispatch(success(user));
+            dispatch(alertActions.success(`You have successfully logged in as ${user.email}`));
             history.push('/');
             
             return user;
         }
         catch (err) {
             const errorMsg = getErrorMessageFromEx(err);
+            dispatch(alertActions.error(errorMsg));
             dispatch(failure(errorMsg));
-            dispatch(alert.error(errorMsg));
         }
     };
 
@@ -54,7 +56,7 @@ export function logOut(): AuthActionTypes {
 
 export function signUp(
     user: UserDTO
-): ThunkAction<void, AuthState, undefined, AuthActionTypes | AlertActionTypes> {
+): ThunkAction<void, RootState, undefined, AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
@@ -64,14 +66,15 @@ export function signUp(
             api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
 
             dispatch(success(user));
+            dispatch(alertActions.success('You have successfully signed up!'));
             history.push('/');
 
             return user;
         }
         catch (err){
             const errorMsg = getErrorMessageFromEx(err);
+            dispatch(alertActions.error(errorMsg));
             dispatch(failure(errorMsg));
-            dispatch(alert.error(errorMsg));
         }
     };
 

@@ -8,7 +8,6 @@ import { RootState } from '../_store';
 import { ThunkDispatch } from 'redux-thunk';
 import { EmployeeState, EmployeeActionTypes } from '../_store/employee/types';
 import * as employeeActions from '../_store/employee/actions';
-import _ from 'lodash';
 
 const mapState = (state: RootState) => ({
     employeeList: state.employee.list,
