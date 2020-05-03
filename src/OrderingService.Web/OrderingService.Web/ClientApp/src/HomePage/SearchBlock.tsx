@@ -7,7 +7,12 @@ import { ServiceTypeState, ServiceTypeActionTypes } from '../_store/serviceType/
 import * as serviceTypes from '../_store/serviceType/actions';
 import { history } from '../_helpers';
 import _ from 'lodash';
-import { useParams } from 'react-router';
+
+type SearchBlockState = {
+    searchString: string,
+    serviceTypeId: number | undefined,
+    maxServiceCost: number | undefined,
+};
 
 const mapState = (state: RootState) => ({
     servicesLoading: state.serviceType.listLoading,
@@ -22,22 +27,12 @@ const mapDispatch = (
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type SearchBlockProps = PropsFromRedux & Readonly<{}>;
-
-type SearchBlockState = {
-    searchString: string,
-    serviceTypeId: number | undefined,
-    maxServiceCost: number | undefined,
-};
+type SearchBlockProps = PropsFromRedux & Readonly<{
+    initialValues: SearchBlockState
+}>;
 
 const SearchBlock = (props: SearchBlockProps) => {
-    const { page } = useParams();
-    
-    const [state, setState] = useState<SearchBlockState>({
-        searchString: '',
-        serviceTypeId: undefined,
-        maxServiceCost: undefined
-    });
+    const [state, setState] = useState<SearchBlockState>(props.initialValues);
 
     const changeState = _.debounce(setState, 1000);
     const handleChange = useCallback(changeState, []);
@@ -49,12 +44,12 @@ const SearchBlock = (props: SearchBlockProps) => {
     }, [ getAllServices ]);
 
     useEffect(() => {
-        let queryParams: string = `/page/1`;
-        queryParams += state.searchString? `?search=${state.searchString}` : '';
+        let queryParams = state.searchString? `?search=${state.searchString}` : '';
         queryParams += state.serviceTypeId? (queryParams? '&': '?') + 
             `service=${state.serviceTypeId}` : ''; 
         queryParams += state.maxServiceCost? (queryParams? '&': '?') +
             `maxServiceCost=${state.maxServiceCost}` : '';
+        queryParams = '/page/1' + queryParams;
 
         history.replace(queryParams);
     }, [state]);
@@ -88,22 +83,31 @@ const SearchBlock = (props: SearchBlockProps) => {
                 <Row>
                     <Col cols={6}>
                     <FormGroup>
-                            <Label>Category</Label>
-                            <Input type='select' className='custom-select' disabled={props.servicesLoading} onChange={handleCategoryChange}>
-                                {servicesList}
+                            <Input 
+                                type='select' 
+                                className='custom-select' 
+                                disabled={props.servicesLoading} 
+                                onChange={handleCategoryChange}
+                                placeholder={'Choose service'}>
+                                    <option>Choose service...</option>
+                                    {servicesList}
                             </Input>
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup>
-                            <Label>Maximum price</Label>
-                            <Input type='number' onChange={handleMaxServiceCostChange}/>
+                            <Input 
+                                type='number' 
+                                onChange={handleMaxServiceCostChange}
+                                placeholder={'Maximum cost'}/>
                         </FormGroup>
                     </Col>
                 </Row>
                 <FormGroup>
-                    <Label>Search</Label>
-                    <Input type='text' onChange={handleSearchInputChange}/> 
+                    <Input 
+                        type='text' 
+                        onChange={handleSearchInputChange}
+                        placeholder={'Search string'}/> 
                 </FormGroup>
             </Form>
         </Card>

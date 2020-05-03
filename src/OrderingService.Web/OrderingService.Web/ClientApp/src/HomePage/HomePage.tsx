@@ -56,7 +56,11 @@ const HomePage = (props: HomePageProps) => {
     
     return (
         <>
-        <SearchBlock />
+        <SearchBlock initialValues={{
+            maxServiceCost,
+            serviceTypeId,
+            searchString: searchString || ''
+        }}/>
         <LoadingContainer isLoading={props.listLoading}>
             {list}
             {!!pagesCount && (
