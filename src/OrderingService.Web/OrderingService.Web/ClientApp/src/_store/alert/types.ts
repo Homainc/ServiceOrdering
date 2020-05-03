@@ -19,6 +19,8 @@ interface AlertClearAction {
 export type AlertActionTypes = AlertSuccessAction | AlertErrorAction | AlertClearAction;
 
 export interface AlertState {
-    type: 'success' | 'danger' | undefined;
-    message: string | undefined;
+    alerts: Array<{
+        type: 'success' | 'danger',
+        message: string
+    }>;
 };

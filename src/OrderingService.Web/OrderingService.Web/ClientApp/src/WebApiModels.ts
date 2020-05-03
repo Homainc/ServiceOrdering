@@ -193,7 +193,7 @@ export class SwaggerCodegen {
             req.retry(opts.$retries);
         }
 
-        if (opts.$timeout && opts.$timeout > 0 || opts.$deadline && opts.$deadline > 0) {
+        if ((opts.$timeout && opts.$timeout > 0) || (opts.$deadline && opts.$deadline > 0)) {
             req.timeout({
                 deadline: opts.$deadline,
                 response: opts.$timeout

@@ -2,7 +2,7 @@ import React, { useEffect, SyntheticEvent, useState, useCallback } from 'react';
 import { RootState } from '../_store';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps } from 'react-redux';
-import { Card, Form, Input, FormGroup, Label, Row, Col } from 'reactstrap';
+import { Card, Form, Input, FormGroup, Row, Col } from 'reactstrap';
 import { ServiceTypeState, ServiceTypeActionTypes } from '../_store/serviceType/types';
 import * as serviceTypes from '../_store/serviceType/actions';
 import { history } from '../_helpers';

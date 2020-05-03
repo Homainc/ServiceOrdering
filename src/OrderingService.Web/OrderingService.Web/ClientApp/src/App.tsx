@@ -33,15 +33,6 @@ type AppProps = PropsFromRedux & {};
 class App extends React.Component<AppProps> {
   static displayName = App.name;
 
-  constructor(props: AppProps) {
-    super(props);
-
-    history.listen((location, action) => {
-      if(props.alert.message)
-        props.clearAlerts();
-    });
-  }
-
   render () {
     return (
       <Layout history={history}>

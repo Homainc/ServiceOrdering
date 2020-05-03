@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import React, { useState } from 'react';
-import { Col, Row, ListGroupItemHeading, ListGroupItemText, Button, Alert } from 'reactstrap';
+import { Col, Row, ListGroupItemHeading, ListGroupItemText, Button } from 'reactstrap';
 import { Formik, Form } from 'formik';
 import { LoadingButton, ImageUpload, ValidationTextField } from '../_components';
 import { connect, ConnectedProps } from 'react-redux';
@@ -90,7 +90,6 @@ const UserPersonalBlock = (props: UserPersonalBlockProps) => {
                             <ListGroupItemHeading>Phone number</ListGroupItemHeading>
                             <ListGroupItemText className="text-secondary">{(props.profile && props.profile.phoneNumber) || 'Not specified'}</ListGroupItemText>
                         </>):(<>
-                            <Alert isOpen={!!props.alert.message} color={props.alert.type}>{props.alert.message}</Alert>
                             <ValidationTextField 
                                 className="form-control-sm" 
                                 label="First Name" 
