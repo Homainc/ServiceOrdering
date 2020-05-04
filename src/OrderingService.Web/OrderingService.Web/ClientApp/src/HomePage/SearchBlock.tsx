@@ -1,4 +1,4 @@
-import React, { useEffect, SyntheticEvent, useState, useCallback } from 'react';
+import React, { useEffect, SyntheticEvent, useState } from 'react';
 import { RootState } from '../_store';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect, ConnectedProps } from 'react-redux';
@@ -10,8 +10,8 @@ import _ from 'lodash';
 
 type SearchBlockState = {
     searchString: string,
-    serviceTypeId: number | undefined,
-    maxServiceCost: number | undefined,
+    serviceTypeId?: number,
+    maxServiceCost?: number,
 };
 
 const mapState = (state: RootState) => ({
@@ -34,39 +34,40 @@ type SearchBlockProps = PropsFromRedux & Readonly<{
 const SearchBlock = (props: SearchBlockProps) => {
     const [state, setState] = useState<SearchBlockState>(props.initialValues);
 
-    const changeState = _.debounce(setState, 1000);
-    const handleChange = useCallback(changeState, []);
+    const updateQueryParams = (searchString: string, serviceTypeId?: number, maxServiceCost?: number) => {
+        let queryParams = searchString? `?search=${searchString}` : '';
+        queryParams += serviceTypeId? (queryParams? '&': '?') + 
+            `service=${serviceTypeId}` : ''; 
+        queryParams += maxServiceCost? (queryParams? '&': '?') +
+            `maxServiceCost=${maxServiceCost}` : '';
+        queryParams = '/page/1' + queryParams;
+
+        history.replace(queryParams);
+    };
+
+    const [ debouncedUpdateQueryParams ] = useState(() => _.debounce(updateQueryParams, 250));
 
     const { getAllServices } = props;
-
     useEffect(() => {
         getAllServices();
     }, [ getAllServices ]);
 
-    useEffect(() => {
-        let queryParams = state.searchString? `?search=${state.searchString}` : '';
-        queryParams += state.serviceTypeId? (queryParams? '&': '?') + 
-            `service=${state.serviceTypeId}` : ''; 
-        queryParams += state.maxServiceCost? (queryParams? '&': '?') +
-            `maxServiceCost=${state.maxServiceCost}` : '';
-        queryParams = '/page/1' + queryParams;
-
-        history.replace(queryParams);
-    }, [state]);
-
     const handleSearchInputChange = ({ target }: SyntheticEvent) => {
         const input = target as HTMLInputElement;
-        handleChange({ ...state, searchString: input.value });
+        setState({ ...state, searchString: input.value });
+        debouncedUpdateQueryParams(input.value, state.serviceTypeId, state.maxServiceCost);
     };
 
     const handleCategoryChange = ({ target }: SyntheticEvent) => {
         const select = target as HTMLSelectElement;
-        handleChange({...state, serviceTypeId: parseInt(select.value)});
+        setState({...state, serviceTypeId: parseInt(select.value)});
+        debouncedUpdateQueryParams(state.searchString, parseInt(select.value), state.maxServiceCost);
     };
 
     const handleMaxServiceCostChange = ({ target }: SyntheticEvent) => {
         const input = target as HTMLInputElement;
-        handleChange({...state, maxServiceCost: parseInt(input.value)});
+        setState({...state, maxServiceCost: parseInt(input.value)});
+        debouncedUpdateQueryParams(state.searchString, state.serviceTypeId, parseInt(input.value));
     };
 
     const servicesList = props.servicesList && props.servicesList.map(service => 
@@ -88,6 +89,7 @@ const SearchBlock = (props: SearchBlockProps) => {
                                 className='custom-select' 
                                 disabled={props.servicesLoading} 
                                 onChange={handleCategoryChange}
+                                value={isNaN(state.serviceTypeId || NaN)? undefined: state.serviceTypeId}
                                 placeholder={'Choose service'}>
                                     <option>Choose service...</option>
                                     {servicesList}
@@ -98,6 +100,7 @@ const SearchBlock = (props: SearchBlockProps) => {
                         <FormGroup>
                             <Input 
                                 type='number' 
+                                value={isNaN(state.maxServiceCost || NaN)? '': state.maxServiceCost}
                                 onChange={handleMaxServiceCostChange}
                                 placeholder={'Maximum cost'}/>
                         </FormGroup>
@@ -107,6 +110,7 @@ const SearchBlock = (props: SearchBlockProps) => {
                     <Input 
                         type='text' 
                         onChange={handleSearchInputChange}
+                        value={state.searchString}
                         placeholder={'Search string'}/> 
                 </FormGroup>
             </Form>
