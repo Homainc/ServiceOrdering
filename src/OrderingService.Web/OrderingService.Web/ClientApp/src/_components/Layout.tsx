@@ -7,21 +7,21 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../_store';
 import { History } from 'history';
 import * as alertActions from '../_store/alert/actions';
-import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
+import * as authActions from '../_store/auth/actions';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { ThunkDispatch } from 'redux-thunk';
 import { AlertActionTypes } from '../_store/alert/types';
+import { AuthActionTypes } from '../_store/auth/types';
 
 const mapState =  (state: RootState) => ({
   alerts: state.alert.alerts,
-  loggedIn: state.auth.loggedIn,
-  userToken: state.auth.user?.token
+  loggedIn: state.auth.loggedIn
 });
 
 const mapDispatch = (
-  dispatch: ThunkDispatch<RootState, undefined, AlertActionTypes>
+  dispatch: ThunkDispatch<RootState, undefined, AlertActionTypes | AuthActionTypes>
 ) => ({
-  pushInfoAlert: (msg: string) => dispatch(alertActions.info(msg)),
+  connectToNotificationHub: () => dispatch(authActions.connectToNotificationHub()),
   clearAlerts: () => alertActions.clear()
 });
 
@@ -32,35 +32,12 @@ type LayoutProps = PropsFromRedux & Readonly<{
   history: History<History.PoorMansUnknown>; 
 }>;
 
-type LayoutState = {
-  notificationHub?: HubConnection;
-};
-
-class Layout extends Component<LayoutProps, LayoutState> {
+class Layout extends Component<LayoutProps> {
   static displayName = Layout.name;
 
-  constructor(props: LayoutProps){
-    super(props);
-
-    this.state = {
-      notificationHub: undefined
-    };
-  }
-
   componentDidMount = () => {
-    if(this.props.loggedIn){
-      const hubConnection = new HubConnectionBuilder()
-        .withUrl('/notification', { accessTokenFactory: () => this.props.userToken || '' })
-        .build();
-      
-      this.setState({ notificationHub: hubConnection }, () => {
-        this.state.notificationHub
-          ?.start()
-          .catch((err: any) => console.log(`Error while establishing connection: ${err}`));
-
-        this.state.notificationHub?.on('ReceiveNotice', msg => this.props.pushInfoAlert(msg));
-      });
-    }
+    if(this.props.loggedIn)
+      this.props.connectToNotificationHub();
   };
 
   getAlertClassName = (alertType: string) => {

@@ -13,6 +13,7 @@ const user = JSON.parse(localStorage.getItem('user') as string) as UserDTO;
     if(user)
         api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
 })();
+
 const initialState: AuthState = user ? 
 { 
     loggedIn: true,

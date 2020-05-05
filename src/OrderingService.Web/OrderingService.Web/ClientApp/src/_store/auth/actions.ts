@@ -10,6 +10,7 @@ import { AuthActionTypes,
 import { AlertActionTypes } from "../alert/types";
 import * as alertActions from '../alert/actions';
 import { RootState } from "..";
+import { HubConnectionBuilder } from '@aspnet/signalr';
 
 export function logIn(
     email: string, 
@@ -25,6 +26,8 @@ export function logIn(
             
             dispatch(success(user));
             dispatch(alertActions.success(`You have successfully logged in as ${user.email}`));
+            dispatch(connectToNotificationHub());
+            
             history.push('/');
             
             return user;
@@ -67,6 +70,8 @@ export function signUp(
 
             dispatch(success(user));
             dispatch(alertActions.success('You have successfully signed up!'));
+            dispatch(connectToNotificationHub());
+
             history.push('/');
 
             return user;
@@ -103,4 +108,23 @@ export function updateEmployee(employeeProfile: EmployeeProfileDTO | undefined):
     localStorage.setItem('user', JSON.stringify(user));
 
     return { type: AUTH_UPDATE_EMPLOYEE, employee: employeeProfile };
+}
+
+export function connectToNotificationHub(
+): ThunkAction<void, RootState, undefined, AuthActionTypes> {
+    return (dispatch, getState) => {
+        const userToken = getState().auth.user?.token;
+        try {
+            const hubConnection = new HubConnectionBuilder()
+            .withUrl('/notification', { accessTokenFactory: () => userToken || '' })
+            .build();
+      
+            hubConnection.start();
+
+            hubConnection.on('ReceiveNotice', msg => dispatch(alertActions.info(msg)));
+        }
+        catch (err){
+            dispatch(logOut());
+        }
+    };
 }
