@@ -75,5 +75,8 @@ namespace OrderingService.Data.Repositories
             return new PagedResult<EmployeeProfile>(await query.Paged(pageSize, pageNumber).ToListAsync(Token), total,
                 pageSize, pageNumber);
         }
+
+        public async Task<Guid> GetUserIdByEmployeeIdAsync(Guid employeeId) =>
+            await (from e in Db.EmployeeProfiles.Where(x => x.Id == employeeId) select e.UserId).SingleAsync(Token);
     }
 }

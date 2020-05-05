@@ -10,7 +10,10 @@ namespace OrderingService.Data.Interfaces
     {
         Task<bool> AnyEmployeeAsync(Expression<Func<EmployeeProfile, bool>> filter);
         Task<EmployeeProfile> GetEagerByIdOrDefaultAsync(Guid id);
+
         Task<IPagedResult<EmployeeProfile>> GetPagedEmployeesAsync(int pageSize, int pageNumber, string searchString,
             decimal? maxServiceCost, int? minAverageRate, int? serviceTypeId);
+
+        Task<Guid> GetUserIdByEmployeeIdAsync(Guid employeeId);
     }
 }

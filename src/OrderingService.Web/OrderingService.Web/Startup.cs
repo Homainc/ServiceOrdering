@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,10 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using OrderingService.Domain.Logic;
 using OrderingService.Web.Code.Filters;
+using OrderingService.Web.Code.Interfaces;
+using OrderingService.Web.Code.Services;
 using OrderingService.Web.Code.Validators;
+using OrderingService.Web.Hubs;
 
 namespace OrderingService.Web
 {
@@ -52,6 +56,11 @@ namespace OrderingService.Web
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+
+            services.AddScoped<INotificationService, NotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +76,7 @@ namespace OrderingService.Web
                 app.UseExceptionHandler("/Error");
             }
 
+
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -80,6 +90,8 @@ namespace OrderingService.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+
+                endpoints.MapHub<NotificationHub>("notification");
             });
 
             app.UseSpa(spa =>

@@ -70,6 +70,9 @@ namespace OrderingService.Domain.Logic.Services
             return _mapper.Map<EmployeeProfileDTO>(employeeProfile);
         }
 
+        public async Task<Guid> GetUserIdByEmployeeIdAsync(Guid employeeId) => 
+            await _employeeRepository.GetUserIdByEmployeeIdAsync(employeeId);
+
         public async Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id) =>
             _mapper.Map<EmployeeProfileDTO>(await GetEmployeeByIdOrThrowAsync(id));
 

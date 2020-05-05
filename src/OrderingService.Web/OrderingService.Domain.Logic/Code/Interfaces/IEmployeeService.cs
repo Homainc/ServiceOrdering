@@ -13,5 +13,6 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
         Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto);
         Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto);
         Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId);
+        Task<Guid> GetUserIdByEmployeeIdAsync(Guid employeeId);
     }
 }
