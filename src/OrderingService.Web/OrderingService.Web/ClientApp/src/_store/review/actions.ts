@@ -37,12 +37,13 @@ export function create(
 }
 
 export function loadListByEmployee(
-    employeeId: string
+    employeeId: string,
+    pageNumber: number
 ): ThunkAction<void, ReviewState, undefined, ReviewActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
-            const pagedResult = (await api.Review_GetUserReviews({ id: employeeId })).body as PagedResult<ReviewDTO>;
+            const pagedResult = (await api.Review_GetUserReviews({ id: employeeId, pageNumber })).body as PagedResult<ReviewDTO>;
 
             dispatch(success(pagedResult));
         }
@@ -56,7 +57,7 @@ export function loadListByEmployee(
         return { type: REVIEW_LOAD_LIST_BY_EMPLOYEE_REQUEST }; 
     }
     function success(pagedResult: PagedResult<ReviewDTO>): ReviewActionTypes { 
-        return { type: REVIEW_LOAD_LIST_BY_EMPLOYEE_SUCCESS, list: pagedResult.value }; 
+        return { type: REVIEW_LOAD_LIST_BY_EMPLOYEE_SUCCESS, list: pagedResult.value, total: pagedResult.total, page: pagedResult.pageNumber }; 
     }
     function failure(error: string): ReviewActionTypes { 
         return { type: REVIEW_LOAD_LIST_BY_EMPLOYEE_FAILURE, error }; 

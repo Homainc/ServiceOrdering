@@ -75,9 +75,12 @@ const SignUpPage = (props: SignUpPageProps) => {
                         }}>
                         <Form>
                             <CardTitle>Credentials</CardTitle>
-                            <ValidationTextField id="email" name="email" type="email" label="Email" disabled={signingUp}/>
-                            <ValidationTextField id="password" name="password" type="password" label="Password" disabled={signingUp}/>
-                            <ValidationTextField id="confirmPassword" name="confirmPassword" type="password" label="Confirm password" disabled={signingUp}/>
+                            <ValidationTextField id="email" name="email" type="email" label="Email" disabled={signingUp}
+                                placeholder='Enter your email'/>
+                            <ValidationTextField id="password" name="password" type="password" label="Password" disabled={signingUp}
+                                placeholder='Enter your password'/>
+                            <ValidationTextField id="confirmPassword" name="confirmPassword" type="password" label="Confirm password" disabled={signingUp}
+                                placeholder='Confirm your password'/>
 
                             <CardTitle>Personal data</CardTitle>
                             <ImageUpload id="imageUrl" name="imageUrl" disabled={signingUp}/>

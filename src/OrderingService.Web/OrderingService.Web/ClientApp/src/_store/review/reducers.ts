@@ -6,7 +6,8 @@ import {
 
 const initialState: ReviewState = {
     creating: false,
-    reviews: undefined
+    reviews: undefined,
+    totalReviews: 0
 };
 
 export function reviewReducer(state: ReviewState = initialState, action: ReviewActionTypes): ReviewState {
@@ -27,7 +28,11 @@ export function reviewReducer(state: ReviewState = initialState, action: ReviewA
         case REVIEW_CREATE_SUCCESS:
             return { ...state, creating: false };
         case REVIEW_LOAD_LIST_BY_EMPLOYEE_SUCCESS:
-            return { ...state, reviews: action.list };
+            if(state.reviews && action.page !== 1)
+                state.reviews = state.reviews.concat(action.list);
+            else
+                state.reviews = action.list;
+            return { ...state, totalReviews: action.total };
 
         default:
             return state;

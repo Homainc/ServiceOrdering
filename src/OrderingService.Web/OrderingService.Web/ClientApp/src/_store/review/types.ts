@@ -22,6 +22,8 @@ interface ReviewCreateSuccessAction {
 interface ReviewLoadListAction {
     type: typeof REVIEW_LOAD_LIST_BY_EMPLOYEE_SUCCESS;
     list: Array<ReviewDTO>;
+    total: number;
+    page: number;
 };
 
 interface ReviewFailureAction {
@@ -37,6 +39,7 @@ export type ReviewActionTypes =
 
 export interface ReviewState {
     creating: boolean;
-    reviews: Array<ReviewDTO> | undefined;
+    reviews?: Array<ReviewDTO>;
+    totalReviews: number;
 };
     

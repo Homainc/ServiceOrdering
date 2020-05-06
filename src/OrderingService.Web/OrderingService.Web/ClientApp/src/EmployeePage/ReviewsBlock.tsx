@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Card, CardText, CardTitle, Row, Col } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+import { Card, CardText, CardTitle, Row, Col, Button } from 'reactstrap';
 import { UserWithAvatar, Rating } from '../_components';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../_store';
@@ -8,27 +8,31 @@ import * as reviewActions from '../_store/review/actions';
 import { ReviewActionTypes, ReviewState } from '../_store/review/types';
 
 const mapState = (state: RootState) => ({
-    reviews: state.review.reviews
+    reviews: state.review.reviews,
+    totalReviews: state.review.totalReviews
 });
 
 const mapDispatch = (
     dispatch: ThunkDispatch<ReviewState, undefined, ReviewActionTypes>
 ) => ({
-    loadReviewsByEmployee: (employeeId: string) => dispatch(reviewActions.loadListByEmployee(employeeId))
+    loadReviewsByEmployee: (employeeId: string, page: number) => dispatch(reviewActions.loadListByEmployee(employeeId, page))
 });
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ReviewBlockProps = PropsFromRedux & Readonly<{
-    employeeId: string | undefined;
+    employeeId?: string;
 }>;
 
 const ReviewsBlock = (props: ReviewBlockProps) => {
+    const [reviewsPage, setReviewsPage] = useState(1);
+
     const { employeeId, loadReviewsByEmployee } = props;
+
     useEffect(() => {
         if(employeeId)
-            loadReviewsByEmployee(employeeId);
-    }, [employeeId, loadReviewsByEmployee]);
+            loadReviewsByEmployee(employeeId, reviewsPage);
+    }, [employeeId, loadReviewsByEmployee, reviewsPage]);
 
     const reviews = props.reviews?.map(review => 
         <Card body key={review.id} className="my-2">
@@ -51,11 +55,21 @@ const ReviewsBlock = (props: ReviewBlockProps) => {
         <>
         <hr/>
         <Row>
-            <Col><h5>Reviews ({reviews?.length || 0})</h5></Col>
+            <Col><h5>Reviews ({props.totalReviews})</h5></Col>
         </Row>
         {reviews?.length === 0 ? (
             <p className="text-secondary">The employee haven't got reviews yet.</p>
-        ): reviews}
+        ): (<>
+            {reviews}
+            {reviews?.length !== props.totalReviews && (
+                <Button 
+                    className='d-flex align-self-center' 
+                    outline 
+                    onClick={() => setReviewsPage(reviewsPage + 1)}>
+                        Show more
+                </Button>
+            )}
+        </>)}
         </>
     );
 };
