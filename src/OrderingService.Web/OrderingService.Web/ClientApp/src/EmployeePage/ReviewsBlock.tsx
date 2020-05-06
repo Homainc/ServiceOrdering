@@ -53,7 +53,7 @@ const ReviewsBlock = (props: ReviewBlockProps) => {
         <Row>
             <Col><h5>Reviews ({reviews?.length || 0})</h5></Col>
         </Row>
-        {reviews && reviews.length === 0 ? (
+        {reviews?.length === 0 ? (
             <p className="text-secondary">The employee haven't got reviews yet.</p>
         ): reviews}
         </>

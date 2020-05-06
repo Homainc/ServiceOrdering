@@ -112,14 +112,14 @@ export function updateEmployee(employeeProfile: EmployeeProfileDTO | undefined):
 
 export function connectToNotificationHub(
 ): ThunkAction<void, RootState, undefined, AuthActionTypes> {
-    return (dispatch, getState) => {
+    return async (dispatch, getState) => {
         const userToken = getState().auth.user?.token;
         try {
             const hubConnection = new HubConnectionBuilder()
             .withUrl('/notification', { accessTokenFactory: () => userToken || '' })
             .build();
       
-            hubConnection.start();
+            await hubConnection.start();
 
             hubConnection.on('ReceiveNotice', msg => dispatch(alertActions.info(msg)));
         }

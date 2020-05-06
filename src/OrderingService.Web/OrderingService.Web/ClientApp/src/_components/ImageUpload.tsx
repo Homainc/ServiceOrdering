@@ -11,7 +11,7 @@ type ImageUploadProps = {
 };
 
 export const ImageUpload = (props: ImageUploadProps) => {
-    const [, setState] = useState({ isUploading: false});
+    const [state, setState] = useState({ isUploading: false});
     const [, meta, helpers] = useField(props);
     const { setValue } = helpers;
 
@@ -41,7 +41,13 @@ export const ImageUpload = (props: ImageUploadProps) => {
     return (
         <FormGroup>
             <Label htmlFor={props.id && props.name}>
-                <img src={meta.value || 'images/default-user.jpg'} 
+                <div 
+                    className='justify-content-center align-items-center position-absolute text-light rounded' 
+                    style={{ height: 150, width: 150, backgroundColor: '#00000070', display: state.isUploading? 'flex': 'none'}}>
+                        <div className="spinner-border"></div>
+                </div>
+                <img 
+                    src={meta.value || 'images/default-user.jpg'} 
                     height="150" width="150"
                     className={'rounded '+ (props.disabled? '': 'img-upload')} 
                     alt="Profile"/>
