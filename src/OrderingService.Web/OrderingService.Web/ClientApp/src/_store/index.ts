@@ -9,6 +9,7 @@ import { profileReducer } from './profile/reducers';
 import { reviewReducer } from './review/reducers';
 import { reviewModalReducer } from './reviewModal/reducers';
 import { serviceTypeReducer } from './serviceType/reducers';
+import { imageReducer } from './image/reducers';
 
 const rootReducer = combineReducers({
     alert: alertReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     review: reviewReducer,
     reviewModal: reviewModalReducer,
     serviceType: serviceTypeReducer,
+    image: imageReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

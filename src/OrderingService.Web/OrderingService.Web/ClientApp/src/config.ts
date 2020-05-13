@@ -1,5 +1,9 @@
+const cloudName = 'dofujaj9p';
+
 export default {
     apiUrl: '/api',
-    cloudinaryApiUrl: 'https://api.cloudinary.com/v1_1/dofujaj9p/image/upload',
-    cloudinaryUploadPreset: 'hqdcjcax'
+    cloudinary: {
+        uploadUrl: `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        uploadPreset: 'hqdcjcax'
+    }
 }
