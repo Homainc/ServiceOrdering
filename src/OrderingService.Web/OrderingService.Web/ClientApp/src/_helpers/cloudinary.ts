@@ -19,9 +19,6 @@ export function uploadFile(
         xhr.upload.addEventListener("progress", function(e) {
             var progress = Math.round((e.loaded * 100.0) / e.total);
             onProgressUpdated(progress);
-
-            console.log(`fileuploadprogress data.loaded: ${e.loaded},
-            data.total: ${e.total}`);
         });
     }
   

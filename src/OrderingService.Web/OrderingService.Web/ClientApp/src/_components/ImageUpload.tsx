@@ -7,7 +7,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { ImageActionTypes } from '../_store/image/types';
 import * as imageActions from '../_store/image/actions';
 import { ConnectedProps, connect } from 'react-redux';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 
@@ -49,9 +49,18 @@ const ImageUpload = ({ uploadingProgress, imageUrl, uploadImage, ...props }: Ima
         <FormGroup>
             <Label htmlFor={props.id && props.name}>
                 <div 
-                    className='justify-content-center align-items-center position-absolute text-light rounded' 
+                    className='justify-content-center position-absolute text-light rounded' 
                     style={{ height: 150, width: 150, backgroundColor: '#00000070', display: isUploading? 'flex': 'none'}}>
-                        <CircularProgressbar value={uploadingProgress || 0} text={`${uploadingProgress}%`}/>
+                        <div className="align-self-center" style={{ height: 50, width: 50 }}>
+                            <CircularProgressbar
+                                strokeWidth={50}
+                                styles={buildStyles({
+                                    pathColor: '#DDD',
+                                    strokeLinecap: 'butt',
+                                    trailColor: 'rgba(0,0,0,0)'
+                                })} 
+                                value={uploadingProgress || 0}/>
+                        </div>
                 </div>
                 <img 
                     src={meta.value || 'images/default-user.jpg'} 
