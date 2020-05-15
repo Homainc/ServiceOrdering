@@ -1,5 +1,5 @@
 import { api, getErrorMessageFromEx } from '../../_helpers';
-import { EmployeeProfileDTO } from '../../WebApiModels';
+import { EmployeeProfileDto, EmployeeProfileCreateDto, EmployeeProfileUpdateDto, IPagedResultOfEmployeeProfileDto } from '../../WebApiModels';
 import { ThunkAction } from 'redux-thunk';
 import { 
     EmployeeActionTypes, EmployeeState,
@@ -14,24 +14,23 @@ import * as auth from '../auth/actions';
 import * as alertActions from '../alert/actions';
 import { AlertActionTypes } from '../alert/types';
 import { AuthActionTypes } from '../auth/types';
-import { PagedResult } from '../types';
 import { RootState } from '..';
 
-export function set(employee: EmployeeProfileDTO | undefined): EmployeeActionTypes {
+export function set(employee: EmployeeProfileDto | undefined): EmployeeActionTypes {
     return { type: EMPLOYEE_SET, employee };
 }
 
 export function create(
-    employee: EmployeeProfileDTO
+    employee: EmployeeProfileCreateDto
 ): ThunkAction<void, RootState, undefined, EmployeeActionTypes | AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
-            employee = (await api.EmployeeProfile_Create({ employeeProfileDto: employee })).body as EmployeeProfileDTO;
+            const createdEmployee = (await api.EmployeeProfile_Create({ employeeProfileDto: employee })).body as EmployeeProfileDto;
             
-            dispatch(auth.updateEmployee(employee));
+            dispatch(auth.updateEmployee(createdEmployee));
             dispatch(alertActions.success('Employee profile was successfully created!'));
-            dispatch(success(employee));
+            dispatch(success(createdEmployee));
         }
         catch (err) {
             const errorMsg = getErrorMessageFromEx(err);
@@ -42,7 +41,7 @@ export function create(
     function request(): EmployeeActionTypes { 
         return { type: EMPLOYEE_CREATE_REQUEST }; 
     }
-    function success(employee: EmployeeProfileDTO): EmployeeActionTypes { 
+    function success(employee: EmployeeProfileDto): EmployeeActionTypes { 
         return { type: EMPLOYEE_CREATE_SUCCESS, employee }; 
     }
     function failure(error: string): EmployeeActionTypes { 
@@ -51,16 +50,16 @@ export function create(
 }
 
 export function update(
-    employee: EmployeeProfileDTO
+    employee: EmployeeProfileUpdateDto
 ): ThunkAction<void, RootState, undefined, EmployeeActionTypes | AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
-            employee = (await api.EmployeeProfile_Update({ id: employee.id as string, employeeProfileDto: employee })).body as EmployeeProfileDTO;
+            const updatedEmployee = (await api.EmployeeProfile_Update({ id: employee.id as string, employeeProfileDto: employee })).body as EmployeeProfileDto;
             
-            dispatch(auth.updateEmployee(employee));
+            dispatch(auth.updateEmployee(updatedEmployee));
             dispatch(alertActions.success('Employee profile was successfully updated!'));
-            dispatch(success(employee));
+            dispatch(success(updatedEmployee));
         }
         catch (err) {
             const errorMsg = getErrorMessageFromEx(err);
@@ -71,7 +70,7 @@ export function update(
     function request(): EmployeeActionTypes { 
         return { type: EMPLOYEE_UPDATE_REQUEST }; 
     }
-    function success(employee: EmployeeProfileDTO): EmployeeActionTypes { 
+    function success(employee: EmployeeProfileDto): EmployeeActionTypes { 
         return { type: EMPLOYEE_UPDATE_SUCCESS, employee }; 
     }
     function failure(error: string): EmployeeActionTypes { 
@@ -124,7 +123,7 @@ export function loadList(
                     maxServiceCost,
                     serviceTypeId
                 })
-            ).body as PagedResult<EmployeeProfileDTO>;
+            ).body as IPagedResultOfEmployeeProfileDto;
             
             dispatch(success(pagedResult));
         }
@@ -137,8 +136,8 @@ export function loadList(
     function request(): EmployeeActionTypes { 
         return { type: EMPLOYEE_LOAD_LIST_REQUEST }; 
     }
-    function success(pagedResult: PagedResult<EmployeeProfileDTO>): EmployeeActionTypes { 
-        return { type: EMPLOYEE_LOAD_LIST_SUCCESS, list: pagedResult.value, pagesCount: pagedResult.pagesCount }; 
+    function success(pagedResult: IPagedResultOfEmployeeProfileDto): EmployeeActionTypes { 
+        return { type: EMPLOYEE_LOAD_LIST_SUCCESS, list: pagedResult.value as EmployeeProfileDto[], pagesCount: pagedResult.pagesCount }; 
     }
     function failure(error: string): EmployeeActionTypes { 
         return { type: EMPLOYEE_LOAD_LIST_FAILURE, error }; 
@@ -151,7 +150,7 @@ export function load(
     return async dispatch => {
         dispatch(request());
         try {
-            const employee = (await api.EmployeeProfile_GetEmployeeById({ id })).body as EmployeeProfileDTO;
+            const employee = (await api.EmployeeProfile_GetEmployeeById({ id })).body as EmployeeProfileDto;
             
             dispatch(success(employee));
         }
@@ -164,7 +163,7 @@ export function load(
     function request(): EmployeeActionTypes { 
         return { type: EMPLOYEE_LOAD_REQUEST }; 
     }
-    function success(employee: EmployeeProfileDTO): EmployeeActionTypes { 
+    function success(employee: EmployeeProfileDto): EmployeeActionTypes { 
         return { type: EMPLOYEE_LOAD_SUCCESS, employee }; 
     }
     function failure(error: string): EmployeeActionTypes { 

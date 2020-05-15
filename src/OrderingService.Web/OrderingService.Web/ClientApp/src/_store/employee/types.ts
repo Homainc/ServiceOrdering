@@ -1,4 +1,4 @@
-import { EmployeeProfileDTO } from "../../WebApiModels";
+import { EmployeeProfileDto } from "../../WebApiModels";
 
 export const EMPLOYEE_CREATE_REQUEST = 'employee/create (request)';
 export const EMPLOYEE_CREATE_SUCCESS = 'employee/create (success)';
@@ -31,12 +31,12 @@ interface EmployeeRequestAction {
 
 interface EmployeeCreateSuccessAction {
     type: typeof EMPLOYEE_CREATE_SUCCESS;
-    employee: EmployeeProfileDTO;
+    employee: EmployeeProfileDto;
 };
 
 interface EmployeeUpdateSuccessAction {
     type: typeof EMPLOYEE_UPDATE_SUCCESS;
-    employee: EmployeeProfileDTO;
+    employee: EmployeeProfileDto;
 };
 
 interface EmployeeDeleteSuccessAction {
@@ -45,18 +45,18 @@ interface EmployeeDeleteSuccessAction {
 
 interface EmployeeLoadListSuccessAction {
     type: typeof EMPLOYEE_LOAD_LIST_SUCCESS;
-    list: Array<EmployeeProfileDTO>;
+    list: Array<EmployeeProfileDto>;
     pagesCount: number;
 };
 
 interface EmployeeLoadSuccessAction {
     type: typeof EMPLOYEE_LOAD_SUCCESS;
-    employee: EmployeeProfileDTO;
+    employee: EmployeeProfileDto;
 };
 
 interface EmployeeSetAction {
     type: typeof EMPLOYEE_SET;
-    employee: EmployeeProfileDTO | undefined;
+    employee?: EmployeeProfileDto;
 };
 
 interface EmployeeFailureAction {
@@ -83,7 +83,7 @@ export interface EmployeeState {
     creating: boolean;
     updating: boolean;
     deleting: boolean;
-    list: Array<EmployeeProfileDTO> | undefined;
-    employee: EmployeeProfileDTO | undefined;
-    pagesCount: number | undefined;
+    list?: Array<EmployeeProfileDto>;
+    employee?: EmployeeProfileDto;
+    pagesCount?: number;
 };

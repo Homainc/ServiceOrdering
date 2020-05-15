@@ -8,8 +8,12 @@ namespace OrderingService.Domain.Logic.MapperProfiles
     {
         public OrderMapperProfile()
         {
-            CreateMap<OrderDTO, ServiceOrder>()
+            CreateMap<OrderCreateDto, ServiceOrder>().ReverseMap();
+            
+            CreateMap<OrderDto, ServiceOrder>()
+                .IncludeBase<OrderCreateDto, ServiceOrder>()
                 .ReverseMap();
+            
             CreateMap<string, Guid>().ConvertUsing(s => Guid.Parse(s));
             CreateMap<Guid, string>().ConvertUsing(g => g.ToString());
         }

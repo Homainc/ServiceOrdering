@@ -1,4 +1,4 @@
-import { EmployeeProfileDTO, UserDto, UserAuthDto } from '../../WebApiModels';
+import { UserDto, UserAuthDto, EmployeeProfileDto } from '../../WebApiModels';
 
 export const AUTH_UPDATE_EMPLOYEE = 'auth/update_employee';
 export const AUTH_UPDATE_USER = 'auth/update_user';
@@ -15,7 +15,7 @@ export const AUTH_SIGN_UP_FAILURE = 'auth/sign_up (failure)';
 
 interface AuthUpdateEmployeeAction {
     type: typeof AUTH_UPDATE_EMPLOYEE;
-    employee: EmployeeProfileDTO | undefined;
+    employee?: EmployeeProfileDto;
 };
 
 interface AuthUpdateUserAction {

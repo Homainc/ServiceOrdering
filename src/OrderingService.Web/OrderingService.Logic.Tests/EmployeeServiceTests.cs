@@ -44,7 +44,7 @@ namespace OrderingService.Logic.Tests
             employeeProfile.ServiceType = "top";
             employeeProfile.ServiceCost = 10;
             employeeProfile.Description = "best+test";
-            EmployeeProfileDTO result;
+            EmployeeProfileDto result;
             using(var context = Initializers.FakeContext(dbName)){
                 var employeeService = Initializers.FakeEmployeeService(context);
                 result = employeeService.UpdateEmployeeAsync(employeeProfile).Result;

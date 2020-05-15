@@ -1,11 +1,11 @@
 import { Row, Col, Badge, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Rating } from './Rating';
-import { EmployeeProfileDTO } from '../WebApiModels';
+import { EmployeeProfileDto } from '../WebApiModels';
 import React from 'react';
 
 type EmployeeOverviewProps = {
-    employee: EmployeeProfileDTO | undefined;
+    employee?: EmployeeProfileDto;
     withHireButton: boolean;
 };
 

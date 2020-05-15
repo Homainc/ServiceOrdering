@@ -26,7 +26,7 @@ namespace OrderingService.Domain.Logic.Services
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<OrderDTO> CreateAsync(OrderDTO orderDto)
+        public async Task<OrderDto> CreateAsync(OrderCreateDto orderDto)
         {
             if (!await _employeeRepository.AnyEmployeeAsync(x => x.Id == orderDto.EmployeeId))
                 throw new LogicNotFoundException($"Employee with id {orderDto.EmployeeId} not found!");
@@ -34,43 +34,44 @@ namespace OrderingService.Domain.Logic.Services
                 throw new LogicNotFoundException($"Client with id {orderDto.ClientId} not found!");
 
             var order = _mapper.Map<ServiceOrder>(orderDto);
+            order.Date = DateTime.Now;
 
             _serviceOrderRepository.Create(order);
             await _saveProvider.SaveAsync();
 
-            return _mapper.Map<OrderDTO>(order);
+            return _mapper.Map<OrderDto>(order);
         }
 
-        public async Task<OrderDTO> TakeOrderAsync(int id) =>
+        public async Task<OrderDto> TakeOrderAsync(int id) =>
             await SetOrderStatusAsync(id, OrderStatus.InProgress);
 
-        public async Task<OrderDTO> DeclineOrderAsync(int id) =>
+        public async Task<OrderDto> DeclineOrderAsync(int id) =>
             await SetOrderStatusAsync(id, OrderStatus.Declined);
 
-        public async Task<OrderDTO> ConfirmOrderCompletion(int id) =>
+        public async Task<OrderDto> ConfirmOrderCompletion(int id) =>
             await SetOrderStatusAsync(id, OrderStatus.Done);
 
-        public async Task<OrderDTO> DeleteAsync(int id)
+        public async Task<OrderDto> DeleteAsync(int id)
         {
             var order = await GetOrderByIdOrThrowAsync(id);
 
             _serviceOrderRepository.Delete(order);
             await _saveProvider.SaveAsync();
 
-            return _mapper.Map<OrderDTO>(order);
+            return _mapper.Map<OrderDto>(order);
         }
 
-        public async Task<IPagedResult<OrderDTO>> GetPagedOrdersByEmployeeAsync(Guid employeeId, int pageSize,
+        public async Task<IPagedResult<OrderDto>> GetPagedOrdersByEmployeeAsync(Guid employeeId, int pageSize,
             int pageNumber) =>
             (await _serviceOrderRepository.GetPagedFilteredOrdersAsync(x => x.EmployeeId == employeeId, pageSize, pageNumber))
-            .ToPagedDto<OrderDTO, ServiceOrder>(_mapper);
+            .ToPagedDto<OrderDto, ServiceOrder>(_mapper);
 
-        public async Task<IPagedResult<OrderDTO>> GetPagedOrdersByUserAsync(Guid userId, int pageSize,
+        public async Task<IPagedResult<OrderDto>> GetPagedOrdersByUserAsync(Guid userId, int pageSize,
             int pageNumber) =>
             (await _serviceOrderRepository.GetPagedFilteredOrdersAsync(x => x.ClientId == userId, pageSize, pageNumber))
-            .ToPagedDto<OrderDTO, ServiceOrder>(_mapper);
+            .ToPagedDto<OrderDto, ServiceOrder>(_mapper);
 
-        private async Task<OrderDTO> SetOrderStatusAsync(int id, OrderStatus status)
+        private async Task<OrderDto> SetOrderStatusAsync(int id, OrderStatus status)
         {
             var order = await GetOrderByIdOrThrowAsync(id);
             switch(status){
@@ -87,7 +88,7 @@ namespace OrderingService.Domain.Logic.Services
             order.Status = status;
             await _saveProvider.SaveAsync();
 
-            return _mapper.Map<OrderDTO>(order);
+            return _mapper.Map<OrderDto>(order);
         }
 
         private async Task<ServiceOrder> GetOrderByIdOrThrowAsync(int id) =>

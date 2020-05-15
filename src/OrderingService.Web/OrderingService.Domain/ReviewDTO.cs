@@ -15,6 +15,6 @@ namespace OrderingService.Domain
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public UserDto Client { get; set; }
-        public EmployeeProfileDTO Employee { get; set; }
+        public EmployeeProfileDto Employee { get; set; }
     }
 }

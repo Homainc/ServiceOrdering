@@ -10,7 +10,7 @@ import { OrderActionTypes } from '../_store/order/types';
 import { ThunkDispatch } from 'redux-thunk';
 import * as orderActions from '../_store/order/actions';
 import * as employeeActions from '../_store/employee/actions';
-import { OrderDTO } from '../WebApiModels';
+import { OrderCreateDto } from '../WebApiModels';
 import { EmployeeActionTypes } from '../_store/employee/types';
 
 const mapState = (state: RootState) => ({
@@ -23,7 +23,7 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (
     dispatch: ThunkDispatch<RootState, undefined, OrderActionTypes | EmployeeActionTypes>
 ) => ({
-    createOrder: (order: OrderDTO) => dispatch(orderActions.create(order)),
+    createOrder: (order: OrderCreateDto) => dispatch(orderActions.create(order)),
     loadEmployeeProfile: (id: string) => dispatch(employeeActions.load(id))
 });
 
@@ -70,7 +70,6 @@ const MakeOrderPage = (props: MakeOrderPageProps) => {
                     })}
                     onSubmit={(values) => {
                         props.createOrder({
-                            status: 0,
                             clientId: props.user?.id as string,
                             employeeId: employeeProfile?.id as string,
                             date: values.date.toDateString(),

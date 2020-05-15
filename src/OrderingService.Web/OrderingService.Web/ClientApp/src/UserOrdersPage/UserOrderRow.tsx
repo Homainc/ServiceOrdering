@@ -5,12 +5,12 @@ import './UserOrdersRow.css';
 import { RootState } from '../_store';
 import * as reviewModalActions from '../_store/reviewModal/actions';
 import { ORDER_STATUS } from '../_store/order/types';
-import { OrderDTO, OrderStatus } from '../WebApiModels';
+import { OrderStatus, OrderDto } from '../WebApiModels';
 
 const mapState = (state: RootState) => ({});
 
 const mapDispatch = {
-    showReviewModal: (order: OrderDTO) => reviewModalActions.show(order)
+    showReviewModal: (order: OrderDto) => reviewModalActions.show(order)
 };
 
 const connector = connect(mapState, mapDispatch);

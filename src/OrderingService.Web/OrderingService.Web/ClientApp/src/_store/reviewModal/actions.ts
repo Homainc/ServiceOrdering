@@ -1,11 +1,11 @@
-import { OrderDTO } from "../../WebApiModels";
+import { OrderDto } from "../../WebApiModels";
 import { 
     ReviewModalActionTypes, 
     REVIEW_MODAL_SHOW, REVIEW_MODAL_HIDE 
 } from "./types";
 
 export function show(
-    order: OrderDTO
+    order: OrderDto
 ): ReviewModalActionTypes {
     return { type: REVIEW_MODAL_SHOW, order };
 }

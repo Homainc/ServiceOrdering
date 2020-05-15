@@ -43,7 +43,7 @@ namespace OrderingService.Logic.Tests
             Role = "user",
         };
 
-        public static EmployeeProfileDTO DefaultEmployeeProfile => new EmployeeProfileDTO
+        public static EmployeeProfileDto DefaultEmployeeProfile => new EmployeeProfileDto
         {
             Description = "test",
             ServiceCost = 1,

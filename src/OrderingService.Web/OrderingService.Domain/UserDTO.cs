@@ -20,7 +20,7 @@ namespace OrderingService.Domain
     public class UserDto : UserDtoBase
     {
         public Guid Id { get; set; }
-        public EmployeeProfileDTO EmployeeProfile { get; set; }
+        public EmployeeProfileDto EmployeeProfile { get; set; }
     }
 
     public class UserAuthDto : UserDto

@@ -1,11 +1,11 @@
-import { OrderDTO } from "../../WebApiModels";
+import { OrderDto } from "../../WebApiModels";
 
 export const REVIEW_MODAL_SHOW = 'reviewModal/show';
 export const REVIEW_MODAL_HIDE = 'reviewModal/hide';
 
 interface ReviewModalShowAction {
     type: typeof REVIEW_MODAL_SHOW;
-    order: OrderDTO;
+    order: OrderDto;
 };
 
 interface ReviewModalHideAction {
@@ -18,5 +18,5 @@ export type ReviewModalActionTypes =
 
 export interface ReviewModalState {
     modalOpened: boolean;
-    order: OrderDTO | undefined;
+    order: OrderDto | undefined;
 };

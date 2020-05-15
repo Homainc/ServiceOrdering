@@ -6,13 +6,13 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
 {
     public interface IEmployeeService
     {
-        Task<EmployeeProfileDTO> GetEmployeeByIdAsync(Guid id);
+        Task<EmployeeProfileDto> GetEmployeeByIdAsync(Guid id);
 
-        Task<IPagedResult<EmployeeProfileDTO>> GetPagedEmployeesAsync(int pageSize, int pageNumber, string searchString,
+        Task<IPagedResult<EmployeeProfileDto>> GetPagedEmployeesAsync(int pageSize, int pageNumber, string searchString,
             decimal? maxServiceCost, int? minAverageRate, int? serviceTypeId);
-        Task<EmployeeProfileDTO> CreateEmployeeAsync(EmployeeProfileDTO employeeProfileDto);
-        Task<EmployeeProfileDTO> UpdateEmployeeAsync(EmployeeProfileDTO employeeProfileDto);
-        Task<EmployeeProfileDTO> DeleteEmployeeAsync(Guid employeeId);
+        Task<EmployeeProfileDto> CreateEmployeeAsync(EmployeeProfileCreateDto employeeProfileDto);
+        Task<EmployeeProfileDto> UpdateEmployeeAsync(EmployeeProfileUpdateDto employeeProfileDto);
+        Task<EmployeeProfileDto> DeleteEmployeeAsync(Guid employeeId);
         Task<Guid> GetUserIdByEmployeeIdAsync(Guid employeeId);
     }
 }

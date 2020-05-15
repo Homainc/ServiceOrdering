@@ -1,11 +1,8 @@
+import { ServiceTypeDto } from "../../WebApiModels";
+
 export const SERVICE_TYPE_ORDERED_LIST_REQUEST = 'serviceType/ordered_list (request)';
 export const SERVICE_TYPE_ORDERED_LIST_SUCCESS = 'serviceType/ordered_list (success)';
 export const SERVICE_TYPE_ORDERED_LIST_FAILURE = 'serviceType/ordered_list (failure)';
-
-export type ServiceTypeDTO = {
-    id: number,
-    name: string
-};
 
 interface ServiceTypeRequestAction {
     type: typeof SERVICE_TYPE_ORDERED_LIST_REQUEST;
@@ -13,7 +10,7 @@ interface ServiceTypeRequestAction {
 
 interface ServiceTypeOrderedListSuccessAction {
     type: typeof SERVICE_TYPE_ORDERED_LIST_SUCCESS;
-    list: Array<ServiceTypeDTO>;
+    list: Array<ServiceTypeDto>;
 };
 
 interface ServiceTypeFailureAction {
@@ -28,5 +25,5 @@ export type ServiceTypeActionTypes =
 
 export interface ServiceTypeState {
     listLoading: boolean;
-    list: Array<ServiceTypeDTO> | undefined;
+    list: Array<ServiceTypeDto> | undefined;
 };

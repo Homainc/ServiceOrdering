@@ -1,6 +1,6 @@
 import { history, api, getErrorMessageFromEx } from "../../_helpers";
 import { ThunkAction } from "redux-thunk";
-import { EmployeeProfileDTO, UserAuthDto, UserCreateDto } from "../../WebApiModels";
+import { UserAuthDto, UserCreateDto, EmployeeProfileDto } from "../../WebApiModels";
 import { AuthActionTypes, 
     AUTH_LOGIN_REQUEST, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE, 
     AUTH_LOGOUT, 
@@ -102,7 +102,7 @@ export function updateUser(user: UserAuthDto): AuthActionTypes {
     return { type: AUTH_UPDATE_USER, user };
 }
 
-export function updateEmployee(employeeProfile: EmployeeProfileDTO | undefined): AuthActionTypes {
+export function updateEmployee(employeeProfile?: EmployeeProfileDto): AuthActionTypes {
     const user = JSON.parse(localStorage.getItem('user') as string);
     user.employeeProfile = employeeProfile;
     localStorage.setItem('user', JSON.stringify(user));

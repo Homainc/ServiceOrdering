@@ -46,7 +46,7 @@ const EmployeePage = (props: EmployeePageProps) => {
                 <Row>
                     <Col>
                     <h5>Description</h5>
-                    <p className="text-secondary" >{employeeProfile && employeeProfile.description}</p>
+                    <p className="text-secondary" >{employeeProfile?.description}</p>
                     </Col>
                 </Row>
                 <ReviewsBlock employeeId={employeeProfile?.id}/>

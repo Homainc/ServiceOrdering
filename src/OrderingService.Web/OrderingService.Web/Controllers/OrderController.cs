@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OrderingService.Common.Interfaces;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
@@ -25,25 +26,25 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpGet("user/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IPagedResult<OrderDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetUserOrdersAsync([FromRoute] string id, [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1) =>
             Ok(await _orderService.GetPagedOrdersByUserAsync(new Guid(id), pageSize, pageNumber));
         
         [HttpGet("employee/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IPagedResult<OrderDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetEmployeeOrdersAsync([FromRoute] string id, [FromQuery] int pageSize = 5,
             [FromQuery] int pageNumber = 1) =>
             Ok(await _orderService.GetPagedOrdersByEmployeeAsync(new Guid(id), pageSize, pageNumber));
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateAsync(
             [FromBody] [CustomizeValidator(RuleSet = "Create")]
-            OrderDTO orderDto)
+            OrderCreateDto orderDto)
         {
             var order = await _orderService.CreateAsync(orderDto);
 
@@ -54,7 +55,7 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpPut("take/{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> TakeAsync([FromRoute] int id)
@@ -68,7 +69,7 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpPut("decline/{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeclineAsync([FromRoute] int id)
@@ -82,7 +83,7 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpPut("confirm/{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ConfirmCompletionAsync([FromRoute] int id)
@@ -96,7 +97,7 @@ namespace OrderingService.Web.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id) =>
             Ok(await _orderService.DeleteAsync(id));

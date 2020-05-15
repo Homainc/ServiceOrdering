@@ -3,7 +3,7 @@ using OrderingService.Domain;
 
 namespace OrderingService.Web.Code.Validators
 {
-    public class EmployeeProfileDtoValidator : AbstractValidator<EmployeeProfileDTO>
+    public class EmployeeProfileDtoValidator : AbstractValidator<EmployeeProfileDto>
     {
         public EmployeeProfileDtoValidator()
         {

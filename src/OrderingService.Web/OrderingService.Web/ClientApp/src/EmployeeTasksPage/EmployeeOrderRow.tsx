@@ -4,11 +4,11 @@ import { EmployeeOrderStatus } from './EmployeeOrderStatus';
 
 type EmployeeOrderRowProps = Readonly<{
     date: string;
-    briefTask: string | undefined;
+    briefTask?: string;
     id: number;
-    serviceDetails: string | undefined;
-    address: string | undefined;
-    contactPhone: string | undefined;
+    serviceDetails?: string;
+    address?: string;
+    contactPhone?: string;
     status: number;
     price: number;
 }>;

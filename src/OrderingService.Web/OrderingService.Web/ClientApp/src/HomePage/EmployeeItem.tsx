@@ -1,10 +1,10 @@
 import React from 'react';
 import { ListGroup, ListGroupItem, Row, Col, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { EmployeeProfileDTO } from '../WebApiModels';
+import { EmployeeProfileDto } from '../WebApiModels';
 
 type EmployeeItemProps = Readonly<{
-    employee: EmployeeProfileDTO;
+    employee: EmployeeProfileDto;
 }>;
 
 export const EmployeeItem = (props: EmployeeItemProps) => {

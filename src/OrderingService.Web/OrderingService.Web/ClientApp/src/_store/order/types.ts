@@ -1,4 +1,4 @@
-import { OrderDTO } from "../../WebApiModels";
+import { OrderDto } from "../../WebApiModels";
 
 export const ORDER_CREATE_REQUEST = 'order/create (request)';
 export const ORDER_CREATE_SUCCESS = 'order/create (success)';
@@ -35,12 +35,12 @@ interface OrderRequestAction {
 
 interface OrderCreateSuccessAction {
     type: typeof ORDER_CREATE_SUCCESS;
-    order: OrderDTO;
+    order: OrderDto;
 };
 
 interface OrderLoadSuccessAction {
     type: typeof ORDER_LOAD_LIST_BY_USER_SUCCESS | typeof ORDER_LOAD_LIST_BY_EMPLOYEE_SUCCESS;
-    list: Array<OrderDTO>;
+    list: Array<OrderDto>;
     pagesCount: number;
     totalOrders: number;
 };
@@ -71,9 +71,9 @@ export interface OrderState {
     accepting: boolean;
     declining: boolean;
     confirming: boolean;
-    order: OrderDTO | undefined;
-    orders: Array<OrderDTO> | undefined;
-    pagesCount: number | undefined;
-    totalOrders: number | undefined;
+    order?: OrderDto;
+    orders?: Array<OrderDto>;
+    pagesCount?: number;
+    totalOrders?: number;
 };
     

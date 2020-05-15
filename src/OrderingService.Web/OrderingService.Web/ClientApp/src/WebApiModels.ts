@@ -26,7 +26,7 @@ export type UserAuthDto = {
     'lastName' ? : string;
     'imageUrl' ? : string;
     'id': string;
-    'employeeProfile' ? : EmployeeProfileDTO;
+    'employeeProfile' ? : EmployeeProfileDto;
     'token' ? : string;
 };
 
@@ -38,18 +38,24 @@ export type UserDto = {
     'lastName' ? : string;
     'imageUrl' ? : string;
     'id': string;
-    'employeeProfile' ? : EmployeeProfileDTO;
+    'employeeProfile' ? : EmployeeProfileDto;
 };
 
-export type EmployeeProfileDTO = {
-    'id' ? : string;
+export type EmployeeProfileDto = {
     'serviceType' ? : string;
     'serviceCost': number;
     'description' ? : string;
+    'id': string;
     'userId': string;
     'user' ? : UserDto;
     'averageRate' ? : number;
     'reviewsCount': number;
+};
+
+export type EmployeeProfileDtoBase = {
+    'serviceType' ? : string;
+    'serviceCost': number;
+    'description' ? : string;
 } & {
     [key: string]: any;
 };
@@ -95,24 +101,70 @@ export type UserCreateDto = {
     'password' ? : string;
 };
 
-export type OrderDTO = {
-    'id' ? : number;
+export type IPagedResultOfEmployeeProfileDto = {
+    'value' ? : Array < EmployeeProfileDto >
+    ;
+    'pagesCount': number;
+    'pageSize': number;
+    'pageNumber': number;
+    'total': number;
+} & {
+    [key: string]: any;
+};
+
+export type EmployeeProfileCreateDto = {
+    'serviceType' ? : string;
+    'serviceCost': number;
+    'description' ? : string;
+    'userId': string;
+};
+
+export type EmployeeProfileUpdateDto = {
+    'serviceType' ? : string;
+    'serviceCost': number;
+    'description' ? : string;
+    'id': string;
+};
+
+export type IPagedResultOfOrderDto = {
+    'value' ? : Array < OrderDto >
+    ;
+    'pagesCount': number;
+    'pageSize': number;
+    'pageNumber': number;
+    'total': number;
+} & {
+    [key: string]: any;
+};
+
+export type OrderDto = {
     'clientId': string;
-    'client' ? : UserDto;
     'employeeId': string;
-    'employee' ? : EmployeeProfileDTO;
     'briefTask' ? : string;
     'serviceDetails' ? : string;
     'address' ? : string;
     'contactPhone' ? : string;
     'price': number;
+    'id': number;
+    'client' ? : UserDto;
+    'employee' ? : EmployeeProfileDto;
     'date': string;
     'status': OrderStatus;
-} & {
-    [key: string]: any;
 };
 
 export type OrderStatus = 0 | 1 | 2 | 3;
+
+export type OrderCreateDto = {
+    'clientId': string;
+    'employeeId': string;
+    'briefTask' ? : string;
+    'serviceDetails' ? : string;
+    'address' ? : string;
+    'contactPhone' ? : string;
+    'price': number;
+} & {
+    [key: string]: any;
+};
 
 export type IPagedResultOfReviewDto = {
     'value' ? : Array < ReviewDto >
@@ -133,7 +185,7 @@ export type ReviewDto = {
     'id': number;
     'date': string;
     'client' ? : UserDto;
-    'employee' ? : EmployeeProfileDTO;
+    'employee' ? : EmployeeProfileDto;
 };
 
 export type ReviewCreateDto = {
@@ -608,7 +660,7 @@ export class SwaggerCodegen {
      */
     EmployeeProfile_GetEmployeeById(parameters: {
         'id': string,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 404, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, EmployeeProfileDto > | ResponseWithBody < 404, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/EmployeeProfile/{id}';
         if (parameters.$path) {
@@ -648,7 +700,7 @@ export class SwaggerCodegen {
 
     EmployeeProfile_UpdateURL(parameters: {
         'id': string,
-        'employeeProfileDto': EmployeeProfileDTO,
+        'employeeProfileDto': EmployeeProfileUpdateDto,
     } & CommonRequestOptions): string {
         let queryParameters: QueryParameters = {};
         const domain = parameters.$domain ? parameters.$domain : this.domain;
@@ -685,8 +737,8 @@ export class SwaggerCodegen {
      */
     EmployeeProfile_Update(parameters: {
         'id': string,
-        'employeeProfileDto': EmployeeProfileDTO,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
+        'employeeProfileDto': EmployeeProfileUpdateDto,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, EmployeeProfileDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/EmployeeProfile/{id}';
         if (parameters.$path) {
@@ -771,7 +823,7 @@ export class SwaggerCodegen {
      */
     EmployeeProfile_Delete(parameters: {
         'id': string,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, EmployeeProfileDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/EmployeeProfile/{id}';
         if (parameters.$path) {
@@ -895,7 +947,7 @@ export class SwaggerCodegen {
         'minAverageRate' ? : number,
         'pageSize' ? : number,
         'pageNumber' ? : number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, IPagedResultOfEmployeeProfileDto > | ResponseWithBody < 400, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/EmployeeProfile';
         if (parameters.$path) {
@@ -963,7 +1015,7 @@ export class SwaggerCodegen {
     }
 
     EmployeeProfile_CreateURL(parameters: {
-        'employeeProfileDto': EmployeeProfileDTO,
+        'employeeProfileDto': EmployeeProfileCreateDto,
     } & CommonRequestOptions): string {
         let queryParameters: QueryParameters = {};
         const domain = parameters.$domain ? parameters.$domain : this.domain;
@@ -992,8 +1044,8 @@ export class SwaggerCodegen {
      * @param {} employeeProfileDto - 
      */
     EmployeeProfile_Create(parameters: {
-        'employeeProfileDto': EmployeeProfileDTO,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+        'employeeProfileDto': EmployeeProfileCreateDto,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, EmployeeProfileDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/EmployeeProfile';
         if (parameters.$path) {
@@ -1087,7 +1139,7 @@ export class SwaggerCodegen {
         'id': string,
         'pageSize' ? : number,
         'pageNumber' ? : number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, IPagedResultOfOrderDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Order/user/{id}';
         if (parameters.$path) {
@@ -1195,7 +1247,7 @@ export class SwaggerCodegen {
         'id': string,
         'pageSize' ? : number,
         'pageNumber' ? : number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, IPagedResultOfOrderDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Order/employee/{id}';
         if (parameters.$path) {
@@ -1248,7 +1300,7 @@ export class SwaggerCodegen {
     }
 
     Order_CreateURL(parameters: {
-        'orderDto': OrderDTO,
+        'orderDto': OrderCreateDto,
     } & CommonRequestOptions): string {
         let queryParameters: QueryParameters = {};
         const domain = parameters.$domain ? parameters.$domain : this.domain;
@@ -1277,8 +1329,8 @@ export class SwaggerCodegen {
      * @param {} orderDto - 
      */
     Order_Create(parameters: {
-        'orderDto': OrderDTO,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+        'orderDto': OrderCreateDto,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, OrderDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Order';
         if (parameters.$path) {
@@ -1353,7 +1405,7 @@ export class SwaggerCodegen {
      */
     Order_Take(parameters: {
         'id': number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, OrderDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Order/take/{id}';
         if (parameters.$path) {
@@ -1428,7 +1480,7 @@ export class SwaggerCodegen {
      */
     Order_Decline(parameters: {
         'id': number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, OrderDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Order/decline/{id}';
         if (parameters.$path) {
@@ -1503,7 +1555,7 @@ export class SwaggerCodegen {
      */
     Order_ConfirmCompletion(parameters: {
         'id': number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, OrderDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Order/confirm/{id}';
         if (parameters.$path) {
@@ -1578,7 +1630,7 @@ export class SwaggerCodegen {
      */
     Order_Delete(parameters: {
         'id': number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, OrderDto > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Order/{id}';
         if (parameters.$path) {

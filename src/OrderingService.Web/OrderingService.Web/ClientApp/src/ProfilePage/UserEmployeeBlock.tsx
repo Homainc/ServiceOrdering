@@ -7,7 +7,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../_store';
 import { ThunkDispatch } from 'redux-thunk';
 import { EmployeeActionTypes } from '../_store/employee/types';
-import { EmployeeProfileDTO } from '../WebApiModels';
+import { EmployeeProfileCreateDto, EmployeeProfileUpdateDto } from '../WebApiModels';
 import * as employeeActions from '../_store/employee/actions';
 
 const mapState = (state: RootState) => ({
@@ -20,8 +20,8 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (
     dispatch: ThunkDispatch<RootState, undefined, EmployeeActionTypes>
 ) => ({
-    createEmployeeProfile: async (employee: EmployeeProfileDTO) => dispatch(employeeActions.create(employee)),
-    updateEmployeeProfile: async (employee: EmployeeProfileDTO) => dispatch(employeeActions.update(employee)),
+    createEmployeeProfile: async (employee: EmployeeProfileCreateDto) => dispatch(employeeActions.create(employee)),
+    updateEmployeeProfile: async (employee: EmployeeProfileUpdateDto) => dispatch(employeeActions.update(employee)),
     deleteEmployeeProfile: (id: string) => dispatch(employeeActions.deleteById(id)),
 });
 
@@ -44,11 +44,10 @@ const UserEmployeeBlock = (props: UserEmployeeBlockProps) => {
         serviceCost: React.ReactText;
         description: string;
     }) => {
-        const profile: EmployeeProfileDTO = {
+        const profile: EmployeeProfileCreateDto = {
             serviceType: values.serviceType,
             serviceCost: values.serviceCost as number,
             description: values.description,
-            reviewsCount: 0,
             userId: props.user?.id || ''
         };
         if(!employeeProfile)

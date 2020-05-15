@@ -1,6 +1,6 @@
 import { history, api, getErrorMessageFromEx } from '../../_helpers';
 import { ThunkAction } from 'redux-thunk';
-import { OrderDTO } from '../../WebApiModels';
+import { OrderCreateDto, OrderDto, IPagedResultOfOrderDto } from '../../WebApiModels';
 import { 
     OrderState, OrderActionTypes, 
     ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_CREATE_FAILURE, 
@@ -11,17 +11,16 @@ import {
     ORDER_CONFIRM_REQUEST, ORDER_CONFIRM_SUCCESS, ORDER_CONFIRM_FAILURE 
 } from './types';
 import { RootState } from '../';
-import { PagedResult } from '../types';
 
 export function create(
-    order: OrderDTO
+    order: OrderCreateDto
 ): ThunkAction<void, RootState, undefined, OrderActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
-            order = (await api.Order_Create({ orderDto: order })).body as OrderDTO;
+            const createdOrder = (await api.Order_Create({ orderDto: order })).body as OrderDto;
             
-            dispatch(success(order));
+            dispatch(success(createdOrder));
             history.push('/profile');
         }
         catch (err) {
@@ -33,7 +32,7 @@ export function create(
     function request(): OrderActionTypes { 
         return { type: ORDER_CREATE_REQUEST }; 
     }
-    function success(order: OrderDTO): OrderActionTypes { 
+    function success(order: OrderDto): OrderActionTypes { 
         return { type: ORDER_CREATE_SUCCESS, order }; 
     }
     function failure(error: string): OrderActionTypes { 
@@ -48,7 +47,7 @@ export function loadOrdersByUser(
     return async dispatch => {
         dispatch(request());
         try {
-            const pagedResult = (await api.Order_GetUserOrders({ id: userId, pageNumber })).body as PagedResult<OrderDTO>;
+            const pagedResult = (await api.Order_GetUserOrders({ id: userId, pageNumber })).body as IPagedResultOfOrderDto;
             
             dispatch(success(pagedResult));
         }
@@ -61,10 +60,10 @@ export function loadOrdersByUser(
     function request(): OrderActionTypes { 
         return { type: ORDER_LOAD_LIST_BY_USER_REQUEST }; 
     }
-    function success(pagedResult: PagedResult<OrderDTO>): OrderActionTypes { 
+    function success(pagedResult: IPagedResultOfOrderDto): OrderActionTypes { 
         return {
             type: ORDER_LOAD_LIST_BY_USER_SUCCESS, 
-            list: pagedResult.value, 
+            list: pagedResult.value as OrderDto[], 
             pagesCount: pagedResult.pagesCount, 
             totalOrders: pagedResult.total 
         }; 
@@ -81,7 +80,7 @@ export function loadOrdersByEmployee(
     return async dispatch => {
         dispatch(request());
         try {
-            const pagedResult = (await api.Order_GetEmployeeOrders({ id: employeeId, pageNumber })).body as PagedResult<OrderDTO>;
+            const pagedResult = (await api.Order_GetEmployeeOrders({ id: employeeId, pageNumber })).body as IPagedResultOfOrderDto;
             
             dispatch(success(pagedResult));
         }
@@ -94,10 +93,10 @@ export function loadOrdersByEmployee(
     function request(): OrderActionTypes { 
         return { type: ORDER_LOAD_LIST_BY_EMPLOYEE_REQUEST }; 
     }
-    function success(pagedResult: PagedResult<OrderDTO>): OrderActionTypes { 
+    function success(pagedResult: IPagedResultOfOrderDto): OrderActionTypes { 
         return { 
             type: ORDER_LOAD_LIST_BY_EMPLOYEE_SUCCESS, 
-            list: pagedResult.value, 
+            list: pagedResult.value as OrderDto[], 
             pagesCount: pagedResult.pagesCount, 
             totalOrders: pagedResult.total 
         }; 

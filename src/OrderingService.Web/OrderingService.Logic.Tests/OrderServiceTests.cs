@@ -24,7 +24,7 @@ namespace OrderingService.Logic.Tests
             employee = await employeeService.CreateEmployeeAsync(employee);
 
             // Action
-            var order = new OrderDTO
+            var order = new OrderDto
             {
                 Address = "ffd",
                 BriefTask = "l",
