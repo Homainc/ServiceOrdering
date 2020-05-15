@@ -1,6 +1,6 @@
-import { history, api, getErrorMessageFromEx } from "../../_helpers";
+import { history, api } from "../../_helpers";
 import { ThunkAction } from "redux-thunk";
-import { UserAuthDto, UserCreateDto, EmployeeProfileDto } from "../../WebApiModels";
+import { UserAuthDto, UserCreateDto, EmployeeProfileDto, ValidationProblemDetails } from "../../WebApiModels";
 import { AuthActionTypes, 
     AUTH_LOGIN_REQUEST, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE, 
     AUTH_LOGOUT, 
@@ -33,9 +33,10 @@ export function logIn(
             return user;
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(alertActions.error(errorMsg));
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ValidationProblemDetails;
+            dispatch(alertActions.error(errObj.detail || ''));
+            dispatch(failure(errObj));
+            throw errObj.errors;
         }
     };
 
@@ -45,7 +46,7 @@ export function logIn(
     function success(user: UserAuthDto): AuthActionTypes { 
         return { type: AUTH_LOGIN_SUCCESS, user }; 
     }
-    function failure(error: string): AuthActionTypes { 
+    function failure(error: ValidationProblemDetails): AuthActionTypes { 
         return { type: AUTH_LOGIN_FAILURE, error }; 
     }
 }
@@ -77,9 +78,10 @@ export function signUp(
             return user;
         }
         catch (err){
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(alertActions.error(errorMsg));
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ValidationProblemDetails;
+            dispatch(alertActions.error(errObj.title || ''));
+            dispatch(failure(errObj));
+            throw errObj.errors;
         }
     };
 
@@ -89,7 +91,7 @@ export function signUp(
     function success(user: UserAuthDto): AuthActionTypes { 
         return { type: AUTH_SIGN_UP_SUCCESS, user }; 
     }
-    function failure(error: string): AuthActionTypes { 
+    function failure(error: ValidationProblemDetails): AuthActionTypes { 
         return { type: AUTH_SIGN_UP_FAILURE, error };
     }
 }
@@ -123,7 +125,7 @@ export function connectToNotificationHub(
 
             hubConnection.on('ReceiveNotice', msg => dispatch(alertActions.info(msg)));
         }
-        catch (err){
+        catch (err) {
             dispatch(logOut());
         }
     };

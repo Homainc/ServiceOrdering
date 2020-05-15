@@ -3,18 +3,25 @@ using OrderingService.Domain;
 
 namespace OrderingService.Web.Code.Validators
 {
-    public class EmployeeProfileDtoValidator : AbstractValidator<EmployeeProfileDto>
+    public class EmployeeProfileCreateDtoValidator : AbstractValidator<EmployeeProfileCreateDto>
     {
-        public EmployeeProfileDtoValidator()
+        public EmployeeProfileCreateDtoValidator()
         {
-            RuleSet("Create", () =>
-            {
-                RuleFor(x => x.ServiceCost).GreaterThan(0);
-                RuleFor(x => x.ServiceType).NotNull();
-                RuleFor(x => x.Description).MaximumLength(255);
-                RuleFor(x => x.ServiceType).NotEmpty().MaximumLength(20);
-            });
-            RuleSet("Id", () => { RuleFor(x => x.Id).NotNull(); });
+            RuleFor(x => x.ServiceCost).GreaterThan(0);
+            RuleFor(x => x.Description).MaximumLength(255);
+            RuleFor(x => x.ServiceType).NotEmpty().MaximumLength(20);
+            RuleFor(x => x.UserId).NotEmpty();
+        }
+    }
+
+    public class EmployeeProfileUpdateDtoValidator : AbstractValidator<EmployeeProfileUpdateDto>
+    {
+        public EmployeeProfileUpdateDtoValidator()
+        {
+            RuleFor(x => x.Id).NotEmpty();
+            RuleFor(x => x.ServiceCost).GreaterThan(0);
+            RuleFor(x => x.Description).MaximumLength(255);
+            RuleFor(x => x.ServiceType).NotEmpty().MaximumLength(20);
         }
     }
 }

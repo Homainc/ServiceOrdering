@@ -71,6 +71,21 @@ export type UserDtoBase = {
     [key: string]: any;
 };
 
+export type ValidationProblemDetails = {
+    'type' ? : string;
+    'title' ? : string;
+    'status' ? : number;
+    'detail' ? : string;
+    'instance' ? : string;
+    'extensions' ? : {} & {
+        [key: string]: void;
+    };
+    'errors' ? : {} & {
+        [key: string]: Array < string >
+        ;
+    };
+};
+
 export type ProblemDetails = {
     'type' ? : string;
     'title' ? : string;
@@ -379,7 +394,7 @@ export class SwaggerCodegen {
      */
     Account_Auth(parameters: {
         'loginModel': UserLoginModel,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserAuthDto > | ResponseWithBody < 400, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserAuthDto > | ResponseWithBody < 400, ValidationProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Account/auth';
         if (parameters.$path) {
@@ -448,7 +463,7 @@ export class SwaggerCodegen {
      */
     Account_SignUp(parameters: {
         'userDto': UserCreateDto,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserAuthDto > | ResponseWithBody < 400, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserAuthDto > | ResponseWithBody < 400, ValidationProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Account/sign-up';
         if (parameters.$path) {
@@ -510,7 +525,7 @@ export class SwaggerCodegen {
      * @method
      * @name SwaggerCodegen#Account_GetProfile
      */
-    Account_GetProfile(parameters: {} & CommonRequestOptions): Promise < ResponseWithBody < 200, UserDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+    Account_GetProfile(parameters: {} & CommonRequestOptions): Promise < ResponseWithBody < 200, UserDto > | ResponseWithBody < 400, ValidationProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Account/profile';
         if (parameters.$path) {
@@ -575,7 +590,7 @@ export class SwaggerCodegen {
     Account_UpdateProfile(parameters: {
         'id': string,
         'userDto': UserDto,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails > | ResponseWithBody < 404, ValidationProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Account/{id}';
         if (parameters.$path) {

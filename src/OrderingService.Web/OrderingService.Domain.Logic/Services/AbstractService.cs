@@ -5,12 +5,12 @@ namespace OrderingService.Domain.Logic.Services
 {
     public class AbstractService
     {
-        protected readonly IMapper _mapper;
-        protected readonly ISaveProvider _saveProvider;
+        protected readonly IMapper Mapper;
+        protected readonly ISaveProvider SaveProvider;
         protected AbstractService(IMapper mapper, ISaveProvider saveProvider)
         {
-            _mapper = mapper;
-            _saveProvider = saveProvider;
+            Mapper = mapper;
+            SaveProvider = saveProvider;
         }
     }
 }

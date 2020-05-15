@@ -28,36 +28,36 @@ namespace OrderingService.Domain.Logic.Services
         public async Task<IPagedResult<EmployeeProfileDto>> GetPagedEmployeesAsync(int pageSize, int pageNumber,
             string searchString, decimal? maxServiceCost, int? minAverageRate, int? serviceTypeId) =>
             (await _employeeRepository.GetPagedEmployeesAsync(pageSize, pageNumber, searchString, maxServiceCost, minAverageRate, serviceTypeId))
-            .ToPagedDto<EmployeeProfileDto, EmployeeProfile>(_mapper);
+            .ToPagedDto<EmployeeProfileDto, EmployeeProfile>(Mapper);
 
         public async Task<EmployeeProfileDto> CreateEmployeeAsync(EmployeeProfileCreateDto employeeProfileDto)
         {
             if(!await _userRepository.AnyUserAsync(x => x.Id == employeeProfileDto.UserId))
-                throw new LogicNotFoundException($"User with id {employeeProfileDto.UserId} not found!");
+                throw new NotFoundLogicException($"User with id {employeeProfileDto.UserId} not found!", nameof(employeeProfileDto.UserId));
             if(await _employeeRepository.AnyEmployeeAsync(x => x.UserId == employeeProfileDto.UserId))
                 throw new LogicException($"Employee profile for user with id {employeeProfileDto.UserId} has been already created!");
 
-            var employeeProfile = _mapper.Map<EmployeeProfile>(employeeProfileDto);
+            var employeeProfile = Mapper.Map<EmployeeProfile>(employeeProfileDto);
             employeeProfile.ServiceType = await _serviceTypeRepository.GetByNameOrCreateNewAsync(employeeProfileDto.ServiceType);
 
             _employeeRepository.Create(employeeProfile);
-            await _saveProvider.SaveAsync();
+            await SaveProvider.SaveAsync();
 
-            return _mapper.Map<EmployeeProfileDto>(employeeProfile);
+            return Mapper.Map<EmployeeProfileDto>(employeeProfile);
         }
 
         public async Task<EmployeeProfileDto> UpdateEmployeeAsync(EmployeeProfileUpdateDto employeeProfileDto)
         {
             var employeeProfile = await GetEmployeeByIdOrThrowAsync(employeeProfileDto.Id);
 
-            _mapper.Map(employeeProfileDto, employeeProfile);
+            Mapper.Map(employeeProfileDto, employeeProfile);
             employeeProfile.ServiceType = await _serviceTypeRepository.GetByNameOrCreateNewAsync(employeeProfileDto.ServiceType);
             employeeProfile.ServiceTypeId = employeeProfile.ServiceType.Id;
             
             _employeeRepository.Update(employeeProfile);
-            await _saveProvider.SaveAsync();
+            await SaveProvider.SaveAsync();
 
-            return _mapper.Map<EmployeeProfileDto>(employeeProfile);
+            return Mapper.Map<EmployeeProfileDto>(employeeProfile);
         }
 
         public async Task<EmployeeProfileDto> DeleteEmployeeAsync(Guid id)
@@ -65,19 +65,19 @@ namespace OrderingService.Domain.Logic.Services
             var employeeProfile = await GetEmployeeByIdOrThrowAsync(id);
 
             _employeeRepository.Delete(employeeProfile);
-            await _saveProvider.SaveAsync();
+            await SaveProvider.SaveAsync();
 
-            return _mapper.Map<EmployeeProfileDto>(employeeProfile);
+            return Mapper.Map<EmployeeProfileDto>(employeeProfile);
         }
 
         public async Task<Guid> GetUserIdByEmployeeIdAsync(Guid employeeId) => 
             await _employeeRepository.GetUserIdByEmployeeIdAsync(employeeId);
 
         public async Task<EmployeeProfileDto> GetEmployeeByIdAsync(Guid id) =>
-            _mapper.Map<EmployeeProfileDto>(await GetEmployeeByIdOrThrowAsync(id));
+            Mapper.Map<EmployeeProfileDto>(await GetEmployeeByIdOrThrowAsync(id));
 
         private async Task<EmployeeProfile> GetEmployeeByIdOrThrowAsync(Guid id) =>
             await _employeeRepository.GetEagerByIdOrDefaultAsync(id) ??
-            throw new LogicNotFoundException($"Employee profile with id {id} not found!");
+            throw new NotFoundLogicException($"Employee profile with id {id} not found!", nameof(id));
     }
 }

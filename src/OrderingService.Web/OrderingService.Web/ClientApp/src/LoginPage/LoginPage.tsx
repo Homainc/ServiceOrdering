@@ -18,7 +18,7 @@ const mapDispatch = (
     dispatch: ThunkDispatch<RootState, undefined, AuthActionTypes>
 ) => ({
     logOut: () => dispatch(authActions.logOut()),
-    logIn: (username: string, password: string) => dispatch(authActions.logIn(username, password))
+    logIn: async (username: string, password: string) => dispatch(authActions.logIn(username, password))
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -54,8 +54,9 @@ class LoginPage extends React.Component<LoginPageProps> {
                                 password: Yup.string()
                                     .required('Required')
                             })}
-                            onSubmit={values => {
-                                logIn(values.email, values.password);
+                            onSubmit={(values, { setErrors }) => {
+                                logIn(values.email, values.password)
+                                    .catch(errors => setErrors(errors));
                             }}>
                             <Form>
                                 <ValidationTextField

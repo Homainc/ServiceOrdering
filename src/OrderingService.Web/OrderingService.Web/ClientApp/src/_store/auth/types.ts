@@ -1,4 +1,4 @@
-import { UserDto, UserAuthDto, EmployeeProfileDto } from '../../WebApiModels';
+import { UserDto, UserAuthDto, EmployeeProfileDto, ProblemDetails } from '../../WebApiModels';
 
 export const AUTH_UPDATE_EMPLOYEE = 'auth/update_employee';
 export const AUTH_UPDATE_USER = 'auth/update_user';
@@ -43,7 +43,7 @@ interface AuthSignUpSuccessAction {
 
 interface AuthFailureAction {
     type: typeof AUTH_SIGN_UP_FAILURE | typeof AUTH_LOGIN_FAILURE;
-    error: string;
+    error: ProblemDetails;
 };
 
 export type AuthActionTypes =

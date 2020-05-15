@@ -6,7 +6,6 @@ namespace OrderingService.Domain.Logic.Code.Exceptions
     {
         public LogicException(string message) : base(message)
         {
-            
         }
     }
 }

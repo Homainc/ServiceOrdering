@@ -23,7 +23,7 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (
     dispatch: ThunkDispatch<RootState, undefined, OrderActionTypes | EmployeeActionTypes>
 ) => ({
-    createOrder: (order: OrderCreateDto) => dispatch(orderActions.create(order)),
+    createOrder: async (order: OrderCreateDto) => dispatch(orderActions.create(order)),
     loadEmployeeProfile: (id: string) => dispatch(employeeActions.load(id))
 });
 
@@ -54,7 +54,7 @@ const MakeOrderPage = (props: MakeOrderPageProps) => {
                         contactPhone: ''
                     }}
                     validationSchema={Yup.object({
-                        date: Yup.date(),
+                        date: Yup.date().min(new Date(Date.now())),
                         briefTask: Yup.string()
                             .required('Brief task is required')
                             .max(50, 'Brief task must be at most 50 characters'),
@@ -66,9 +66,9 @@ const MakeOrderPage = (props: MakeOrderPageProps) => {
                             .max(50, 'Address must be at most 50 characters'),
                         contactPhone: Yup.string()
                             .required('Your contact phone is required')
-                            .max(20, 'Your contact phone must be at most 20 characters')
+                            .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/, 'Incorrect contact phone')
                     })}
-                    onSubmit={(values) => {
+                    onSubmit={(values, { setErrors }) => {
                         props.createOrder({
                             clientId: props.user?.id as string,
                             employeeId: employeeProfile?.id as string,
@@ -78,7 +78,8 @@ const MakeOrderPage = (props: MakeOrderPageProps) => {
                             address: values.address,
                             contactPhone: values.contactPhone,
                             price: employeeProfile?.serviceCost as number
-                        });
+                        })
+                        .catch(errors => setErrors(errors));
                     }}>
                     <Form>
                         <Row>

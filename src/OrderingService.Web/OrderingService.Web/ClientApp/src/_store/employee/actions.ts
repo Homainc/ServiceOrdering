@@ -1,5 +1,11 @@
-import { api, getErrorMessageFromEx } from '../../_helpers';
-import { EmployeeProfileDto, EmployeeProfileCreateDto, EmployeeProfileUpdateDto, IPagedResultOfEmployeeProfileDto } from '../../WebApiModels';
+import { api } from '../../_helpers';
+import { 
+    EmployeeProfileDto, 
+    EmployeeProfileCreateDto, 
+    EmployeeProfileUpdateDto, 
+    IPagedResultOfEmployeeProfileDto, 
+    ValidationProblemDetails, ProblemDetails 
+} from '../../WebApiModels';
 import { ThunkAction } from 'redux-thunk';
 import { 
     EmployeeActionTypes, EmployeeState,
@@ -33,8 +39,9 @@ export function create(
             dispatch(success(createdEmployee));
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ValidationProblemDetails;
+            dispatch(failure(errObj));
+            throw errObj.errors;
         }
     };
 
@@ -44,7 +51,7 @@ export function create(
     function success(employee: EmployeeProfileDto): EmployeeActionTypes { 
         return { type: EMPLOYEE_CREATE_SUCCESS, employee }; 
     }
-    function failure(error: string): EmployeeActionTypes { 
+    function failure(error: ValidationProblemDetails): EmployeeActionTypes { 
         return { type: EMPLOYEE_CREATE_FAILURE, error }; 
     } 
 }
@@ -62,8 +69,9 @@ export function update(
             dispatch(success(updatedEmployee));
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ValidationProblemDetails;
+            dispatch(failure(errObj));
+            throw errObj.errors;
         }
     };
 
@@ -73,7 +81,7 @@ export function update(
     function success(employee: EmployeeProfileDto): EmployeeActionTypes { 
         return { type: EMPLOYEE_UPDATE_SUCCESS, employee }; 
     }
-    function failure(error: string): EmployeeActionTypes { 
+    function failure(error: ValidationProblemDetails): EmployeeActionTypes { 
         return { type: EMPLOYEE_UPDATE_FAILURE, error }; 
     } 
 }
@@ -91,8 +99,9 @@ export function deleteById(
             dispatch(success());
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ProblemDetails;
+            dispatch(failure(errObj));
+            throw errObj.errors;
         }
     };
 
@@ -102,7 +111,7 @@ export function deleteById(
     function success(): EmployeeActionTypes { 
         return { type: EMPLOYEE_DELETE_SUCCESS }; 
     }
-    function failure(error: string): EmployeeActionTypes { 
+    function failure(error: ProblemDetails): EmployeeActionTypes { 
         return { type: EMPLOYEE_DELETE_FAILURE, error }; 
     } 
 }
@@ -128,8 +137,8 @@ export function loadList(
             dispatch(success(pagedResult));
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ProblemDetails;
+            dispatch(failure(errObj));
         }
     };
 
@@ -139,7 +148,7 @@ export function loadList(
     function success(pagedResult: IPagedResultOfEmployeeProfileDto): EmployeeActionTypes { 
         return { type: EMPLOYEE_LOAD_LIST_SUCCESS, list: pagedResult.value as EmployeeProfileDto[], pagesCount: pagedResult.pagesCount }; 
     }
-    function failure(error: string): EmployeeActionTypes { 
+    function failure(error: ProblemDetails): EmployeeActionTypes { 
         return { type: EMPLOYEE_LOAD_LIST_FAILURE, error }; 
     } 
 }
@@ -155,8 +164,8 @@ export function load(
             dispatch(success(employee));
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ProblemDetails;
+            dispatch(failure(errObj));
         }
     };
 
@@ -166,7 +175,7 @@ export function load(
     function success(employee: EmployeeProfileDto): EmployeeActionTypes { 
         return { type: EMPLOYEE_LOAD_SUCCESS, employee }; 
     }
-    function failure(error: string): EmployeeActionTypes { 
+    function failure(error: ProblemDetails): EmployeeActionTypes { 
         return { type: EMPLOYEE_LOAD_FAILURE, error }; 
     } 
 }

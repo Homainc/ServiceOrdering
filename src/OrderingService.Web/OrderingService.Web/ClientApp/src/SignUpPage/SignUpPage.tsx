@@ -17,7 +17,7 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (
     dispatch: ThunkDispatch<RootState, undefined, AuthActionTypes>
 ) => ({
-    signUp: (user: UserCreateDto) => dispatch(authActions.signUp(user))
+    signUp: async (user: UserCreateDto) => dispatch(authActions.signUp(user))
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -59,10 +59,12 @@ const SignUpPage = (props: SignUpPageProps) => {
                             lastName: Yup.string()
                                 .required("Last name is required")
                                 .max(20, "Last name must be at most 20 characters"),
-                            phoneNumber: Yup.string(),
+                            phoneNumber: Yup.string()
+                                .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/,
+                                "Incorrect phone format"),
                             imageUrl: Yup.string()
                         })}
-                        onSubmit={values => {
+                        onSubmit={(values, { setErrors }) => {
                             signUp({
                                 email: values.email,
                                 password: values.password,
@@ -70,7 +72,8 @@ const SignUpPage = (props: SignUpPageProps) => {
                                 lastName: values.lastName,
                                 phoneNumber: values.phoneNumber,
                                 imageUrl: values.imageUrl
-                            });
+                            })
+                            .catch(errors => setErrors(errors));
                         }}>
                         <Form>
                             <CardTitle>Credentials</CardTitle>

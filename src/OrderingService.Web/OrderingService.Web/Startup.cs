@@ -44,10 +44,7 @@ namespace OrderingService.Web
                 .AddFluentValidation(fv =>
                 {
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-                    fv.RegisterValidatorsFromAssemblyContaining<UserDtoValidator>();
-                    fv.RegisterValidatorsFromAssemblyContaining<OrderDtoValidator>();
-                    fv.RegisterValidatorsFromAssemblyContaining<ReviewDtoValidator>();
-                    fv.RegisterValidatorsFromAssemblyContaining<EmployeeProfileDtoValidator>();
+                    fv.RegisterValidatorsFromAssemblyContaining<UserCreateDtoValidator>();
                 });
             services.AddAutoMapper(typeof(Startup).Assembly);
 

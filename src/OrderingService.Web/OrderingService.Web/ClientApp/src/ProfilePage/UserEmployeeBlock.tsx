@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import React, { useState } from 'react';
 import { Col, Row, ListGroupItemHeading, Button, ListGroupItemText, Spinner } from 'reactstrap';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { LoadingButton, ValidationTextField } from '../_components';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../_store';
@@ -29,6 +29,12 @@ const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type UserEmployeeBlockProps = PropsFromRedux & Readonly<{}>;
 
+type FormikValues = {
+    serviceType: string;
+    serviceCost: React.ReactText;
+    description: string;
+};
+
 const UserEmployeeBlock = (props: UserEmployeeBlockProps) => {
 
     const [state, setState] = useState({ editMode: false });
@@ -39,11 +45,7 @@ const UserEmployeeBlock = (props: UserEmployeeBlockProps) => {
         setState({ editMode: false });
     };
 
-    const handleSubmit = (values: {
-        serviceType: string;
-        serviceCost: React.ReactText;
-        description: string;
-    }) => {
+    const handleSubmit = (values: FormikValues, { setErrors }: FormikHelpers<FormikValues>) => {
         const profile: EmployeeProfileCreateDto = {
             serviceType: values.serviceType,
             serviceCost: values.serviceCost as number,
@@ -52,10 +54,12 @@ const UserEmployeeBlock = (props: UserEmployeeBlockProps) => {
         };
         if(!employeeProfile)
             props.createEmployeeProfile(profile)
-                .then(handleProfileProcessed);
+                .then(handleProfileProcessed)
+                .catch(errors => setErrors(errors));
         else
             props.updateEmployeeProfile({...profile, id: employeeProfile.id})
-                .then(handleProfileProcessed);
+                .then(handleProfileProcessed)
+                .catch(errors => setErrors(errors));
     };
 
     return(

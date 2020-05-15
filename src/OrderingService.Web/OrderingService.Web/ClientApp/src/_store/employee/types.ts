@@ -1,4 +1,4 @@
-import { EmployeeProfileDto } from "../../WebApiModels";
+import { EmployeeProfileDto, ProblemDetails } from "../../WebApiModels";
 
 export const EMPLOYEE_CREATE_REQUEST = 'employee/create (request)';
 export const EMPLOYEE_CREATE_SUCCESS = 'employee/create (success)';
@@ -64,7 +64,7 @@ interface EmployeeFailureAction {
         typeof EMPLOYEE_CREATE_FAILURE | typeof EMPLOYEE_UPDATE_FAILURE | 
         typeof EMPLOYEE_DELETE_FAILURE | typeof EMPLOYEE_LOAD_LIST_FAILURE |
         typeof EMPLOYEE_LOAD_FAILURE;
-    error: string;
+    error: ProblemDetails;
 };
 
 export type EmployeeActionTypes = 

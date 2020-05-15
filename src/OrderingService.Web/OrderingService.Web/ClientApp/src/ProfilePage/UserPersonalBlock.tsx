@@ -51,30 +51,34 @@ const UserPersonalBlock = (props: UserPersonalBlockProps) => {
             <Formik
                 enableReinitialize={true}
                 initialValues={{
-                    imageUrl: (profile && profile.imageUrl) || '',
-                    lastName: (profile && profile.lastName) || '',
-                    firstName: (profile && profile.firstName) || '',
-                    phoneNumber: (profile && profile.phoneNumber) || ''
+                    imageUrl: profile?.imageUrl || '',
+                    lastName: profile?.lastName || '',
+                    firstName: profile?.firstName || '',
+                    phoneNumber: profile?.phoneNumber || ''
                 }}
                 validationSchema={Yup.object({
                     firstName: Yup.string()
                         .required("First name is required")
-                        .max(20, "First name must be at most 20 characters"),
+                        .max(30, "First name must be at most 30 characters"),
                     lastName: Yup.string()
                         .required("Last name is required")
-                        .max(20, "Last name must be at most 20 characters"),
+                        .max(30, "Last name must be at most 30 characters"),
                     phoneNumber: Yup.string()
                         .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/, "Incorrect phone number")
-                        .notRequired()
+                        .notRequired(),
+                    imageUrl: Yup.string()
+                        .max(200)
                 })}
-                onSubmit={(values) => {
+                onSubmit={(values, { setErrors }) => {
                     props.updateProfile({
                         ...props.profile as UserDto,
                         lastName: values.lastName,
                         firstName: values.firstName,
                         phoneNumber: values.phoneNumber,
                         imageUrl: values.imageUrl
-                    }).then(handleProfileUpdated);
+                    })
+                    .then(handleProfileUpdated)
+                    .catch(errors => setErrors(errors));
                 }}>
                 {({ resetForm }) => (
                 <Form><Row>

@@ -1,4 +1,4 @@
-import { UserDto } from "../../WebApiModels";
+import { UserDto, ProblemDetails } from "../../WebApiModels";
 
 export const PROFILE_LOAD_REQUEST = 'profile/load (request)';
 export const PROFILE_LOAD_SUCCESS = 'profile/load (success)';
@@ -24,7 +24,7 @@ interface ProfileUpdateSuccessAction {
 
 interface ProfileFailureAction {
     type: typeof PROFILE_LOAD_FAILURE | typeof PROFILE_UPDATE_FAILURE;
-    error: string;
+    error: ProblemDetails;
 }
 
 export type ProfileActionTypes =

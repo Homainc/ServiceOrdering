@@ -28,17 +28,17 @@ namespace OrderingService.Domain.Logic.Services
         public async Task<ReviewDto> CreateAsync(ReviewCreateDto reviewDto)
         {
             if(!await _userRepository.AnyUserAsync(x => x.Id == reviewDto.ClientId))
-                throw new LogicNotFoundException($"Client with id {reviewDto.ClientId} not found!");
+                throw new NotFoundLogicException($"Client with id {reviewDto.ClientId} not found!", nameof(reviewDto.ClientId));
             if(!await _employeeRepository.AnyEmployeeAsync(x => x.Id == reviewDto.EmployeeId))
-                throw new LogicNotFoundException($"Employee with id {reviewDto.EmployeeId} not found!");
+                throw new NotFoundLogicException($"Employee with id {reviewDto.EmployeeId} not found!", nameof(reviewDto.EmployeeId));
 
-            var review = _mapper.Map<Review>(reviewDto);
+            var review = Mapper.Map<Review>(reviewDto);
             review.Date = DateTime.Now;
 
             _reviewRepository.Create(review);
-            await _saveProvider.SaveAsync();
+            await SaveProvider.SaveAsync();
 
-            return _mapper.Map<ReviewDto>(review);
+            return Mapper.Map<ReviewDto>(review);
         }
 
         public async Task<ReviewDto> DeleteAsync(int id)
@@ -46,17 +46,17 @@ namespace OrderingService.Domain.Logic.Services
             var review = await GetReviewByIdOrThrowAsync(id);
 
             _reviewRepository.Delete(review);
-            await _saveProvider.SaveAsync();
+            await SaveProvider.SaveAsync();
 
-            return _mapper.Map<ReviewDto>(review);
+            return Mapper.Map<ReviewDto>(review);
         }
 
         public async Task<IPagedResult<ReviewDto>> GetPagedReviewsAsync(Guid employeeId, int pageSize, int pageNumber) =>
             (await _reviewRepository.GetPagedEmployeeReviewsAsync(employeeId, pageSize, pageNumber))
-                .ToPagedDto<ReviewDto, Review>(_mapper);
+                .ToPagedDto<ReviewDto, Review>(Mapper);
 
         private async Task<Review> GetReviewByIdOrThrowAsync(int id) =>
             await _reviewRepository.GetByIdOrDefaultAsync(id) ??
-            throw new LogicNotFoundException($"Review with id {id} not found!");
+            throw new NotFoundLogicException($"Review with id {id} not found!", nameof(id));
     }
 }

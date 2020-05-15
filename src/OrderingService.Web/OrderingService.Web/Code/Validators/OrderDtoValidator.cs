@@ -3,22 +3,19 @@ using OrderingService.Domain;
 
 namespace OrderingService.Web.Code.Validators
 {
-    public class OrderDtoValidator : AbstractValidator<OrderDto>
+    public class OrderCreateDtoValidator : AbstractValidator<OrderCreateDto>
     {
-        public OrderDtoValidator()
+        public OrderCreateDtoValidator()
         {
-            RuleSet("Create", () =>
-            {
-                RuleFor(x => x.ClientId).NotNull();
-                RuleFor(x => x.EmployeeId).NotNull();
-                RuleFor(x => x.Price).GreaterThan(0);
-                RuleFor(x => x.Date).NotEmpty();
-                RuleFor(x => x.Address).NotEmpty().MaximumLength(40);
-                RuleFor(x => x.BriefTask).NotEmpty().MaximumLength(50);
-                RuleFor(x => x.ServiceDetails).MaximumLength(255);
-                RuleFor(x => x.ContactPhone).NotEmpty().MaximumLength(20);
-            });
-            RuleSet("Id", () => { RuleFor(x => x.Id).NotNull(); });
+            RuleFor(x => x.ClientId).NotEmpty();
+            RuleFor(x => x.EmployeeId).NotEmpty();
+            RuleFor(x => x.Price).GreaterThan(0);
+            RuleFor(x => x.Address).NotEmpty().MaximumLength(40);
+            RuleFor(x => x.BriefTask).NotEmpty().MaximumLength(50);
+            RuleFor(x => x.ServiceDetails).MaximumLength(255);
+            RuleFor(x => x.ContactPhone)
+                .Matches(@"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$")
+                .NotEmpty().MaximumLength(20);
         }
     }
 }

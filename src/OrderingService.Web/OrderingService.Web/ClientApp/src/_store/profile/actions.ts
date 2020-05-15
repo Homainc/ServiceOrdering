@@ -1,6 +1,6 @@
-import { history, api, getErrorMessageFromEx } from "../../_helpers";
+import { history, api } from "../../_helpers";
 import { ThunkAction } from "redux-thunk";
-import { UserDto } from "../../WebApiModels";
+import { UserDto, ValidationProblemDetails, ProblemDetails } from "../../WebApiModels";
 import { 
     ProfileState, ProfileActionTypes, 
     PROFILE_LOAD_REQUEST, PROFILE_LOAD_SUCCESS, PROFILE_LOAD_FAILURE, 
@@ -25,9 +25,10 @@ export function load(
             dispatch(employee.set(profile.employeeProfile));            
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ProblemDetails;
+            dispatch(failure(errObj));
             history.push('/login');
+            throw errObj.errors;
         }
     };
 
@@ -37,7 +38,7 @@ export function load(
     function success(profile: UserDto): ProfileActionTypes { 
         return { type: PROFILE_LOAD_SUCCESS, profile }; 
     }
-    function failure(error: string): ProfileActionTypes {
+    function failure(error: ProblemDetails): ProfileActionTypes {
          return { type: PROFILE_LOAD_FAILURE, error }; 
     } 
 }
@@ -55,8 +56,9 @@ export function update(
             dispatch(success(profile));
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ValidationProblemDetails;
+            dispatch(failure(errObj));
+            throw errObj.errors;
         }
     };
 
@@ -66,7 +68,7 @@ export function update(
     function success(profile: UserDto): ProfileActionTypes { 
         return { type: PROFILE_UPDATE_SUCCESS, profile }; 
     }
-    function failure(error: string): ProfileActionTypes { 
+    function failure(error: ProblemDetails): ProfileActionTypes { 
         return { type: PROFILE_UPDATE_FAILURE, error }; 
     } 
 }

@@ -1,6 +1,6 @@
 import { history, api, getErrorMessageFromEx } from '../../_helpers';
 import { ThunkAction } from 'redux-thunk';
-import { OrderCreateDto, OrderDto, IPagedResultOfOrderDto } from '../../WebApiModels';
+import { OrderCreateDto, OrderDto, IPagedResultOfOrderDto, ValidationProblemDetails } from '../../WebApiModels';
 import { 
     OrderState, OrderActionTypes, 
     ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_CREATE_FAILURE, 
@@ -24,8 +24,9 @@ export function create(
             history.push('/profile');
         }
         catch (err) {
-            const errorMsg = getErrorMessageFromEx(err);
-            dispatch(failure(errorMsg));
+            const errObj = err.response.body as ValidationProblemDetails;
+            dispatch(failure(errObj.title || ''));
+            throw errObj.errors;
         }
     };
 
