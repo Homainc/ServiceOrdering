@@ -1,6 +1,6 @@
 import { history, api, getErrorMessageFromEx } from "../../_helpers";
 import { ThunkAction } from "redux-thunk";
-import { UserDTO, EmployeeProfileDTO } from "../../WebApiModels";
+import { EmployeeProfileDTO, UserAuthDto, UserCreateDto } from "../../WebApiModels";
 import { AuthActionTypes, 
     AUTH_LOGIN_REQUEST, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE, 
     AUTH_LOGOUT, 
@@ -19,7 +19,7 @@ export function logIn(
     return async dispatch => {
         dispatch(request());
         try {
-            const user = (await api.Account_Auth({ userDto: { email, password }})).body as UserDTO;
+            const user = (await api.Account_Auth({ loginModel: { userEmail: email, userPassword: password } })).body as UserAuthDto;
 
             localStorage.setItem('user', JSON.stringify(user));
             api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
@@ -42,7 +42,7 @@ export function logIn(
     function request(): AuthActionTypes { 
         return { type: AUTH_LOGIN_REQUEST }; 
     }
-    function success(user: UserDTO): AuthActionTypes { 
+    function success(user: UserAuthDto): AuthActionTypes { 
         return { type: AUTH_LOGIN_SUCCESS, user }; 
     }
     function failure(error: string): AuthActionTypes { 
@@ -58,17 +58,17 @@ export function logOut(): AuthActionTypes {
 }
 
 export function signUp(
-    user: UserDTO
+    user: UserCreateDto
 ): ThunkAction<void, RootState, undefined, AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
-            user = (await api.Account_SignUp({ userDto: user })).body as UserDTO;
+            const authUser = (await api.Account_SignUp({ userDto: user })).body as UserAuthDto;
 
             localStorage.setItem('user', JSON.stringify(user));
-            api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
+            api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + authUser.token }));
 
-            dispatch(success(user));
+            dispatch(success(authUser));
             dispatch(alertActions.success('You have successfully signed up!'));
             dispatch(connectToNotificationHub());
 
@@ -86,7 +86,7 @@ export function signUp(
     function request(): AuthActionTypes { 
         return { type: AUTH_SIGN_UP_REQUEST }; 
     }
-    function success(user: UserDTO): AuthActionTypes { 
+    function success(user: UserAuthDto): AuthActionTypes { 
         return { type: AUTH_SIGN_UP_SUCCESS, user }; 
     }
     function failure(error: string): AuthActionTypes { 
@@ -94,7 +94,7 @@ export function signUp(
     }
 }
 
-export function updateUser(user: UserDTO): AuthActionTypes {
+export function updateUser(user: UserAuthDto): AuthActionTypes {
     const oldUser = JSON.parse(localStorage.getItem('user') as string);
     user.token = oldUser.token;
     localStorage.setItem('user', JSON.stringify(user));

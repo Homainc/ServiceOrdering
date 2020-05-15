@@ -18,6 +18,53 @@ export type ConfigureRequestHandler = (agent: SuperAgentRequest) => SuperAgentRe
 
 export type CallbackHandler = (err: any, res ? : request.Response) => void;
 
+export type UserAuthDto = {
+    'email' ? : string;
+    'phoneNumber' ? : string;
+    'role' ? : string;
+    'firstName' ? : string;
+    'lastName' ? : string;
+    'imageUrl' ? : string;
+    'id': string;
+    'employeeProfile' ? : EmployeeProfileDTO;
+    'token' ? : string;
+};
+
+export type UserDto = {
+    'email' ? : string;
+    'phoneNumber' ? : string;
+    'role' ? : string;
+    'firstName' ? : string;
+    'lastName' ? : string;
+    'imageUrl' ? : string;
+    'id': string;
+    'employeeProfile' ? : EmployeeProfileDTO;
+};
+
+export type EmployeeProfileDTO = {
+    'id' ? : string;
+    'serviceType' ? : string;
+    'serviceCost': number;
+    'description' ? : string;
+    'userId': string;
+    'user' ? : UserDto;
+    'averageRate' ? : number;
+    'reviewsCount': number;
+} & {
+    [key: string]: any;
+};
+
+export type UserDtoBase = {
+    'email' ? : string;
+    'phoneNumber' ? : string;
+    'role' ? : string;
+    'firstName' ? : string;
+    'lastName' ? : string;
+    'imageUrl' ? : string;
+} & {
+    [key: string]: any;
+};
+
 export type ProblemDetails = {
     'type' ? : string;
     'title' ? : string;
@@ -31,38 +78,27 @@ export type ProblemDetails = {
     [key: string]: any;
 };
 
-export type UserDTO = {
-    'id' ? : string;
-    'email' ? : string;
-    'phoneNumber' ? : string;
-    'password' ? : string;
-    'role' ? : string;
-    'firstName' ? : string;
-    'lastName' ? : string;
-    'token' ? : string;
-    'imageUrl' ? : string;
-    'employeeProfile' ? : EmployeeProfileDTO;
+export type UserLoginModel = {
+    'userEmail' ? : string;
+    'userPassword' ? : string;
 } & {
     [key: string]: any;
 };
 
-export type EmployeeProfileDTO = {
-    'id' ? : string;
-    'serviceType' ? : string;
-    'serviceCost': number;
-    'description' ? : string;
-    'userId': string;
-    'user' ? : UserDTO;
-    'averageRate' ? : number;
-    'reviewsCount': number;
-} & {
-    [key: string]: any;
+export type UserCreateDto = {
+    'email' ? : string;
+    'phoneNumber' ? : string;
+    'role' ? : string;
+    'firstName' ? : string;
+    'lastName' ? : string;
+    'imageUrl' ? : string;
+    'password' ? : string;
 };
 
 export type OrderDTO = {
     'id' ? : number;
     'clientId': string;
-    'client' ? : UserDTO;
+    'client' ? : UserDto;
     'employeeId': string;
     'employee' ? : EmployeeProfileDTO;
     'briefTask' ? : string;
@@ -84,7 +120,7 @@ export type ReviewDTO = {
     'rate': number;
     'date': string;
     'clientId': string;
-    'client' ? : UserDTO;
+    'client' ? : UserDto;
     'employeeId': string;
     'employee' ? : EmployeeProfileDTO;
 } & {
@@ -193,7 +229,7 @@ export class SwaggerCodegen {
             req.retry(opts.$retries);
         }
 
-        if ((opts.$timeout && opts.$timeout > 0) || (opts.$deadline && opts.$deadline > 0)) {
+        if (opts.$timeout && opts.$timeout > 0 || opts.$deadline && opts.$deadline > 0) {
             req.timeout({
                 deadline: opts.$deadline,
                 response: opts.$timeout
@@ -233,7 +269,7 @@ export class SwaggerCodegen {
     }
 
     Account_AuthURL(parameters: {
-        'userDto': UserDTO,
+        'loginModel': UserLoginModel,
     } & CommonRequestOptions): string {
         let queryParameters: QueryParameters = {};
         const domain = parameters.$domain ? parameters.$domain : this.domain;
@@ -259,11 +295,11 @@ export class SwaggerCodegen {
      * 
      * @method
      * @name SwaggerCodegen#Account_Auth
-     * @param {} userDto - 
+     * @param {} loginModel - 
      */
     Account_Auth(parameters: {
-        'userDto': UserDTO,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails >> {
+        'loginModel': UserLoginModel,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserAuthDto > | ResponseWithBody < 400, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Account/auth';
         if (parameters.$path) {
@@ -278,12 +314,12 @@ export class SwaggerCodegen {
             headers['Accept'] = 'text/plain, application/json, text/json';
             headers['Content-Type'] = 'application/json-patch+json';
 
-            if (parameters['userDto'] !== undefined) {
-                body = parameters['userDto'];
+            if (parameters['loginModel'] !== undefined) {
+                body = parameters['loginModel'];
             }
 
-            if (parameters['userDto'] === undefined) {
-                reject(new Error('Missing required  parameter: userDto'));
+            if (parameters['loginModel'] === undefined) {
+                reject(new Error('Missing required  parameter: loginModel'));
                 return;
             }
 
@@ -302,7 +338,7 @@ export class SwaggerCodegen {
     }
 
     Account_SignUpURL(parameters: {
-        'userDto': UserDTO,
+        'userDto': UserCreateDto,
     } & CommonRequestOptions): string {
         let queryParameters: QueryParameters = {};
         const domain = parameters.$domain ? parameters.$domain : this.domain;
@@ -331,8 +367,8 @@ export class SwaggerCodegen {
      * @param {} userDto - 
      */
     Account_SignUp(parameters: {
-        'userDto': UserDTO,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails >> {
+        'userDto': UserCreateDto,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserAuthDto > | ResponseWithBody < 400, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Account/sign-up';
         if (parameters.$path) {
@@ -394,7 +430,7 @@ export class SwaggerCodegen {
      * @method
      * @name SwaggerCodegen#Account_GetProfile
      */
-    Account_GetProfile(parameters: {} & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+    Account_GetProfile(parameters: {} & CommonRequestOptions): Promise < ResponseWithBody < 200, UserDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Account/profile';
         if (parameters.$path) {
@@ -421,7 +457,7 @@ export class SwaggerCodegen {
 
     Account_UpdateProfileURL(parameters: {
         'id': string,
-        'userDto': UserDTO,
+        'userDto': UserDto,
     } & CommonRequestOptions): string {
         let queryParameters: QueryParameters = {};
         const domain = parameters.$domain ? parameters.$domain : this.domain;
@@ -458,8 +494,8 @@ export class SwaggerCodegen {
      */
     Account_UpdateProfile(parameters: {
         'id': string,
-        'userDto': UserDTO,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+        'userDto': UserDto,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, UserDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Account/{id}';
         if (parameters.$path) {

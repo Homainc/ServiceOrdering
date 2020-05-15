@@ -7,7 +7,7 @@ namespace OrderingService.Domain
     {
         public int Id { get; set; }
         public Guid ClientId { get; set; }
-        public UserDTO Client { get; set; }
+        public UserDto Client { get; set; }
         public Guid EmployeeId { get; set; }
         public EmployeeProfileDTO Employee { get; set; }
         public string BriefTask { get; set; }

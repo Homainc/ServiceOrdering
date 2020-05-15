@@ -26,7 +26,7 @@ namespace OrderingService.Domain.Logic.Services
             _roleRepository = roleRepository;
         }
 
-        public async Task<UserDTO> CreateAsync(UserDTO userDto)
+        public async Task<UserAuthDto> CreateAsync(UserCreateDto userDto)
         {
             if (await _userRepository.AnyUserAsync(x => x.Email == userDto.Email))
                 throw new LogicException($"User with email {userDto.Email} already exists!");
@@ -34,39 +34,39 @@ namespace OrderingService.Domain.Logic.Services
             var user = _mapper.Map<User>(userDto);
             user.HashedPassword = _passwordHasher.HashPassword(user, userDto.Password);
             user.RoleId = await _roleRepository.GetRoleIdByNameAsync(userDto.Role);
-            
+
             _userRepository.Create(user);
             await _saveProvider.SaveAsync();
 
-            return _mapper.Map<UserDTO>(user);
+            return _mapper.Map<UserAuthDto>(user);
         }
 
-        public async Task<UserDTO> AuthenticateAsync(UserDTO userDto)
+        public async Task<UserAuthDto> AuthenticateAsync(string email, string password)
         {
-            var user = await GetUserByEmailOrThrowAsync(userDto.Email);
+            var user = await GetUserByEmailOrThrowAsync(email);
 
-            var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
+            var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, password);
             if (result == PasswordVerificationResult.Failed)
                 throw new LogicException("Incorrect email or password");
 
-            userDto = _mapper.Map<UserDTO>(user);
-            userDto.Token = _tokenGenerator.GenerateUserToken(user);
-            return userDto;
+            var userAuthDto = _mapper.Map<UserAuthDto>(user);
+            userAuthDto.Token = _tokenGenerator.GenerateUserToken(user);
+            return userAuthDto;
         }
 
-        public async Task<UserDTO> SignUpAsync(UserDTO userDto)
+        public async Task<UserAuthDto> SignUpAsync(UserCreateDto userDto)
         {
             userDto.Role = "user";
             await CreateAsync(userDto);
-            return await AuthenticateAsync(userDto);
+            return await AuthenticateAsync(userDto.Email, userDto.Password);
         }
 
-        public async Task<UserDTO> GetUserByIdAsync(Guid id) => 
-            _mapper.Map<UserDTO>(await GetUserByIdOrThrowAsync(id));
+        public async Task<UserDto> GetUserByIdAsync(Guid id) =>
+            _mapper.Map<UserDto>(await GetUserByIdOrThrowAsync(id));
 
-        public async Task<UserDTO> UpdateProfileAsync(UserDTO userDto)
+        public async Task<UserDto> UpdateProfileAsync(UserDto userDto)
         {
-            var user = await GetUserByIdOrThrowAsync(userDto.Id.Value);
+            var user = await GetUserByIdOrThrowAsync(userDto.Id);
 
             _mapper.Map(userDto, user);
             _userRepository.Update(user);

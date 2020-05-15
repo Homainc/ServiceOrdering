@@ -5,9 +5,9 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDTO> SignUpAsync(UserDTO userDto);
-        Task<UserDTO> AuthenticateAsync(UserDTO userDto);
-        Task<UserDTO> GetUserByIdAsync(Guid id);
-        Task<UserDTO> UpdateProfileAsync(UserDTO userDto);
+        Task<UserAuthDto> SignUpAsync(UserCreateDto userDto);
+        Task<UserAuthDto> AuthenticateAsync(string email, string password);
+        Task<UserDto> GetUserByIdAsync(Guid id);
+        Task<UserDto> UpdateProfileAsync(UserDto userDto);
     }
 }

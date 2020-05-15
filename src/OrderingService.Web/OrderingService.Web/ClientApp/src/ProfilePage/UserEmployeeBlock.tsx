@@ -6,7 +6,7 @@ import { LoadingButton, ValidationTextField } from '../_components';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../_store';
 import { ThunkDispatch } from 'redux-thunk';
-import { EmployeeState, EmployeeActionTypes } from '../_store/employee/types';
+import { EmployeeActionTypes } from '../_store/employee/types';
 import { EmployeeProfileDTO } from '../WebApiModels';
 import * as employeeActions from '../_store/employee/actions';
 
@@ -18,7 +18,7 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (
-    dispatch: ThunkDispatch<EmployeeState, undefined, EmployeeActionTypes>
+    dispatch: ThunkDispatch<RootState, undefined, EmployeeActionTypes>
 ) => ({
     createEmployeeProfile: async (employee: EmployeeProfileDTO) => dispatch(employeeActions.create(employee)),
     updateEmployeeProfile: async (employee: EmployeeProfileDTO) => dispatch(employeeActions.update(employee)),

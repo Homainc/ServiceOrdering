@@ -33,7 +33,7 @@ namespace OrderingService.Logic.Tests
             }
         }
 
-        public static UserDTO DefaultUser => new UserDTO
+        public static UserDto DefaultUser => new UserDto
         {
             Email = "test1@test.net",
             FirstName = "test1_first_name",

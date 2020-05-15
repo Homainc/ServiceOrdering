@@ -1,4 +1,4 @@
-import { UserDTO, EmployeeProfileDTO } from '../../WebApiModels';
+import { EmployeeProfileDTO, UserDto, UserAuthDto } from '../../WebApiModels';
 
 export const AUTH_UPDATE_EMPLOYEE = 'auth/update_employee';
 export const AUTH_UPDATE_USER = 'auth/update_user';
@@ -20,7 +20,7 @@ interface AuthUpdateEmployeeAction {
 
 interface AuthUpdateUserAction {
     type: typeof AUTH_UPDATE_USER;
-    user: UserDTO;
+    user: UserDto;
 };
 
 interface AuthRequestAction {
@@ -29,7 +29,7 @@ interface AuthRequestAction {
 
 interface AuthLoginSuccessAction {
     type: typeof AUTH_LOGIN_SUCCESS;
-    user: UserDTO;
+    user: UserAuthDto;
 };
 
 interface AuthLogoutAction {
@@ -38,7 +38,7 @@ interface AuthLogoutAction {
 
 interface AuthSignUpSuccessAction {
     type: typeof AUTH_SIGN_UP_SUCCESS;
-    user: UserDTO;
+    user: UserAuthDto;
 };
 
 interface AuthFailureAction {
@@ -57,7 +57,7 @@ export type AuthActionTypes =
 
 export interface AuthState {
     loggedIn: boolean;
-    user: UserDTO | undefined;
+    user: UserAuthDto | undefined;
     loggingIn: boolean;
     signingUp: boolean;
 };

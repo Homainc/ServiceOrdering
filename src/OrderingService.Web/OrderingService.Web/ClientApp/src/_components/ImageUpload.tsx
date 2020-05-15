@@ -41,7 +41,8 @@ const ImageUpload = ({ uploadingProgress, imageUrl, uploadImage, ...props }: Ima
     }
 
     useEffect(() => {
-        setValue(imageUrl);
+        if(imageUrl)
+            setValue(imageUrl);
     }, [imageUrl]);
 
     const isUploading = uploadingProgress !== undefined;

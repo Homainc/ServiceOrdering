@@ -6,9 +6,9 @@ import { LoadingButton, ImageUpload, ValidationTextField } from '../_components'
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../_store';
 import { ThunkDispatch } from 'redux-thunk';
-import { ProfileActionTypes, ProfileState } from '../_store/profile/types';
+import { ProfileActionTypes } from '../_store/profile/types';
 import * as profileActions from '../_store/profile/actions'; 
-import { UserDTO } from '../WebApiModels';
+import { UserDto } from '../WebApiModels';
 
 const mapState = (state: RootState) => ({
     profileUpdating: state.profile.updating,
@@ -17,9 +17,9 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (
-    dispatch: ThunkDispatch<ProfileState, undefined, ProfileActionTypes>
+    dispatch: ThunkDispatch<RootState, undefined, ProfileActionTypes>
 ) => ({
-    updateProfile: async (profile: UserDTO) => dispatch(profileActions.update(profile))
+    updateProfile: async (profile: UserDto) => dispatch(profileActions.update(profile))
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -69,7 +69,7 @@ const UserPersonalBlock = (props: UserPersonalBlockProps) => {
                 })}
                 onSubmit={(values) => {
                     props.updateProfile({
-                        ...props.profile,
+                        ...props.profile as UserDto,
                         lastName: values.lastName,
                         firstName: values.firstName,
                         phoneNumber: values.phoneNumber,

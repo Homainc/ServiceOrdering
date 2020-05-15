@@ -1,8 +1,8 @@
 import React from 'react';
-import { UserDTO } from '../WebApiModels';
+import { UserDto } from '../WebApiModels';
 
 type UserWithAvatarProps = Readonly<{
-    user: UserDTO | undefined;
+    user: UserDto | undefined;
 }>;
 
 export const UserWithAvatar = ({ user }: UserWithAvatarProps) => {

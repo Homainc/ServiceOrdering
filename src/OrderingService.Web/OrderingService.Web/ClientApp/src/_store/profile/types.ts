@@ -1,4 +1,4 @@
-import { UserDTO } from "../../WebApiModels";
+import { UserDto } from "../../WebApiModels";
 
 export const PROFILE_LOAD_REQUEST = 'profile/load (request)';
 export const PROFILE_LOAD_SUCCESS = 'profile/load (success)';
@@ -14,12 +14,12 @@ interface ProfileRequestAction {
 
 interface ProfileLoadSuccessAction {
     type: typeof PROFILE_LOAD_SUCCESS;
-    profile: UserDTO;
+    profile: UserDto;
 };
 
 interface ProfileUpdateSuccessAction {
     type: typeof PROFILE_UPDATE_SUCCESS;
-    profile: UserDTO;
+    profile: UserDto;
 };
 
 interface ProfileFailureAction {
@@ -34,7 +34,7 @@ export type ProfileActionTypes =
     ProfileFailureAction;
 
 export interface ProfileState {
-    profile: UserDTO | undefined;
+    profile: UserDto | undefined;
     updating: boolean;
     loading: boolean;
 };

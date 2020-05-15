@@ -7,10 +7,14 @@ namespace OrderingService.Domain.Logic.MapperProfiles
     {
         public UserMapperProfile()
         {
-            CreateMap<UserDTO, User>()
+            CreateMap<UserCreateDto, User>()
                 .ForPath(dest => dest.Role.Name, opt => opt.MapFrom(src => src.Role));
-            CreateMap<User, UserDTO>()
+            CreateMap<UserDto, User>()
+                .ForPath(dest => dest.Role.Name, opt => opt.MapFrom(src => src.Role));
+
+            CreateMap<User, UserDto>()
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name));
+            CreateMap<User, UserAuthDto>().IncludeBase<User, UserDto>();
         }
     }
 }

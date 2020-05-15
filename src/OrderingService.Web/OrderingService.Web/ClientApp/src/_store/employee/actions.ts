@@ -11,6 +11,8 @@ import {
     EMPLOYEE_LOAD_REQUEST, EMPLOYEE_LOAD_SUCCESS, EMPLOYEE_LOAD_FAILURE 
 } from './types';
 import * as auth from '../auth/actions';
+import * as alertActions from '../alert/actions';
+import { AlertActionTypes } from '../alert/types';
 import { AuthActionTypes } from '../auth/types';
 import { PagedResult } from '../types';
 import { RootState } from '..';
@@ -21,13 +23,14 @@ export function set(employee: EmployeeProfileDTO | undefined): EmployeeActionTyp
 
 export function create(
     employee: EmployeeProfileDTO
-): ThunkAction<void, EmployeeState, undefined, EmployeeActionTypes | AuthActionTypes> {
+): ThunkAction<void, RootState, undefined, EmployeeActionTypes | AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
             employee = (await api.EmployeeProfile_Create({ employeeProfileDto: employee })).body as EmployeeProfileDTO;
             
             dispatch(auth.updateEmployee(employee));
+            dispatch(alertActions.success('Employee profile was successfully created!'));
             dispatch(success(employee));
         }
         catch (err) {
@@ -49,13 +52,14 @@ export function create(
 
 export function update(
     employee: EmployeeProfileDTO
-): ThunkAction<void, EmployeeState, undefined, EmployeeActionTypes | AuthActionTypes> {
+): ThunkAction<void, RootState, undefined, EmployeeActionTypes | AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
             employee = (await api.EmployeeProfile_Update({ id: employee.id as string, employeeProfileDto: employee })).body as EmployeeProfileDTO;
             
             dispatch(auth.updateEmployee(employee));
+            dispatch(alertActions.success('Employee profile was successfully updated!'));
             dispatch(success(employee));
         }
         catch (err) {
@@ -77,13 +81,14 @@ export function update(
 
 export function deleteById(
     id: string
-): ThunkAction<void, EmployeeState, undefined, EmployeeActionTypes | AuthActionTypes> {
+): ThunkAction<void, RootState, undefined, EmployeeActionTypes | AuthActionTypes | AlertActionTypes> {
     return async dispatch => {
         dispatch(request());
         try {
             await api.EmployeeProfile_Delete({ id });
 
             dispatch(auth.updateEmployee(undefined));
+            dispatch(alertActions.success('Employee profile was successfully deleted!'));
             dispatch(success());
         }
         catch (err) {

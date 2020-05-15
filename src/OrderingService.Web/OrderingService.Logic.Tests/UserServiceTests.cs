@@ -44,7 +44,7 @@ namespace OrderingService.Logic.Tests
             // Assign
             using var context = Initializers.FakeContext("Can_not_create_user_with_same_email");
             var user = Initializers.DefaultUser;
-            var sameEmailUser = new UserDTO
+            var sameEmailUser = new UserDto
             {
                 FirstName = "tes",
                 LastName = "sss",
@@ -78,7 +78,7 @@ namespace OrderingService.Logic.Tests
             user.LastName = "new last name";
             user.ImageUrl = "new image url";
             user.Email = "email@new.com";
-            UserDTO updatedUser;
+            UserDto updatedUser;
             using(var context = Initializers.FakeContext(dbName)){
                 var service = Initializers.FakeUserService(context);
                 updatedUser = service.UpdateProfileAsync(user).Result;

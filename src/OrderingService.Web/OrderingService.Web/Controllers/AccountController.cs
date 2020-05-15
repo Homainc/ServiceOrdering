@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
+using OrderingService.Web.Models;
 
 namespace OrderingService.Web.Controllers
 {
@@ -17,22 +18,21 @@ namespace OrderingService.Web.Controllers
         public AccountController(IUserService userService) => _userService = userService;
 
         [HttpPost("auth")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserAuthDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AuthAsync(
-            [FromBody] [CustomizeValidator(RuleSet = "LogIn")]
-            UserDTO userDto) => Ok(await _userService.AuthenticateAsync(userDto));
+            [FromBody] UserLoginModel loginModel) =>
+            Ok(await _userService.AuthenticateAsync(loginModel.UserEmail, loginModel.UserPassword));
 
         [HttpPost("sign-up")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserAuthDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SignUpAsync(
-            [FromBody] [CustomizeValidator(RuleSet = "SignUp")]
-            UserDTO userDto) => Ok(await _userService.SignUpAsync(userDto));
+            [FromBody] UserCreateDto userDto) => Ok(await _userService.SignUpAsync(userDto));
 
         [Authorize]
         [HttpGet("profile")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetProfileAsync() =>
@@ -40,13 +40,12 @@ namespace OrderingService.Web.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateProfileAsync(
             [FromRoute] Guid id,
-            [FromBody] [CustomizeValidator(RuleSet = "Update")]
-            UserDTO userDto)
+            [FromBody] [CustomizeValidator(RuleSet = "Update")] UserDto userDto)
         {
             userDto.Id = id;
             return Ok(await _userService.UpdateProfileAsync(userDto));

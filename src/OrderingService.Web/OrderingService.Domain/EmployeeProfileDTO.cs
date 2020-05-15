@@ -9,7 +9,7 @@ namespace OrderingService.Domain
         public decimal ServiceCost { get; set; }
         public string Description { get; set; }
         public Guid UserId { get; set; }
-        public UserDTO User { get; set; }
+        public UserDto User { get; set; }
         public double? AverageRate { get; set; }
         public int ReviewsCount { get; set; }
     }

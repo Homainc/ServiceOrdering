@@ -9,7 +9,7 @@ namespace OrderingService.Domain
         public int Rate { get; set; }
         public DateTime Date { get; set; }
         public Guid ClientId { get; set; }
-        public UserDTO Client { get; set; }
+        public UserDto Client { get; set; }
         public Guid EmployeeId { get; set; }
         public EmployeeProfileDTO Employee { get; set; }
     }

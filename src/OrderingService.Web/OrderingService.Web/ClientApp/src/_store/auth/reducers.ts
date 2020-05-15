@@ -6,25 +6,20 @@ import {
     AUTH_UPDATE_USER, AUTH_UPDATE_EMPLOYEE 
 } from "./types";
 import { api } from "../../_helpers";
-import { UserDTO } from "../../WebApiModels";
+import { UserAuthDto } from "../../WebApiModels";
 
-const user = JSON.parse(localStorage.getItem('user') as string) as UserDTO;
+const user = JSON.parse(localStorage.getItem('user') as string) as UserAuthDto;
 (() => {
     if(user)
         api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
 })();
 
-const initialState: AuthState = user ? 
+const initialState: AuthState = 
 { 
-    loggedIn: true,
+    loggedIn: !!user,
     loggingIn: false,
     signingUp: false, 
     user 
-} : { 
-    loggedIn: false,
-    loggingIn: false,
-    signingUp: false,
-    user: undefined 
 };
 
 export function authReducer(state: AuthState = initialState, action: AuthActionTypes): AuthState {
@@ -54,7 +49,7 @@ export function authReducer(state: AuthState = initialState, action: AuthActionT
         case AUTH_UPDATE_EMPLOYEE:
             return {
                 ...state,
-                user: {...state.user, employeeProfile: action.employee }
+                user: { ...state.user as UserAuthDto, employeeProfile: action.employee }
             };
         
         default:

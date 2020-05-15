@@ -8,7 +8,7 @@ import { RootState } from '../_store';
 import { AuthActionTypes } from '../_store/auth/types';
 import { ThunkDispatch } from 'redux-thunk';
 import * as authActions from '../_store/auth/actions'; 
-import { UserDTO } from '../WebApiModels';
+import { UserCreateDto } from '../WebApiModels';
 
 const mapState = (state: RootState) => ({
     signingUp: state.auth.signingUp
@@ -17,7 +17,7 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (
     dispatch: ThunkDispatch<RootState, undefined, AuthActionTypes>
 ) => ({
-    signUp: (user: UserDTO) => dispatch(authActions.signUp(user))
+    signUp: (user: UserCreateDto) => dispatch(authActions.signUp(user))
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -65,7 +65,6 @@ const SignUpPage = (props: SignUpPageProps) => {
                         onSubmit={values => {
                             signUp({
                                 email: values.email,
-                                userName: values.email.replace(/[\W]/g, ''),
                                 password: values.password,
                                 firstName: values.firstName,
                                 lastName: values.lastName,
