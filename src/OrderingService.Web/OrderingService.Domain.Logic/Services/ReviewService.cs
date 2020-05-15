@@ -25,35 +25,35 @@ namespace OrderingService.Domain.Logic.Services
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<ReviewDTO> CreateAsync(ReviewDTO reviewDto)
+        public async Task<ReviewDto> CreateAsync(ReviewCreateDto reviewDto)
         {
             if(!await _userRepository.AnyUserAsync(x => x.Id == reviewDto.ClientId))
                 throw new LogicNotFoundException($"Client with id {reviewDto.ClientId} not found!");
             if(!await _employeeRepository.AnyEmployeeAsync(x => x.Id == reviewDto.EmployeeId))
                 throw new LogicNotFoundException($"Employee with id {reviewDto.EmployeeId} not found!");
 
-            reviewDto.Date = DateTime.Now;
             var review = _mapper.Map<Review>(reviewDto);
-            
+            review.Date = DateTime.Now;
+
             _reviewRepository.Create(review);
             await _saveProvider.SaveAsync();
 
-            return _mapper.Map<ReviewDTO>(review);
+            return _mapper.Map<ReviewDto>(review);
         }
 
-        public async Task<ReviewDTO> DeleteAsync(int id)
+        public async Task<ReviewDto> DeleteAsync(int id)
         {
             var review = await GetReviewByIdOrThrowAsync(id);
 
             _reviewRepository.Delete(review);
             await _saveProvider.SaveAsync();
 
-            return _mapper.Map<ReviewDTO>(review);
+            return _mapper.Map<ReviewDto>(review);
         }
 
-        public async Task<IPagedResult<ReviewDTO>> GetPagedReviewsAsync(Guid employeeId, int pageSize, int pageNumber) =>
+        public async Task<IPagedResult<ReviewDto>> GetPagedReviewsAsync(Guid employeeId, int pageSize, int pageNumber) =>
             (await _reviewRepository.GetPagedEmployeeReviewsAsync(employeeId, pageSize, pageNumber))
-                .ToPagedDto<ReviewDTO, Review>(_mapper);
+                .ToPagedDto<ReviewDto, Review>(_mapper);
 
         private async Task<Review> GetReviewByIdOrThrowAsync(int id) =>
             await _reviewRepository.GetByIdOrDefaultAsync(id) ??

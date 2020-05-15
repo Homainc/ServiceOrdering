@@ -5,6 +5,6 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
 {
     public interface IServiceTypeService
     {
-        Task<IEnumerable<ServiceTypeDTO>> GetAllOrderedByProfilesCount();
+        Task<IEnumerable<ServiceTypeDto>> GetAllOrderedByProfilesCount();
     }
 }

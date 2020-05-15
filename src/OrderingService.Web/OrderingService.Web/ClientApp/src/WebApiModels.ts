@@ -114,18 +114,46 @@ export type OrderDTO = {
 
 export type OrderStatus = 0 | 1 | 2 | 3;
 
-export type ReviewDTO = {
-    'id' ? : number;
-    'text' ? : string;
-    'rate': number;
-    'date': string;
-    'clientId': string;
-    'client' ? : UserDto;
-    'employeeId': string;
-    'employee' ? : EmployeeProfileDTO;
+export type IPagedResultOfReviewDto = {
+    'value' ? : Array < ReviewDto >
+    ;
+    'pagesCount': number;
+    'pageSize': number;
+    'pageNumber': number;
+    'total': number;
 } & {
     [key: string]: any;
 };
+
+export type ReviewDto = {
+    'text' ? : string;
+    'rate': number;
+    'clientId': string;
+    'employeeId': string;
+    'id': number;
+    'date': string;
+    'client' ? : UserDto;
+    'employee' ? : EmployeeProfileDTO;
+};
+
+export type ReviewCreateDto = {
+    'text' ? : string;
+    'rate': number;
+    'clientId': string;
+    'employeeId': string;
+} & {
+    [key: string]: any;
+};
+
+export type ServiceTypeDto = {
+    'id': number;
+    'name' ? : string;
+} & {
+    [key: string]: any;
+};
+
+export type Response_ServiceType_GetAllOrderedByProfilesCount_200 = Array < ServiceTypeDto >
+;
 
 export type Logger = {
     log: (line: string) => any
@@ -1644,7 +1672,7 @@ export class SwaggerCodegen {
         'id': string,
         'pageSize' ? : number,
         'pageNumber' ? : number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, IPagedResultOfReviewDto > | ResponseWithBody < 400, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Review/{id}';
         if (parameters.$path) {
@@ -1733,7 +1761,7 @@ export class SwaggerCodegen {
      */
     Review_Delete(parameters: {
         'id': number,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 404, ProblemDetails >> {
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, ReviewDto > | ResponseWithBody < 404, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Review/{id}';
         if (parameters.$path) {
@@ -1772,7 +1800,7 @@ export class SwaggerCodegen {
     }
 
     Review_CreateURL(parameters: {
-        'reviewDto': ReviewDTO,
+        'reviewDto': ReviewCreateDto,
     } & CommonRequestOptions): string {
         let queryParameters: QueryParameters = {};
         const domain = parameters.$domain ? parameters.$domain : this.domain;
@@ -1801,8 +1829,8 @@ export class SwaggerCodegen {
      * @param {} reviewDto - 
      */
     Review_Create(parameters: {
-        'reviewDto': ReviewDTO,
-    } & CommonRequestOptions): Promise < ResponseWithBody < 200, void > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
+        'reviewDto': ReviewCreateDto,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, ReviewDto > | ResponseWithBody < 400, ProblemDetails > | ResponseWithBody < 401, ProblemDetails >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/Review';
         if (parameters.$path) {
@@ -1864,7 +1892,7 @@ export class SwaggerCodegen {
      * @method
      * @name SwaggerCodegen#ServiceType_GetAllOrderedByProfilesCount
      */
-    ServiceType_GetAllOrderedByProfilesCount(parameters: {} & CommonRequestOptions): Promise < ResponseWithBody < 200, void >> {
+    ServiceType_GetAllOrderedByProfilesCount(parameters: {} & CommonRequestOptions): Promise < ResponseWithBody < 200, Response_ServiceType_GetAllOrderedByProfilesCount_200 >> {
         const domain = parameters.$domain ? parameters.$domain : this.domain;
         let path = '/api/ServiceType';
         if (parameters.$path) {
@@ -1876,6 +1904,7 @@ export class SwaggerCodegen {
         let headers: RequestHeaders = {};
         let form: any = {};
         return new Promise((resolve, reject) => {
+            headers['Accept'] = 'text/plain, application/json, text/json';
 
             if (parameters.$queryParameters) {
                 queryParameters = {

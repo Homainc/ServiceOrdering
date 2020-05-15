@@ -1,4 +1,4 @@
-import { ReviewDTO } from "../../WebApiModels";
+import { ReviewDto } from "../../WebApiModels";
 
 export const REVIEW_CREATE_REQUEST = 'review/create (request)';
 export const REVIEW_CREATE_SUCCESS = 'review/create (success)';
@@ -16,12 +16,12 @@ interface ReviewRequestAction {
 
 interface ReviewCreateSuccessAction {
     type: typeof REVIEW_CREATE_SUCCESS;
-    review: ReviewDTO;
+    review: ReviewDto;
 };
 
 interface ReviewLoadListAction {
     type: typeof REVIEW_LOAD_LIST_BY_EMPLOYEE_SUCCESS;
-    list: Array<ReviewDTO>;
+    list: Array<ReviewDto>;
     total: number;
     page: number;
 };
@@ -39,7 +39,7 @@ export type ReviewActionTypes =
 
 export interface ReviewState {
     creating: boolean;
-    reviews?: Array<ReviewDTO>;
+    reviews?: Array<ReviewDto>;
     totalReviews: number;
 };
     

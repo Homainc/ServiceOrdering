@@ -6,8 +6,8 @@ namespace OrderingService.Domain.Logic.Code.Interfaces
 {
     public interface IReviewService
     {
-        Task<IPagedResult<ReviewDTO>> GetPagedReviewsAsync(Guid employeeId, int pageSize, int pageNumber);
-        Task<ReviewDTO> CreateAsync(ReviewDTO reviewDto);
-        Task<ReviewDTO> DeleteAsync(int reviewDto);
+        Task<IPagedResult<ReviewDto>> GetPagedReviewsAsync(Guid employeeId, int pageSize, int pageNumber);
+        Task<ReviewDto> CreateAsync(ReviewCreateDto reviewDto);
+        Task<ReviewDto> DeleteAsync(int reviewDto);
     }
 }

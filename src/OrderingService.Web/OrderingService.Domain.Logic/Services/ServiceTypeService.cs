@@ -16,7 +16,7 @@ namespace OrderingService.Domain.Logic.Services
             _serviceTypeRepository = serviceTypeRepository;
         }
 
-        public async Task<IEnumerable<ServiceTypeDTO>> GetAllOrderedByProfilesCount() =>
-            _mapper.Map<IEnumerable<ServiceTypeDTO>>(await _serviceTypeRepository.GetAllOrderedByProfilesCount());
+        public async Task<IEnumerable<ServiceTypeDto>> GetAllOrderedByProfilesCount() =>
+            _mapper.Map<IEnumerable<ServiceTypeDto>>(await _serviceTypeRepository.GetAllOrderedByProfilesCount());
     }
 }

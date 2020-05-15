@@ -12,7 +12,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import * as reviewModalActions from '../_store/reviewModal/actions';
 import * as reviewActions from '../_store/review/actions';
 import * as orderActions from '../_store/order/actions';
-import { ReviewDTO } from '../WebApiModels';
+import { ReviewCreateDto } from '../WebApiModels';
 
 const mapState = (state: RootState) => ({
     modalOpened: state.reviewModal.modalOpened,
@@ -25,7 +25,7 @@ const mapDispatch = (
     dispatch: ThunkDispatch<RootState, undefined, ReviewActionTypes | ReviewModalActionTypes | OrderActionTypes>
 ) => ({
     closeModal: () => dispatch(reviewModalActions.close()),
-    createReview: async (review: ReviewDTO) => dispatch(reviewActions.create(review)),
+    createReview: async (review: ReviewCreateDto) => dispatch(reviewActions.create(review)),
     confirmOrder: async (id: number) => dispatch(orderActions.confirm(id))
 });
 
@@ -41,7 +41,6 @@ const ReviewModal = (props: ReviewModalProps) => {
     }) => {
         if(props.order){
             await props.createReview({
-                date: new Date(Date.now()).toDateString(),
                 text: values.text,
                 rate: values.rate,
                 clientId: props.order.clientId,

@@ -7,7 +7,10 @@ namespace OrderingService.Domain.Logic.MapperProfiles
     {
         public ReviewMapperProfile()
         {
-            CreateMap<ReviewDTO, Review>()
+            CreateMap<ReviewCreateDto, Review>()
+                .ReverseMap();
+            CreateMap<ReviewDto, Review>()
+                .IncludeBase<ReviewCreateDto, Review>()
                 .ReverseMap();
         }
     }

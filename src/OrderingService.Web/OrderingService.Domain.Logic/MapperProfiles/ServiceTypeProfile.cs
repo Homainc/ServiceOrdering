@@ -7,7 +7,7 @@ namespace OrderingService.Domain.Logic.MapperProfiles
     {
         public ServiceTypeProfile()
         {
-            CreateMap<ServiceType, ServiceTypeDTO>();
+            CreateMap<ServiceType, ServiceTypeDto>();
         }
     }
 }

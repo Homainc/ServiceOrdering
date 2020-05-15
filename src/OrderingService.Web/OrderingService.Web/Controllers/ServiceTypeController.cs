@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
 using OrderingService.Web.Code;
 
@@ -14,7 +16,7 @@ namespace OrderingService.Web.Controllers
             _serviceTypeService = serviceTypeService;
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ServiceTypeDto>))]
         public async Task<IActionResult> GetAllOrderedByProfilesCount() =>
             Ok(await _serviceTypeService.GetAllOrderedByProfilesCount());
     }
