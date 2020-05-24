@@ -1,0 +1,52 @@
+@import '~bootstrap';
+
+@include media-breakpoint-up(xs) { 
+    .employee-img {
+        max-width: 60px;
+        max-height: 60px;
+    }
+    .employee-h1 {font-size: 1.3rem;}
+    .employee-h2 {font-size: 1.2rem;}
+    .employee-h3 {font-size: 1.1rem;}
+    .pl-5 {padding-left: 1rem !important;}
+}
+@include media-breakpoint-up(sm) { 
+    .employee-img {
+        max-width: 70px;
+        max-height: 70px;
+    }
+    .employee-h1 {font-size: 1.4rem;}
+    .employee-h2 {font-size: 1.3rem;}
+    .employee-h3 {font-size: 1.2rem;}
+    .pl-5 {padding-left: 3rem !important;}
+}
+@include media-breakpoint-up(md) {
+    .employee-img {
+        max-width: 100px;
+        max-height: 100px;
+    }
+    .employee-h1 {font-size: 1.5rem;}
+    .employee-h2 {font-size: 1.4rem;}
+    .employee-h3 {font-size: 1.3rem;}
+    .pl-5 {padding-left: 3rem !important;}
+}
+@include media-breakpoint-up(lg) {
+    .employee-img {
+        max-width: 130px;
+        max-height: 130px;
+    }
+    .employee-h1 {font-size: 1.7rem;}
+    .employee-h2 {font-size: 1.6rem;}
+    .employee-h3 {font-size: 1.5rem;}
+    .pl-5 {padding-left: 3rem !important;}
+}
+@include media-breakpoint-up(xl) {
+    .employee-img {
+        max-width: 130px;
+        max-height: 130px;
+    }
+    .employee-h1 {font-size: 1.7rem;}
+    .employee-h2 {font-size: 1.6rem;}
+    .employee-h3 {font-size: 1.5rem;}
+    .pl-5 {padding-left: 3rem !important;}
+}

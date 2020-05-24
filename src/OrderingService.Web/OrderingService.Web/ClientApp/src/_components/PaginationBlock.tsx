@@ -21,7 +21,7 @@ export const PaginationBlock = (props: PaginationBlockProps) => {
         </PaginationItem>    
     );
     return(
-        <Pagination className="d-flex justify-content-center">
+        <Pagination className="d-flex justify-content-center mt-4">
             <PaginationItem disabled={props.pageNumber === 1}>
                 <PaginationLink first tag={Link} to={buildURI(1)}/>
             </PaginationItem>
