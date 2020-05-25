@@ -43,9 +43,8 @@ export function uploadFile(
         }
     };
   
-    fd.append('tags', 'temporary');
     fd.append('upload_preset', config.cloudinary.uploadPreset);
-    fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
+    fd.append('tags', 'temporary');
     fd.append('file', file);
     xhr.send(fd);
   }

@@ -20,11 +20,13 @@ namespace OrderingService.Domain.Logic.Code.Extensions
         {
             services.AddDataServices(config);
 
-            //configure your Domain Logic Layer services here
+            // Configuration
             var appSettingSection = config.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingSection);
-
             var appSettings = appSettingSection.Get<AppSettings>();
+            services.Configure<AppSettings>(appSettingSection);
+            services.Configure<CloudinaryCredentials>(config.GetSection("CloudinaryCredentials"));
+
+            // Jwt Bearer configuration
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(options =>
             {
@@ -60,14 +62,23 @@ namespace OrderingService.Domain.Logic.Code.Extensions
                 };
             });
 
-            services.AddAutoMapper(typeof(UserMapperProfile), typeof(EmployeeMapperProfile),
-                typeof(ReviewMapperProfile), typeof(OrderMapperProfile), typeof(ServiceType));
+            // Add AutoMapper services
+            services.AddAutoMapper(
+                typeof(UserMapperProfile), 
+                typeof(EmployeeMapperProfile),
+                typeof(ReviewMapperProfile), 
+                typeof(OrderMapperProfile), 
+                typeof(ServiceType));
+            
+            // Services
+            services.AddScoped<IPictureService, PictureService>();
             services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IServiceTypeService, ServiceTypeService>();
+            
             return services;
         }
     }

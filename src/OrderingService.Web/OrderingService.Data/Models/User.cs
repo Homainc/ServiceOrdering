@@ -27,7 +27,7 @@ namespace OrderingService.Data.Models
             builder.Property(x => x.LastName)
                 .IsRequired().HasMaxLength(30);
             builder.Property(x => x.ImagePublicId)
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsRequired(false);
             builder.HasAlternateKey(x => x.Email);
             builder.Property(x => x.Email).HasMaxLength(50);

@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using OrderingService.Data.Code.Constants;
 using OrderingService.Data.Code.Interfaces;
 using OrderingService.Data.Models;
+using OrderingService.Domain.Logic.Code.Constants;
 using OrderingService.Domain.Logic.Code.Exceptions;
 using OrderingService.Domain.Logic.Code.Interfaces;
 
@@ -15,8 +17,9 @@ namespace OrderingService.Domain.Logic.Services
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IPictureService _pictureService;
 
-        public UserService(IUserRepository userRepository, ISaveProvider saveProvider, IMapper mapper,
+        public UserService(IPictureService pictureService, IUserRepository userRepository, ISaveProvider saveProvider, IMapper mapper,
             IRoleRepository roleRepository, IPasswordHasher<User> passwordHasher, ITokenGenerator tokenGenerator)
             : base(mapper, saveProvider)
         {
@@ -24,6 +27,7 @@ namespace OrderingService.Domain.Logic.Services
             _tokenGenerator = tokenGenerator;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _pictureService = pictureService;
         }
 
         public async Task<UserAuthDto> CreateAsync(UserCreateDto userDto)
@@ -38,6 +42,9 @@ namespace OrderingService.Domain.Logic.Services
 
             _userRepository.Create(user);
             await SaveProvider.SaveAsync();
+
+            await _pictureService.ChangeImageTagAsync(user.ImagePublicId, CloudinaryTagDefaults.Employee);
+            await _pictureService.DeleteTemporaryImagesAsync();
 
             return Mapper.Map<UserAuthDto>(user);
         }
@@ -57,7 +64,7 @@ namespace OrderingService.Domain.Logic.Services
 
         public async Task<UserAuthDto> SignUpAsync(UserCreateDto userDto)
         {
-            userDto.Role = "user";
+            userDto.Role = RoleDefaults.User;
             await CreateAsync(userDto);
             return await AuthenticateAsync(userDto.Email, userDto.Password);
         }
@@ -68,10 +75,19 @@ namespace OrderingService.Domain.Logic.Services
         public async Task<UserDto> UpdateProfileAsync(UserDto userDto)
         {
             var user = await GetUserByIdOrThrowAsync(userDto.Id);
+            var oldImagePublicId = user.ImagePublicId;
 
             Mapper.Map(userDto, user);
             _userRepository.Update(user);
             await SaveProvider.SaveAsync();
+
+            if (user.ImagePublicId != oldImagePublicId)
+            {
+                await _pictureService.DeleteImageAsync(oldImagePublicId);
+                await _pictureService.ChangeImageTagAsync(user.ImagePublicId, CloudinaryTagDefaults.Employee);
+            }
+
+            await _pictureService.DeleteTemporaryImagesAsync();
 
             return userDto;
         }
