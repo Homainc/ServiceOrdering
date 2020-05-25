@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import { connect, ConnectedProps } from 'react-redux';
@@ -49,17 +49,34 @@ class NavMenu extends Component<NavMenuProps, NavMenuState> {
                 </NavItem>
                 { loggedIn? (
                   <>
-                  <NavItem>
-                    <NavLink tag={Link} className="text-light" to="/profile"><UserWithAvatar user={user}/></NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink tag={Link} className="text-light" to="/orders/page/1">My orders</NavLink>
-                  </NavItem>
-                  {user && user.employeeProfile && (
-                    <NavItem>
-                      <NavLink tag={Link} className="text-light" to="/tasks/page/1">Tasks</NavLink>
-                    </NavItem>
+                  {user?.role === 'admin' && (
+                    <UncontrolledDropdown nav inNavbar>
+                      <DropdownToggle className="text-light" nav caret>Manage</DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem>
+                          <Link className='text-dark text-decoration-none' to='/service-types'>Service Types</Link>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
                   )}
+                  <UncontrolledDropdown nav inNavbar>
+                      <DropdownToggle className="text-light" nav caret>
+                        <UserWithAvatar user={user}/>
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem>
+                          <Link className="text-dark text-decoration-none" to="/profile">Profile</Link>
+                        </DropdownItem>
+                        <DropdownItem>
+                          <Link className="text-dark text-decoration-none" to="/orders/page/1">My orders</Link>
+                        </DropdownItem>
+                        <DropdownItem>
+                          {user && user.employeeProfile && (
+                            <Link className="text-dark text-decoration-none" to="/tasks/page/1">My Tasks</Link>
+                          )}
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
                   </>
                 ):(
                   <NavItem>

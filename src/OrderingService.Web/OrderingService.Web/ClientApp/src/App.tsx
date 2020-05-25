@@ -9,6 +9,7 @@ import { HomePage } from './HomePage';
 
 import './custom.css'
 import { SignUpPage } from './SignUpPage';
+import { ServiceTypesPage } from './ServiceTypesPage';
 import { connect, ConnectedProps } from 'react-redux';
 import { ProfilePage } from './ProfilePage';
 import { EmployeePage } from './EmployeePage';
@@ -36,6 +37,7 @@ class App extends React.Component<AppProps> {
   render () {
     return (
       <Layout history={history}>
+        <PrivateRoute path='/service-types' component={ServiceTypesPage}/>
         <PrivateRoute path='/orders/page/:page' component={UserOrdersPage}/>
         <PrivateRoute path='/tasks/page/:page' component={EmployeeOrdersPage}/>
         <PrivateRoute path='/order/:employeeId' component={MakeOrderPage}/>

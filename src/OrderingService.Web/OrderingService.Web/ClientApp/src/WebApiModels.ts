@@ -213,7 +213,11 @@ export type ReviewCreateDto = {
 };
 
 export type ServiceTypeDto = {
+    'name' ? : string;
     'id': number;
+};
+
+export type ServiceTypeCreateDto = {
     'name' ? : string;
 } & {
     [key: string]: any;
@@ -1981,6 +1985,238 @@ export class SwaggerCodegen {
             }
 
             this.request('GET', domain + path, body, headers, queryParameters, form, reject, resolve, parameters);
+        });
+    }
+
+    ServiceType_CreateURL(parameters: {
+        'item': ServiceTypeCreateDto,
+    } & CommonRequestOptions): string {
+        let queryParameters: QueryParameters = {};
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/ServiceType';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        if (parameters.$queryParameters) {
+            queryParameters = {
+                ...queryParameters,
+                ...parameters.$queryParameters
+            };
+        }
+
+        queryParameters = {};
+
+        let keys = Object.keys(queryParameters);
+        return domain + path + (keys.length > 0 ? '?' + (keys.map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&')) : '');
+    }
+
+    /**
+     * 
+     * @method
+     * @name SwaggerCodegen#ServiceType_Create
+     * @param {} item - 
+     */
+    ServiceType_Create(parameters: {
+        'item': ServiceTypeCreateDto,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, ServiceTypeDto > | ResponseWithBody < 400, ValidationProblemDetails >> {
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/ServiceType';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        let body: any;
+        let queryParameters: QueryParameters = {};
+        let headers: RequestHeaders = {};
+        let form: any = {};
+        return new Promise((resolve, reject) => {
+            headers['Accept'] = 'text/plain, application/json, text/json';
+            headers['Content-Type'] = 'application/json-patch+json';
+
+            if (parameters['item'] !== undefined) {
+                body = parameters['item'];
+            }
+
+            if (parameters['item'] === undefined) {
+                reject(new Error('Missing required  parameter: item'));
+                return;
+            }
+
+            if (parameters.$queryParameters) {
+                queryParameters = {
+                    ...queryParameters,
+                    ...parameters.$queryParameters
+                };
+            }
+
+            form = queryParameters;
+            queryParameters = {};
+
+            this.request('POST', domain + path, body, headers, queryParameters, form, reject, resolve, parameters);
+        });
+    }
+
+    ServiceType_UpdateURL(parameters: {
+        'item': ServiceTypeDto,
+        'id': string,
+    } & CommonRequestOptions): string {
+        let queryParameters: QueryParameters = {};
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/ServiceType/{id}';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        path = path.replace(
+            '{id}',
+            `${encodeURIComponent(this.convertParameterCollectionFormat(
+                        parameters['id'],
+                        ''
+                    ).toString())}`
+        );
+
+        if (parameters.$queryParameters) {
+            queryParameters = {
+                ...queryParameters,
+                ...parameters.$queryParameters
+            };
+        }
+
+        let keys = Object.keys(queryParameters);
+        return domain + path + (keys.length > 0 ? '?' + (keys.map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&')) : '');
+    }
+
+    /**
+     * 
+     * @method
+     * @name SwaggerCodegen#ServiceType_Update
+     * @param {} item - 
+     * @param {string} id - 
+     */
+    ServiceType_Update(parameters: {
+        'item': ServiceTypeDto,
+        'id': string,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, ServiceTypeDto > | ResponseWithBody < 400, ValidationProblemDetails > | ResponseWithBody < 404, ValidationProblemDetails >> {
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/ServiceType/{id}';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        let body: any;
+        let queryParameters: QueryParameters = {};
+        let headers: RequestHeaders = {};
+        let form: any = {};
+        return new Promise((resolve, reject) => {
+            headers['Accept'] = 'text/plain, application/json, text/json';
+            headers['Content-Type'] = 'application/json-patch+json';
+
+            if (parameters['item'] !== undefined) {
+                body = parameters['item'];
+            }
+
+            if (parameters['item'] === undefined) {
+                reject(new Error('Missing required  parameter: item'));
+                return;
+            }
+
+            path = path.replace(
+                '{id}',
+                `${encodeURIComponent(this.convertParameterCollectionFormat(
+                    parameters['id'],
+                    ''
+                ).toString())}`
+            );
+
+            if (parameters['id'] === undefined) {
+                reject(new Error('Missing required  parameter: id'));
+                return;
+            }
+
+            if (parameters.$queryParameters) {
+                queryParameters = {
+                    ...queryParameters,
+                    ...parameters.$queryParameters
+                };
+            }
+
+            this.request('PUT', domain + path, body, headers, queryParameters, form, reject, resolve, parameters);
+        });
+    }
+
+    ServiceType_DeleteURL(parameters: {
+        'id': number,
+    } & CommonRequestOptions): string {
+        let queryParameters: QueryParameters = {};
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/ServiceType/{id}';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        path = path.replace(
+            '{id}',
+            `${encodeURIComponent(this.convertParameterCollectionFormat(
+                        parameters['id'],
+                        ''
+                    ).toString())}`
+        );
+
+        if (parameters.$queryParameters) {
+            queryParameters = {
+                ...queryParameters,
+                ...parameters.$queryParameters
+            };
+        }
+
+        let keys = Object.keys(queryParameters);
+        return domain + path + (keys.length > 0 ? '?' + (keys.map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&')) : '');
+    }
+
+    /**
+     * 
+     * @method
+     * @name SwaggerCodegen#ServiceType_Delete
+     * @param {integer} id - 
+     */
+    ServiceType_Delete(parameters: {
+        'id': number,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, ServiceTypeDto > | ResponseWithBody < 404, ValidationProblemDetails >> {
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/ServiceType/{id}';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        let body: any;
+        let queryParameters: QueryParameters = {};
+        let headers: RequestHeaders = {};
+        let form: any = {};
+        return new Promise((resolve, reject) => {
+            headers['Accept'] = 'text/plain, application/json, text/json';
+
+            path = path.replace(
+                '{id}',
+                `${encodeURIComponent(this.convertParameterCollectionFormat(
+                    parameters['id'],
+                    ''
+                ).toString())}`
+            );
+
+            if (parameters['id'] === undefined) {
+                reject(new Error('Missing required  parameter: id'));
+                return;
+            }
+
+            if (parameters.$queryParameters) {
+                queryParameters = {
+                    ...queryParameters,
+                    ...parameters.$queryParameters
+                };
+            }
+
+            this.request('DELETE', domain + path, body, headers, queryParameters, form, reject, resolve, parameters);
         });
     }
 

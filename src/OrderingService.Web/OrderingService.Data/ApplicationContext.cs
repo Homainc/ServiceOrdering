@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OrderingService.Data.Code.Constants;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data
@@ -33,8 +34,8 @@ namespace OrderingService.Data
             // Initialization of default roles
             var roles = new Role[]
             {
-                new Role{Id = 1, Name = "user"},
-                new Role{Id = 2, Name = "admin"}
+                new Role{Id = RoleDefaults.UserRoleId, Name = RoleDefaults.User},
+                new Role{Id = RoleDefaults.AdminRoleId, Name = RoleDefaults.Admin}
             };
             builder.Entity<Role>().HasData(roles);
 

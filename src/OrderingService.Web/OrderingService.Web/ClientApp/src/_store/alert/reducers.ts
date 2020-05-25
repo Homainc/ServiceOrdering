@@ -23,7 +23,7 @@ export function alertReducer(state: AlertState = initialState, action: AlertActi
             state.alerts.push({type: 'info', message: action.message, title: ALERT_INFO_TITLE});
             return { ...state };
         case ALERT_CLEAR:
-            state.alerts.splice(-1);
+            state.alerts.splice(0, 1);
             return { ...state };
         default:
             return state;

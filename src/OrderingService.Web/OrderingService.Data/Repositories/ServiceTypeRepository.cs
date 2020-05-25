@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -32,8 +34,9 @@ namespace OrderingService.Data.Repositories
         public async Task<IEnumerable<ServiceType>> GetAllOrderedByProfilesCount()
         {
             var query =
-                from e in Db.EmployeeProfiles
-                join st in Db.ServiceTypes on e.ServiceType.Id equals st.Id
+                from st in Db.ServiceTypes
+                join e in Db.EmployeeProfiles on st.Id equals e.ServiceTypeId into eGrouping
+                from e in eGrouping.DefaultIfEmpty()
                 group e by new { st.Id, st.Name } into g
                 select new
                 {
@@ -52,5 +55,11 @@ namespace OrderingService.Data.Repositories
                 }).ToListAsync(Token);
             return serviceTypes;
         }
+
+        public async Task<ServiceType> GetByIdOrDefaultAsync(int id) =>
+            await Db.ServiceTypes.SingleOrDefaultAsync(x => x.Id == id, Token);
+
+        public async Task<bool> AnyServiceAsync(Expression<Func<ServiceType, bool>> filter)
+            => await Db.ServiceTypes.AnyAsync(filter, Token);
     }
 }
