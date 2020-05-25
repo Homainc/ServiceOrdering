@@ -10,7 +10,7 @@ namespace OrderingService.Data.Models
         public Role Role { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string ImageUrl { get; set; }
+        public string ImagePublicId { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string HashedPassword { get; set; }
@@ -26,8 +26,8 @@ namespace OrderingService.Data.Models
                 .IsRequired().HasMaxLength(30);
             builder.Property(x => x.LastName)
                 .IsRequired().HasMaxLength(30);
-            builder.Property(x => x.ImageUrl)
-                .HasMaxLength(200)
+            builder.Property(x => x.ImagePublicId)
+                .HasMaxLength(30)
                 .IsRequired(false);
             builder.HasAlternateKey(x => x.Email);
             builder.Property(x => x.Email).HasMaxLength(50);

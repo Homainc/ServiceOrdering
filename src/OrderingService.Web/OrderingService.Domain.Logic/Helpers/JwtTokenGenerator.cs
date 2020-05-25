@@ -21,7 +21,8 @@ namespace OrderingService.Domain.Logic.Helpers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role.Name), 
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

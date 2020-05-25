@@ -37,7 +37,7 @@ namespace OrderingService.Domain.Logic.Services
             if(await _employeeRepository.AnyEmployeeAsync(x => x.UserId == employeeProfileDto.UserId))
                 throw new LogicException($"Employee profile for user with id {employeeProfileDto.UserId} has been already created!");
 
-            var employeeProfile = Mapper.Map<EmployeeProfile>(employeeProfileDto);
+            var employeeProfile = Mapper.Map<EmployeeProfileCreateDto, EmployeeProfile>(employeeProfileDto);
             employeeProfile.ServiceType = await _serviceTypeRepository.GetByNameOrCreateNewAsync(employeeProfileDto.ServiceType);
 
             _employeeRepository.Create(employeeProfile);

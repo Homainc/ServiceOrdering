@@ -51,7 +51,7 @@ const UserPersonalBlock = (props: UserPersonalBlockProps) => {
             <Formik
                 enableReinitialize={true}
                 initialValues={{
-                    imageUrl: profile?.imageUrl || '',
+                    imagePublicId: profile?.imagePublicId || '',
                     lastName: profile?.lastName || '',
                     firstName: profile?.firstName || '',
                     phoneNumber: profile?.phoneNumber || ''
@@ -66,8 +66,8 @@ const UserPersonalBlock = (props: UserPersonalBlockProps) => {
                     phoneNumber: Yup.string()
                         .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/, "Incorrect phone number")
                         .notRequired(),
-                    imageUrl: Yup.string()
-                        .max(200)
+                    imagePublicId: Yup.string()
+                        .max(30)
                 })}
                 onSubmit={(values, { setErrors }) => {
                     props.updateProfile({
@@ -75,7 +75,7 @@ const UserPersonalBlock = (props: UserPersonalBlockProps) => {
                         lastName: values.lastName,
                         firstName: values.firstName,
                         phoneNumber: values.phoneNumber,
-                        imageUrl: values.imageUrl
+                        imagePublicId: values.imagePublicId
                     })
                     .then(handleProfileUpdated)
                     .catch(errors => setErrors(errors));
@@ -83,7 +83,7 @@ const UserPersonalBlock = (props: UserPersonalBlockProps) => {
                 {({ resetForm }) => (
                 <Form><Row>
                     <Col sm="5" md="4" lg="3">
-                        <ImageUpload id="imageUrl" name="imageUrl" disabled={!state.editMode}/>
+                        <ImageUpload id="imagePublicId" name="imagePublicId" disabled={!state.editMode}/>
                     </Col>
                     <Col>
                         {!state.editMode ? (<>

@@ -9,6 +9,7 @@
     .employee-h2 {font-size: 1.2rem;}
     .employee-h3 {font-size: 1.1rem;}
     .pl-5 {padding-left: 1rem !important;}
+    .collapse-xs {display: none !important;}
 }
 @include media-breakpoint-up(sm) { 
     .employee-img {
@@ -19,6 +20,7 @@
     .employee-h2 {font-size: 1.3rem;}
     .employee-h3 {font-size: 1.2rem;}
     .pl-5 {padding-left: 3rem !important;}
+    .collapse-xs {display: inherit !important;}
 }
 @include media-breakpoint-up(md) {
     .employee-img {
@@ -29,6 +31,7 @@
     .employee-h2 {font-size: 1.4rem;}
     .employee-h3 {font-size: 1.3rem;}
     .pl-5 {padding-left: 3rem !important;}
+    .collapse-xs {display: inherit !important;}
 }
 @include media-breakpoint-up(lg) {
     .employee-img {
@@ -39,6 +42,7 @@
     .employee-h2 {font-size: 1.6rem;}
     .employee-h3 {font-size: 1.5rem;}
     .pl-5 {padding-left: 3rem !important;}
+    .collapse-xs {display: inherit !important;}
 }
 @include media-breakpoint-up(xl) {
     .employee-img {
@@ -49,4 +53,5 @@
     .employee-h2 {font-size: 1.6rem;}
     .employee-h3 {font-size: 1.5rem;}
     .pl-5 {padding-left: 3rem !important;}
+    .collapse-xs {display: inherit !important;}
 }

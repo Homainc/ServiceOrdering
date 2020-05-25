@@ -9,7 +9,7 @@ import * as imageActions from '../_store/image/actions';
 import { ConnectedProps, connect } from 'react-redux';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-
+import { cloudinary } from '../_helpers';
 
 const mapState =  (state: RootState) => ({
     uploadingProgress: state.image.uploadingProgress,
@@ -64,7 +64,7 @@ const ImageUpload = ({ uploadingProgress, imageUrl, uploadImage, ...props }: Ima
                         </div>
                 </div>
                 <img 
-                    src={meta.value || 'images/default-user.jpg'} 
+                    src={cloudinary.url(meta.value, { format: 'jpg' })} 
                     height="150" width="150"
                     className={'rounded '+ (props.disabled? '': 'img-upload')} 
                     alt="Profile"/>

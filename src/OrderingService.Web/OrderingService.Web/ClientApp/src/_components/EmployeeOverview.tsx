@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Rating } from './Rating';
 import { EmployeeProfileDto } from '../WebApiModels';
 import React from 'react';
+import { cloudinary } from '../_helpers';
 
 type EmployeeOverviewProps = {
     employee?: EmployeeProfileDto;
@@ -14,7 +15,7 @@ export const EmployeeOverview = (props: EmployeeOverviewProps) => {
     return (
         <Row>
             <Col xs='4' sm='4' md='3' lg='3' xl='2'>
-                <img src={employee?.user?.imageUrl || 'images/default-user.jpg'} className="rounded" height="150" width="150" alt="employee"/>
+                <img src={cloudinary.url(employee?.user?.imagePublicId || 'default-employee')} className="rounded" height="150" width="150" alt="employee"/>
             </Col>
             <Col xm='4' sm='4'>
                 <h5>{employee?.user?.firstName} {employee?.user?.lastName}</h5>

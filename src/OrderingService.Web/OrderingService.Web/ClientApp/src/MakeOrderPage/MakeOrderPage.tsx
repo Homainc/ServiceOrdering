@@ -66,7 +66,7 @@ const MakeOrderPage = (props: MakeOrderPageProps) => {
                             .max(50, 'Address must be at most 50 characters'),
                         contactPhone: Yup.string()
                             .required('Your contact phone is required')
-                            .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/, 'Incorrect contact phone')
+                            .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/, 'Incorrect contact phone')
                     })}
                     onSubmit={(values, { setErrors }) => {
                         props.createOrder({

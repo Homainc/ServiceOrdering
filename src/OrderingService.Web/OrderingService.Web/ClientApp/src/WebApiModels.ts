@@ -24,7 +24,7 @@ export type UserAuthDto = {
     'role' ? : string;
     'firstName' ? : string;
     'lastName' ? : string;
-    'imageUrl' ? : string;
+    'imagePublicId' ? : string;
     'id': string;
     'employeeProfile' ? : EmployeeProfileDto;
     'token' ? : string;
@@ -36,7 +36,7 @@ export type UserDto = {
     'role' ? : string;
     'firstName' ? : string;
     'lastName' ? : string;
-    'imageUrl' ? : string;
+    'imagePublicId' ? : string;
     'id': string;
     'employeeProfile' ? : EmployeeProfileDto;
 };
@@ -66,7 +66,7 @@ export type UserDtoBase = {
     'role' ? : string;
     'firstName' ? : string;
     'lastName' ? : string;
-    'imageUrl' ? : string;
+    'imagePublicId' ? : string;
 } & {
     [key: string]: any;
 };
@@ -112,7 +112,7 @@ export type UserCreateDto = {
     'role' ? : string;
     'firstName' ? : string;
     'lastName' ? : string;
-    'imageUrl' ? : string;
+    'imagePublicId' ? : string;
     'password' ? : string;
 };
 

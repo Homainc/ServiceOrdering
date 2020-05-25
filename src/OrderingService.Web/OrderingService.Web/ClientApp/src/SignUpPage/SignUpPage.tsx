@@ -39,7 +39,7 @@ const SignUpPage = (props: SignUpPageProps) => {
                             firstName: '',
                             lastName: '',
                             phoneNumber: '',
-                            imageUrl: ''
+                            imagePublicId: 'default-employee'
                         }}
                         validationSchema={Yup.object({
                              email: Yup.string()
@@ -60,9 +60,9 @@ const SignUpPage = (props: SignUpPageProps) => {
                                 .required("Last name is required")
                                 .max(20, "Last name must be at most 20 characters"),
                             phoneNumber: Yup.string()
-                                .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/,
+                                .matches(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/,
                                 "Incorrect phone format"),
-                            imageUrl: Yup.string()
+                            imagePublicId: Yup.string()
                         })}
                         onSubmit={(values, { setErrors }) => {
                             signUp({
@@ -71,7 +71,7 @@ const SignUpPage = (props: SignUpPageProps) => {
                                 firstName: values.firstName,
                                 lastName: values.lastName,
                                 phoneNumber: values.phoneNumber,
-                                imageUrl: values.imageUrl
+                                imagePublicId: values.imagePublicId
                             })
                             .catch(errors => setErrors(errors));
                         }}>
@@ -85,7 +85,7 @@ const SignUpPage = (props: SignUpPageProps) => {
                                 placeholder='Confirm your password'/>
 
                             <CardTitle>Personal data</CardTitle>
-                            <ImageUpload id="imageUrl" name="imageUrl" disabled={signingUp}/>
+                            <ImageUpload id="imagePublicId" name="imagePublicId" disabled={signingUp}/>
                             <ValidationTextField id="firstName" name="firstName" type="text" label="First Name" disabled={signingUp}/>
                             <ValidationTextField id="lastName" name="lastName" type="text" label="Last Name" disabled={signingUp}/>
                             <ValidationTextField id="phoneNumber" name="phoneNumber" type="text" label="Phone Number" disabled={signingUp}/>

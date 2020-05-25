@@ -38,7 +38,7 @@ namespace OrderingService.Data.EF
             };
             builder.Entity<Role>().HasData(roles);
 
-            // Initilization of data for content
+            // Initialization of data for content
             DataSeeder.Seed(builder);
         }
     }

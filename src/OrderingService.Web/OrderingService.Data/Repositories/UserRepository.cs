@@ -37,7 +37,7 @@ namespace OrderingService.Data.Repositories {
                     }: null,
                     FirstName = u.FirstName,
                     Id = u.Id,
-                    ImageUrl = u.ImageUrl,
+                    ImagePublicId = u.ImagePublicId,
                     LastName = u.LastName,
                     PhoneNumber = u.PhoneNumber,
                     Role = r,

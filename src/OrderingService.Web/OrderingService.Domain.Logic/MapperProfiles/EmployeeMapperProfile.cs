@@ -8,19 +8,20 @@ namespace OrderingService.Domain.Logic.MapperProfiles
         public EmployeeMapperProfile()
         {
             CreateMap<EmployeeProfile, EmployeeProfileDtoBase>()
+                .Include<EmployeeProfile, EmployeeProfileCreateDto>()
+                .Include<EmployeeProfile, EmployeeProfileUpdateDto>()
+                .Include<EmployeeProfile, EmployeeProfileDto>()
                 .ForMember(dest => dest.ServiceType, opt => opt.MapFrom(src => src.ServiceType.Name));
 
             CreateMap<EmployeeProfileDtoBase, EmployeeProfile>()
+                .Include<EmployeeProfileCreateDto, EmployeeProfile>()
+                .Include<EmployeeProfileUpdateDto, EmployeeProfile>()
+                .Include<EmployeeProfileDto, EmployeeProfile>()
                 .ForPath(dest => dest.ServiceType.Name, opt => opt.MapFrom(src => src.ServiceType));
 
-            CreateMap<EmployeeProfile, EmployeeProfileCreateDto>()
-                .IncludeBase<EmployeeProfile, EmployeeProfileDtoBase>();
-
-            CreateMap<EmployeeProfile, EmployeeProfileUpdateDto>()
-                .IncludeBase<EmployeeProfile, EmployeeProfileDtoBase>();
-
-            CreateMap<EmployeeProfile, EmployeeProfileDto>()
-                .IncludeBase<EmployeeProfile, EmployeeProfileDtoBase>().ReverseMap();
+            CreateMap<EmployeeProfile, EmployeeProfileCreateDto>().ReverseMap();
+            CreateMap<EmployeeProfile, EmployeeProfileUpdateDto>().ReverseMap();
+            CreateMap<EmployeeProfile, EmployeeProfileDto>().ReverseMap();
         }
     }
 }

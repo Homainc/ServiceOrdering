@@ -38,7 +38,7 @@ namespace OrderingService.Logic.Tests
             Email = "test1@test.net",
             FirstName = "test1_first_name",
             LastName = "test1_second_name",
-            Password = "test1_pwD1@",
+            //Password = "test1_pwD1@",
             PhoneNumber = "+1234567890",
             Role = "user",
         };

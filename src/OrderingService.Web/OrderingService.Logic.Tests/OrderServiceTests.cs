@@ -18,17 +18,17 @@ namespace OrderingService.Logic.Tests
             var employee = Initializers.DefaultEmployeeProfile;
             var client = Initializers.DefaultUser;
             client.Email = "tesfd55@gmail.com";
-            client = await userService.CreateAsync(client);
-            employee.User = await userService.CreateAsync(employee.User);
-            employee.UserId = employee.User.Id.Value;
-            employee = await employeeService.CreateEmployeeAsync(employee);
+            //client = await userService.CreateAsync(client);
+            //employee.User = await userService.CreateAsync(employee.User);
+            //employee.UserId = employee.User.Id.Value;
+            //employee = await employeeService.CreateEmployeeAsync(employee);
 
             // Action
             var order = new OrderDto
             {
                 Address = "ffd",
                 BriefTask = "l",
-                ClientId = client.Id.Value,
+                //ClientId = client.Id.Value,
                 EmployeeId = employee.Id,
                 ContactPhone = "124",
                 Date = DateTime.Now,

@@ -52,7 +52,7 @@ namespace OrderingService.Data.EF
                     LastName = "Wildermuth",
                     PhoneNumber = "+37533655993",
                     Id = Guid.NewGuid(),
-                    ImageUrl = "https://wildermuth.com/img/shawn-head.gif",
+                    ImagePublicId = "estfjuxhdlgmfmnyartx",
                     RoleId = 1
                 },
                 new User
@@ -62,7 +62,7 @@ namespace OrderingService.Data.EF
                     LastName = "Shinoda",
                     PhoneNumber = "+37533636993",
                     Id = Guid.NewGuid(),
-                    ImageUrl = "https://res.cloudinary.com/dofujaj9p/image/upload/v1585154354/egirl_ge9khz.jpg",
+                    ImagePublicId = "estfjuxhdlgmfmnyartx",
                     RoleId = 1
                 },
                 new User
@@ -72,7 +72,7 @@ namespace OrderingService.Data.EF
                     LastName = "Bennington",
                     PhoneNumber = "+37533636993",
                     Id = Guid.NewGuid(),
-                    ImageUrl = "https://wildermuth.com/img/shawn-head.gif",
+                    ImagePublicId = "estfjuxhdlgmfmnyartx",
                     RoleId = 1
                 },
                 new User
@@ -82,7 +82,7 @@ namespace OrderingService.Data.EF
                     LastName = "Khamitsevich",
                     PhoneNumber = "+37533636993",
                     Id = Guid.NewGuid(),
-                    ImageUrl = "https://res.cloudinary.com/dofujaj9p/image/upload/v1585154354/egirl_ge9khz.jpg",
+                    ImagePublicId = "estfjuxhdlgmfmnyartx",
                     RoleId = 1
                 },
                 new User
@@ -92,7 +92,7 @@ namespace OrderingService.Data.EF
                     LastName = "Robinson",
                     PhoneNumber = "+37533636993",
                     Id = Guid.NewGuid(),
-                    ImageUrl = "https://wildermuth.com/img/shawn-head.gif",
+                    ImagePublicId = "estfjuxhdlgmfmnyartx",
                     RoleId = 1
                 },
                 new User
@@ -102,7 +102,7 @@ namespace OrderingService.Data.EF
                     LastName = "Shima",
                     PhoneNumber = "+37533636993",
                     Id = Guid.NewGuid(),
-                    ImageUrl = "https://res.cloudinary.com/dofujaj9p/image/upload/v1585154354/egirl_ge9khz.jpg",
+                    ImagePublicId = "estfjuxhdlgmfmnyartx",
                     RoleId = 1
                 },
                 new User
@@ -112,7 +112,7 @@ namespace OrderingService.Data.EF
                     LastName = "Vasya",
                     PhoneNumber = "+37533636993",
                     Id = Guid.NewGuid(),
-                    ImageUrl = "https://wildermuth.com/img/shawn-head.gif",
+                    ImagePublicId = "estfjuxhdlgmfmnyartx",
                     RoleId = 1
                 },
                 new User
@@ -122,7 +122,7 @@ namespace OrderingService.Data.EF
                     LastName = "Jesus",
                     PhoneNumber = "+37533636993",
                     Id = Guid.NewGuid(),
-                    ImageUrl = "https://res.cloudinary.com/dofujaj9p/image/upload/v1585154354/egirl_ge9khz.jpg",
+                    ImagePublicId = "estfjuxhdlgmfmnyartx",
                     RoleId = 1
                 }
             };
