@@ -1,5 +1,5 @@
 using AutoMapper;
-using OrderingService.Data.Interfaces;
+using OrderingService.Data.Code.Interfaces;
 
 namespace OrderingService.Domain.Logic.Services
 {

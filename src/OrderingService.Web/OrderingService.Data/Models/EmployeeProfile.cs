@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OrderingService.Data.EF;
 
 namespace OrderingService.Data.Models
 {

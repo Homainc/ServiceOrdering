@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using OrderingService.Data.Interfaces;
-using OrderingService.Data.Models;
+using OrderingService.Data.Code.Interfaces;
 using OrderingService.Domain.Logic.Code.Interfaces;
 
 namespace OrderingService.Domain.Logic.Services

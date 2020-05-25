@@ -1,8 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using OrderingService.Data.EF;
-using OrderingService.Data.Interfaces;
+using OrderingService.Data.Code.Interfaces;
 
 namespace OrderingService.Data.Repositories
 {

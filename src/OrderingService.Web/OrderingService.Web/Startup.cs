@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using OrderingService.Domain.Logic;
+using OrderingService.Domain.Logic.Code.Extensions;
 using OrderingService.Web.Code.Filters;
 using OrderingService.Web.Code.Interfaces;
 using OrderingService.Web.Code.Services;
@@ -33,14 +33,15 @@ namespace OrderingService.Web
 
             services.AddSwaggerDocument();
 
-            services.AddControllersWithViews(opt => { 
-                opt.Filters.Add(typeof(LoggingAttribute));
-                opt.Filters.Add(typeof(LogicExceptionAttribute));
-            })
+            services.AddControllersWithViews(opt =>
+                {
+                    opt.Filters.Add(typeof(GlobalLoggingFilter));
+                    opt.Filters.Add(typeof(GlobalExceptionFilter));
+                })
                 .AddNewtonsoftJson(cfg =>
-                    {
-                        cfg.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    })
+                {
+                    cfg.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                })
                 .AddFluentValidation(fv =>
                 {
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
@@ -49,10 +50,7 @@ namespace OrderingService.Web
             services.AddAutoMapper(typeof(Startup).Assembly);
 
             // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
 
             services.AddSignalR();
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();

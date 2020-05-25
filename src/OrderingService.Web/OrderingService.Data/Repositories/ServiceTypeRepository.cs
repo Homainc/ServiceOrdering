@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using OrderingService.Data.EF;
-using OrderingService.Data.Interfaces;
+using OrderingService.Data.Code.Abstractions;
+using OrderingService.Data.Code.Interfaces;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Repositories
@@ -16,8 +15,6 @@ namespace OrderingService.Data.Repositories
             httpContextAccessor)
         {
         }
-
-        public override IQueryable<ServiceType> GetAll() => Db.ServiceTypes.AsQueryable();
 
         public async Task<ServiceType> GetByNameOrCreateNewAsync(string name)
         {

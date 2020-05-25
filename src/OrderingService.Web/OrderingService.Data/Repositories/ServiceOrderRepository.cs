@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Common;
+using OrderingService.Common.Concretes;
 using OrderingService.Common.Interfaces;
-using OrderingService.Data.EF;
-using OrderingService.Data.Interfaces;
+using OrderingService.Data.Code.Abstractions;
+using OrderingService.Data.Code.Extensions;
+using OrderingService.Data.Code.Interfaces;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Repositories
@@ -17,8 +19,6 @@ namespace OrderingService.Data.Repositories
         public ServiceOrderRepository(ApplicationContext db, IHttpContextAccessor httpContextAccessor) 
             : base(db, httpContextAccessor) { }
 
-        public override IQueryable<ServiceOrder> GetAll() => 
-            Db.ServiceOrders.AsQueryable();
         public async Task<ServiceOrder> GetByIdOrDefaultAsync(int id) => 
             await Db.ServiceOrders.SingleOrDefaultAsync(x => x.Id == id, Token);
 

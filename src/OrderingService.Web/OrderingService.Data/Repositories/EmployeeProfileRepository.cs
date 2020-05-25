@@ -6,9 +6,11 @@ using Binbin.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Common;
+using OrderingService.Common.Concretes;
 using OrderingService.Common.Interfaces;
-using OrderingService.Data.EF;
-using OrderingService.Data.Interfaces;
+using OrderingService.Data.Code.Abstractions;
+using OrderingService.Data.Code.Extensions;
+using OrderingService.Data.Code.Interfaces;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Repositories
@@ -17,8 +19,6 @@ namespace OrderingService.Data.Repositories
     {
         public EmployeeProfileRepository(ApplicationContext db, IHttpContextAccessor httpContextAccessor) : base(db,
             httpContextAccessor) { }
-
-        public override IQueryable<EmployeeProfile> GetAll() => Db.EmployeeProfiles.AsQueryable();
 
         public async Task<bool> AnyEmployeeAsync(Expression<Func<EmployeeProfile, bool>> filter) =>
             await Db.EmployeeProfiles.AnyAsync(filter, Token);

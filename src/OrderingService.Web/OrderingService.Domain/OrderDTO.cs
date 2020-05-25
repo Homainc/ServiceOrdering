@@ -1,5 +1,5 @@
 ﻿using System;
-using OrderingService.Common;
+using OrderingService.Common.Concretes;
 
 namespace OrderingService.Domain
 {

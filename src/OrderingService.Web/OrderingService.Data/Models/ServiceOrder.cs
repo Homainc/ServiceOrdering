@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Common;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OrderingService.Common.Concretes;
 
 namespace OrderingService.Data.Models
 {

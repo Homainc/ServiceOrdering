@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using OrderingService.Data.Code.Interfaces;
 using OrderingService.Data.Models;
 using OrderingService.Domain.Logic.Code.Exceptions;
 using OrderingService.Domain.Logic.Code.Interfaces;
-using OrderingService.Data.Interfaces;
 
 namespace OrderingService.Domain.Logic.Services
 {

@@ -4,9 +4,9 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using OrderingService.Data.EF;
+using OrderingService.Data.Code.Abstractions;
+using OrderingService.Data.Code.Interfaces;
 using OrderingService.Data.Models;
-using OrderingService.Data.Interfaces;
 
 namespace OrderingService.Data.Repositories {
     public class UserRepository : AbstractRepository<User>, IUserRepository 
@@ -16,7 +16,6 @@ namespace OrderingService.Data.Repositories {
         {
         }
 
-        public override IQueryable<User> GetAll() => Db.Users.AsQueryable();
         public async Task<User> EagerSingleOrDefaultAsync(Expression<Func<User, bool>> filter){
             var user = await (
                 from u in Db.Users

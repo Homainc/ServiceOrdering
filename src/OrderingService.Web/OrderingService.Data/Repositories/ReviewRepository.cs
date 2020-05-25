@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OrderingService.Common;
+using OrderingService.Common.Concretes;
 using OrderingService.Common.Interfaces;
-using OrderingService.Data.EF;
-using OrderingService.Data.Interfaces;
+using OrderingService.Data.Code.Abstractions;
+using OrderingService.Data.Code.Extensions;
+using OrderingService.Data.Code.Interfaces;
 using OrderingService.Data.Models;
 
 namespace OrderingService.Data.Repositories
@@ -15,8 +17,6 @@ namespace OrderingService.Data.Repositories
     {
         public ReviewRepository(ApplicationContext db, IHttpContextAccessor httpContextAccessor) : 
             base(db, httpContextAccessor) { }
-
-        public override IQueryable<Review> GetAll() => Db.Reviews.AsQueryable();
 
         public async Task<Review> GetByIdOrDefaultAsync(int id) =>
             await Db.Reviews.SingleOrDefaultAsync(x => x.Id == id, Token);

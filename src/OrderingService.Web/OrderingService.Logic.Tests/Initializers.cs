@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Moq;
 using Microsoft.AspNetCore.Http;
+using OrderingService.Data;
 using OrderingService.Data.Repositories;
-using OrderingService.Data.EF;
 using OrderingService.Data.Models;
 using OrderingService.Domain;
-using OrderingService.Domain.Logic.Helpers;
-using OrderingService.Domain.Logic.MapperProfiles;
+using OrderingService.Domain.Logic.Code.Configs;
+using OrderingService.Domain.Logic.Code.MapperProfiles;
 using OrderingService.Domain.Logic.Services;
 
 namespace OrderingService.Logic.Tests

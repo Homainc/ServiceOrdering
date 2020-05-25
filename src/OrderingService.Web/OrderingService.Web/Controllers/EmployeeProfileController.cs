@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderingService.Common.Interfaces;
 using OrderingService.Domain;
 using OrderingService.Domain.Logic.Code.Interfaces;
-using OrderingService.Web.Code;
+using OrderingService.Web.Code.Abstractions;
 
 namespace OrderingService.Web.Controllers
 {
