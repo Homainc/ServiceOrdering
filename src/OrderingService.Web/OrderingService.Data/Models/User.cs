@@ -14,6 +14,7 @@ namespace OrderingService.Data.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string HashedPassword { get; set; }
+        public RefreshToken RefreshToken { get; set; }
         public EmployeeProfile EmployeeProfile { get; set; }
     }
 
@@ -39,6 +40,10 @@ namespace OrderingService.Data.Models
             builder.HasOne(x => x.Role)
                 .WithMany()
                 .HasForeignKey(x => x.RoleId);
+            builder.HasOne(x => x.RefreshToken)
+                .WithOne(x => x.User)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace OrderingService.Domain.Logic.Services
                 throw new FieldLogicException("Incorrect email or password", nameof(password));
 
             var userAuthDto = Mapper.Map<UserAuthDto>(user);
-            userAuthDto.Token = _tokenGenerator.GenerateUserToken(user);
+            userAuthDto.Token = await _tokenGenerator.CreateAccessTokenAsync(user);
             return userAuthDto;
         }
 

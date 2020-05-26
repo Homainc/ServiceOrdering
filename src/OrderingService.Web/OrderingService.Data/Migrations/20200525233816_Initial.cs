@@ -89,6 +89,24 @@ namespace OrderingService.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    Token = table.Column<string>(maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -163,7 +181,7 @@ namespace OrderingService.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "FirstName", "HashedPassword", "ImagePublicId", "LastName", "PhoneNumber", "RoleId" },
-                values: new object[] { new Guid("3655b3bb-c8f5-4e1b-9cdd-20f5f0db54b6"), "spritefok@gmail.com", "Shawn", "AQAAAAEAACcQAAAAEClVKBzq7x48VMGkaiit5RfLI36criEy9r0TziiSuI28Nx8WjxxGJxfif9fwTXc/bA==", "default-employee", "Wildermuth", "+37533655993", 2 });
+                values: new object[] { new Guid("b391463d-4a82-442a-8b29-d250979ba20e"), "spritefok@gmail.com", "Shawn", "AQAAAAEAACcQAAAAELyb1jWxQYqgwRwFf8L5zTtfCmqkno2LT4Oj6NJuSDJIk7WXyhSTdjBh9MzYKT55MA==", "default-employee", "Wildermuth", "+37533655993", 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmployeeProfiles_ServiceTypeId",
@@ -204,6 +222,9 @@ namespace OrderingService.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
             migrationBuilder.DropTable(
                 name: "Reviews");
 

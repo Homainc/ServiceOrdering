@@ -12,6 +12,7 @@ namespace OrderingService.Data
         public DbSet<EmployeeProfile> EmployeeProfiles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
@@ -30,6 +31,7 @@ namespace OrderingService.Data
             builder.ApplyConfiguration(new ServiceOrderConfiguration());
             builder.ApplyConfiguration(new ServiceTypeConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new RefreshTokenConfiguration());
 
             // Initialization of default roles
             var roles = new Role[]

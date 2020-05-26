@@ -10,6 +10,7 @@ import { reviewReducer } from './review/reducers';
 import { reviewModalReducer } from './reviewModal/reducers';
 import { serviceTypeReducer } from './serviceType/reducers';
 import { imageReducer } from './image/reducers';
+import { jwt } from './_middleware/jwtMiddleware'
 
 const rootReducer = combineReducers({
     alert: alertReducer,
@@ -30,6 +31,7 @@ const loggerMiddleware = createLogger();
 export default createStore(
     rootReducer,
     applyMiddleware(
+        jwt,
         thunkMiddleware,
         loggerMiddleware
     )

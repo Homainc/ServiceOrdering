@@ -54,7 +54,7 @@ class NavMenu extends Component<NavMenuProps, NavMenuState> {
                       <DropdownToggle className="text-light" nav caret>Manage</DropdownToggle>
                       <DropdownMenu>
                         <DropdownItem>
-                          <Link className='text-dark text-decoration-none' to='/service-types'>Service Types</Link>
+                          <NavLink tag={Link} className='p-0 text-dark text-decoration-none' to='/service-types'>Service Types</NavLink>
                         </DropdownItem>
                       </DropdownMenu>
                     </UncontrolledDropdown>
@@ -65,14 +65,14 @@ class NavMenu extends Component<NavMenuProps, NavMenuState> {
                       </DropdownToggle>
                       <DropdownMenu>
                         <DropdownItem>
-                          <Link className="text-dark text-decoration-none" to="/profile">Profile</Link>
+                          <NavLink tag={Link} className="p-0 text-dark text-decoration-none" to="/profile">Profile</NavLink>
                         </DropdownItem>
                         <DropdownItem>
-                          <Link className="text-dark text-decoration-none" to="/orders/page/1">My orders</Link>
+                          <NavLink tag={Link} className="p-0 text-dark text-decoration-none" to="/orders/page/1">My orders</NavLink>
                         </DropdownItem>
                         <DropdownItem>
                           {user && user.employeeProfile && (
-                            <Link className="text-dark text-decoration-none" to="/tasks/page/1">My Tasks</Link>
+                            <NavLink tag={Link} className="p-0 text-dark text-decoration-none" to="/tasks/page/1">My Tasks</NavLink>
                           )}
                         </DropdownItem>
                       </DropdownMenu>

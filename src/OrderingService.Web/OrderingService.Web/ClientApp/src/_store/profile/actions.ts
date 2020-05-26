@@ -28,7 +28,6 @@ export function load(
             const errObj = err.response.body as ProblemDetails;
             dispatch(failure(errObj));
             history.push('/login');
-            throw errObj.errors;
         }
     };
 

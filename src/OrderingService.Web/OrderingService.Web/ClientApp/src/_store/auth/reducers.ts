@@ -3,7 +3,7 @@ import {
     AUTH_LOGIN_REQUEST, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE, 
     AUTH_LOGOUT, 
     AUTH_SIGN_UP_REQUEST, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE, 
-    AUTH_UPDATE_USER, AUTH_UPDATE_EMPLOYEE 
+    AUTH_UPDATE_USER, AUTH_UPDATE_EMPLOYEE, AUTH_REFRESHING_TOKEN, AUTH_DONE_REFRESHING_TOKEN, AUTH_UPDATE_TOKEN 
 } from "./types";
 import { api } from "../../_helpers";
 import { UserAuthDto } from "../../WebApiModels";
@@ -52,6 +52,13 @@ export function authReducer(state: AuthState = initialState, action: AuthActionT
                 user: { ...state.user as UserAuthDto, employeeProfile: action.employee }
             };
         
+        case AUTH_REFRESHING_TOKEN:
+            return { ...state, refreshingPromise: action.refreshingPromise };
+        case AUTH_DONE_REFRESHING_TOKEN:
+            return { ...state, refreshingPromise: undefined };
+        case AUTH_UPDATE_TOKEN:
+            return { ...state, user: { ...state.user as UserAuthDto, token: action.token } };
+
         default:
             return state;
         

@@ -75,7 +75,7 @@ namespace OrderingService.Logic.Tests
             var hca = FakeHttpContextAccessor();
 
             return new UserService(new PictureService(null, hca), new UserRepository(db, hca), new SaveProvider(db, hca), Mapper, 
-                new RoleRepository(db, hca), new PasswordHasher<User>(), new JwtTokenGenerator(mockOptions.Object));
+                new RoleRepository(db, hca), new PasswordHasher<User>(), new JwtTokenGenerator(mockOptions.Object, null, null));
         }
 
         public static EmployeeService FakeEmployeeService(ApplicationContext db){ 

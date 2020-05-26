@@ -10,7 +10,7 @@ using OrderingService.Data;
 namespace OrderingService.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200525215207_Initial")]
+    [Migration("20200525233816_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,21 @@ namespace OrderingService.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("EmployeeProfiles");
+                });
+
+            modelBuilder.Entity("OrderingService.Data.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("OrderingService.Data.Models.Review", b =>
@@ -226,10 +241,10 @@ namespace OrderingService.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3655b3bb-c8f5-4e1b-9cdd-20f5f0db54b6"),
+                            Id = new Guid("b391463d-4a82-442a-8b29-d250979ba20e"),
                             Email = "spritefok@gmail.com",
                             FirstName = "Shawn",
-                            HashedPassword = "AQAAAAEAACcQAAAAEClVKBzq7x48VMGkaiit5RfLI36criEy9r0TziiSuI28Nx8WjxxGJxfif9fwTXc/bA==",
+                            HashedPassword = "AQAAAAEAACcQAAAAELyb1jWxQYqgwRwFf8L5zTtfCmqkno2LT4Oj6NJuSDJIk7WXyhSTdjBh9MzYKT55MA==",
                             ImagePublicId = "default-employee",
                             LastName = "Wildermuth",
                             PhoneNumber = "+37533655993",
@@ -248,6 +263,14 @@ namespace OrderingService.Data.Migrations
                     b.HasOne("OrderingService.Data.Models.User", "User")
                         .WithOne("EmployeeProfile")
                         .HasForeignKey("OrderingService.Data.Models.EmployeeProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("OrderingService.Data.Models.RefreshToken", b =>
+                {
+                    b.HasOne("OrderingService.Data.Models.User", "User")
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("OrderingService.Data.Models.RefreshToken", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

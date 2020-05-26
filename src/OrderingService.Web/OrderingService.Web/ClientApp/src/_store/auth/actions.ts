@@ -1,11 +1,11 @@
 import { history, api } from "../../_helpers";
 import { ThunkAction } from "redux-thunk";
-import { UserAuthDto, UserCreateDto, EmployeeProfileDto, ValidationProblemDetails } from "../../WebApiModels";
+import { UserAuthDto, UserCreateDto, EmployeeProfileDto, ValidationProblemDetails, AccessTokenDto, ProblemDetails } from "../../WebApiModels";
 import { AuthActionTypes, 
     AUTH_LOGIN_REQUEST, AUTH_LOGIN_SUCCESS, AUTH_LOGIN_FAILURE, 
     AUTH_LOGOUT, 
     AUTH_SIGN_UP_REQUEST, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE, 
-    AUTH_UPDATE_USER, AUTH_UPDATE_EMPLOYEE 
+    AUTH_UPDATE_USER, AUTH_UPDATE_EMPLOYEE, AUTH_UPDATE_TOKEN, AUTH_REFRESHING_TOKEN, AUTH_DONE_REFRESHING_TOKEN 
 } from "./types";
 import { AlertActionTypes } from "../alert/types";
 import * as alertActions from '../alert/actions';
@@ -22,7 +22,7 @@ export function logIn(
             const user = (await api.Account_Auth({ loginModel: { userEmail: email, userPassword: password } })).body as UserAuthDto;
 
             localStorage.setItem('user', JSON.stringify(user));
-            api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token }));
+            api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + user.token?.token }));
             
             dispatch(success(user));
             dispatch(alertActions.success(`You have successfully logged in as ${user.email}`));
@@ -67,7 +67,7 @@ export function signUp(
             const authUser = (await api.Account_SignUp({ userDto: user })).body as UserAuthDto;
 
             localStorage.setItem('user', JSON.stringify(user));
-            api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + authUser.token }));
+            api.setRequestHeadersHandler(h => ({ ...h, 'Authorization': 'Bearer ' + authUser.token?.token }));
 
             dispatch(success(authUser));
             dispatch(alertActions.success('You have successfully signed up!'));
@@ -118,7 +118,7 @@ export function connectToNotificationHub(
         const userToken = getState().auth.user?.token;
         try {
             const hubConnection = new HubConnectionBuilder()
-            .withUrl('/notification', { accessTokenFactory: () => userToken || '' })
+            .withUrl('/notification', { accessTokenFactory: () => userToken?.token || '' })
             .build();
       
             await hubConnection.start();
@@ -130,3 +130,36 @@ export function connectToNotificationHub(
         }
     };
 }
+
+export function updateToken(token: AccessTokenDto): AuthActionTypes {
+    const user = JSON.parse(localStorage.getItem('user') as string);
+    user.token = token;
+    localStorage.setItem('user', JSON.stringify(user));
+
+    return { type: AUTH_UPDATE_TOKEN, token: token };
+}
+
+export const refreshToken = (dispatch: any, token: AccessTokenDto): any => {
+    var refreshTokenPromise = api.Account_RefreshToken({ accessToken: token as AccessTokenDto })
+        .then(resp => {
+            const newToken = resp.body as AccessTokenDto;
+            dispatch({ type: AUTH_DONE_REFRESHING_TOKEN });
+            dispatch(updateToken(newToken));
+            return Promise.resolve(newToken);
+        })
+        .catch(err => {
+            dispatch({ type: AUTH_DONE_REFRESHING_TOKEN });
+            console.log('error refreshing token', err);
+            dispatch(logOut());
+            return Promise.reject(err);
+        });
+
+    dispatch({
+        type: AUTH_REFRESHING_TOKEN,
+        // we want to keep track of token promise in the state so that we don't try to refresh
+        // the token again while refreshing is in process
+        refreshingPromise: refreshTokenPromise
+    });
+
+    return refreshTokenPromise;
+};

@@ -27,7 +27,14 @@ export type UserAuthDto = {
     'imagePublicId' ? : string;
     'id': string;
     'employeeProfile' ? : EmployeeProfileDto;
+    'token' ? : AccessTokenDto;
+};
+
+export type AccessTokenDto = {
     'token' ? : string;
+    'refreshToken' ? : string;
+} & {
+    [key: string]: any;
 };
 
 export type UserDto = {
@@ -639,6 +646,75 @@ export class SwaggerCodegen {
             }
 
             this.request('PUT', domain + path, body, headers, queryParameters, form, reject, resolve, parameters);
+        });
+    }
+
+    Account_RefreshTokenURL(parameters: {
+        'accessToken': AccessTokenDto,
+    } & CommonRequestOptions): string {
+        let queryParameters: QueryParameters = {};
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/Account/refresh-token';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        if (parameters.$queryParameters) {
+            queryParameters = {
+                ...queryParameters,
+                ...parameters.$queryParameters
+            };
+        }
+
+        queryParameters = {};
+
+        let keys = Object.keys(queryParameters);
+        return domain + path + (keys.length > 0 ? '?' + (keys.map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&')) : '');
+    }
+
+    /**
+     * 
+     * @method
+     * @name SwaggerCodegen#Account_RefreshToken
+     * @param {} accessToken - 
+     */
+    Account_RefreshToken(parameters: {
+        'accessToken': AccessTokenDto,
+    } & CommonRequestOptions): Promise < ResponseWithBody < 200, AccessTokenDto > | ResponseWithBody < 401, ProblemDetails >> {
+        const domain = parameters.$domain ? parameters.$domain : this.domain;
+        let path = '/api/Account/refresh-token';
+        if (parameters.$path) {
+            path = (typeof(parameters.$path) === 'function') ? parameters.$path(path) : parameters.$path;
+        }
+
+        let body: any;
+        let queryParameters: QueryParameters = {};
+        let headers: RequestHeaders = {};
+        let form: any = {};
+        return new Promise((resolve, reject) => {
+            headers['Accept'] = 'text/plain, application/json, text/json';
+            headers['Content-Type'] = 'application/json-patch+json';
+
+            if (parameters['accessToken'] !== undefined) {
+                body = parameters['accessToken'];
+            }
+
+            if (parameters['accessToken'] === undefined) {
+                reject(new Error('Missing required  parameter: accessToken'));
+                return;
+            }
+
+            if (parameters.$queryParameters) {
+                queryParameters = {
+                    ...queryParameters,
+                    ...parameters.$queryParameters
+                };
+            }
+
+            form = queryParameters;
+            queryParameters = {};
+
+            this.request('POST', domain + path, body, headers, queryParameters, form, reject, resolve, parameters);
         });
     }
 

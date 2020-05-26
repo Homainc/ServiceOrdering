@@ -1,7 +1,10 @@
-import { UserDto, UserAuthDto, EmployeeProfileDto, ProblemDetails } from '../../WebApiModels';
+import { UserDto, UserAuthDto, EmployeeProfileDto, ProblemDetails, AccessTokenDto } from '../../WebApiModels';
 
 export const AUTH_UPDATE_EMPLOYEE = 'auth/update_employee';
 export const AUTH_UPDATE_USER = 'auth/update_user';
+export const AUTH_UPDATE_TOKEN = 'auth/update_token';
+export const AUTH_REFRESHING_TOKEN = 'auth/refreshing_token';
+export const AUTH_DONE_REFRESHING_TOKEN = 'auth/done_refreshing_token';
 
 export const AUTH_LOGIN_REQUEST = 'auth/login (request)';
 export const AUTH_LOGIN_SUCCESS = 'auth/login (success)';
@@ -21,6 +24,20 @@ interface AuthUpdateEmployeeAction {
 interface AuthUpdateUserAction {
     type: typeof AUTH_UPDATE_USER;
     user: UserDto;
+};
+
+interface AuthRefreshingTokenAction {
+    type: typeof AUTH_REFRESHING_TOKEN;
+    refreshingPromise: Promise<AccessTokenDto>;
+};
+
+interface AuthDoneRefreshingTokenAction {
+    type: typeof AUTH_DONE_REFRESHING_TOKEN;
+};
+
+interface AuthUpdateTokenAction {
+    type: typeof AUTH_UPDATE_TOKEN;
+    token: AccessTokenDto;
 };
 
 interface AuthRequestAction {
@@ -50,8 +67,11 @@ export type AuthActionTypes =
     AuthRequestAction |
     AuthUpdateEmployeeAction | 
     AuthUpdateUserAction | 
+    AuthRefreshingTokenAction |
+    AuthDoneRefreshingTokenAction |
     AuthLoginSuccessAction | 
     AuthLogoutAction |
+    AuthUpdateTokenAction |
     AuthSignUpSuccessAction |
     AuthFailureAction; 
 
@@ -60,4 +80,5 @@ export interface AuthState {
     user: UserAuthDto | undefined;
     loggingIn: boolean;
     signingUp: boolean;
+    refreshingPromise?: Promise<AccessTokenDto>;
 };

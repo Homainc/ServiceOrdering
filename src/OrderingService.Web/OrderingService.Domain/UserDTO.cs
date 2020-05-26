@@ -25,6 +25,6 @@ namespace OrderingService.Domain
 
     public class UserAuthDto : UserDto
     {
-        public string Token { get; set; }
+        public AccessTokenDto Token { get; set; }
     }
 }

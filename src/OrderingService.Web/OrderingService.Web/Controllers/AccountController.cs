@@ -13,8 +13,13 @@ namespace OrderingService.Web.Controllers
     public class AccountController : AbstractApiController
     {
         private readonly IUserService _userService;
+        private readonly ITokenGenerator _tokenGenerator;
 
-        public AccountController(IUserService userService) => _userService = userService;
+        public AccountController(IUserService userService, ITokenGenerator tokenGenerator)
+        {
+            _userService = userService;
+            _tokenGenerator = tokenGenerator;
+        }
 
         [HttpPost("auth")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserAuthDto))]
@@ -50,5 +55,12 @@ namespace OrderingService.Web.Controllers
             userDto.Id = id;
             return Ok(await _userService.UpdateProfileAsync(userDto));
         }
+
+        [HttpPost("refresh-token")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccessTokenDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> RefreshTokenAsync(AccessTokenDto accessToken) =>
+            Ok(await _tokenGenerator.RefreshAccessTokenAsync(accessToken));
     }
+
 }
