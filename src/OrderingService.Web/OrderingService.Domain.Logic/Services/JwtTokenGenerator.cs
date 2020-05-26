@@ -63,7 +63,7 @@ namespace OrderingService.Domain.Logic.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 NotBefore = DateTime.UtcNow,
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var userToken = tokenHandler.CreateToken(tokenDescriptor);
